@@ -5,10 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roler2</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #000;
+        }
+    </style>
 </head>
 <body>
 <script type="module">
-import Vec2 from "./math/vec2.js"
+import Vec2 from "./public/math/vec2.js"
 let p = new Vec2(1, 0);
 console.log(p.rotate(90, new Vec2(2, 0)));
 </script>

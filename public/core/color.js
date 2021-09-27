@@ -58,7 +58,7 @@ class Color{
     }
 
     toString(){
-        return `#${(this.#r * (256 ** 3) + this.#g * (256 ** 2) + this.#b * 256 + this.#a).toString(16)}`;
+        return `#${(0+this.#r.toString(16)).slice(-2)}${(0+this.#g.toString(16)).slice(-2)}${(0+this.#b.toString(16)).slice(-2)}${(0+this.#a.toString(16)).slice(-2)}`;
     }
 
     clone(){

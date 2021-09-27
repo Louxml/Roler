@@ -185,6 +185,10 @@ class Node{
         return Mat3.multiply(this.parent.getWorldTransfrom(),this.getTransfrom());
     }
 
+    getRenderTransfrom(){
+        return this.getWorldTransfrom();
+    }
+
     add(node){
         node.parent = this;
         node.scane = this.scene;

@@ -40,7 +40,7 @@ class CanvasRenderer{
         this.#renderer.clearRect(0, 0, this.#renderer.canvas.width, this.#renderer.canvas.height);
         for(let o of this.#data){
             if(!o.renderer || !o.renderer.canvas)continue;
-            let t = o.getWorldTransfrom().data;
+            let t = o.getRenderTransfrom().data;
             let c = o.renderer.canvas;
             this.#renderer.save();
             this.#renderer.globalAlpha = o.alpha;

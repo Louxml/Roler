@@ -7,8 +7,51 @@ function precision(a){
 }
 
 class Vec2{
+    #x = 0;
+    #y = 0;
     constructor(x = 0, y = 0){
-        this.set(x, y);
+        this.x = x;
+        this.y = y;
+    }
+
+    set x(v){
+        if(typeof v == "number"){
+            this.#x = v;
+        }else return;
+    }
+    
+    get x(){
+        return this.#x;
+    }
+
+    set y(v){
+        if(typeof v == "number"){
+            this.#y = v;
+        }else return;
+    }
+
+    get y(){
+        return this.#y;
+    }
+
+    set w(v){
+        if(typeof v == "number"){
+            this.#x = v;
+        }else return;
+    }
+    
+    get w(){
+        return this.#x;
+    }
+
+    set h(v){
+        if(typeof v == "number"){
+            this.#y = v;
+        }else return;
+    }
+
+    get h(){
+        return this.#y;
     }
 
     set(x, y){
@@ -26,12 +69,14 @@ class Vec2{
     }
 
     add(v){
+        if(v.constructor.name != Vec2.name)return this;
         this.x += v.x;
         this.y += v.y;
         return this;
     }
 
     sub(v){
+        if(v.constructor.name != Vec2.name)return this;
         this.x -= v.x;
         this.y -= v.y;
         return this;
@@ -52,6 +97,7 @@ class Vec2{
     }
 
     rotate(deg, v = new Vec2()){
+        if(v.constructor.name != Vec2.name)return this;
         this.sub(v);
         var x = this.x;
         var y = this.y;
@@ -78,23 +124,32 @@ class Vec2{
     }
     
     distance(v){
+        if(v.constructor.name != Vec2.name)return -1;
         return Vec2.getDistance(this, v);
     }
 
     distanceSquared(v){
+        if(v.constructor.name != Vec2.name)return -1;
         return Vec2.getDistanceSquared(this, v);
     }
     
     clone(){
         return new Vec2(this.x, this.y);
     }
+
+    // 静态方法
+    static get ZERO(){
+        return new Vec2(0, 0);
+    }
+
+    static get UNIT_X(){
+        return new Vec2(1, 0);
+    }
+
+    static get UNIT_Y(){
+        return new Vec2(0, 1);
+    }
 }
-
-Vec2.ZERO = new Vec2();
-
-Vec2.UNIT_X = new Vec2(1, 0);
-
-Vec2.UNIT_Y = new Vec2(0, 1);
 
 Vec2.add = function(a, b){
     return new Vec2(a.x + b.x, a.y + b.y);

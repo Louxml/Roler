@@ -1,0 +1,30 @@
+let BlendFunc = {
+    "SRC_OVER": "source-over",
+    "SRC_ATOP": "source-atop",
+    "SRC_IN": "source-in",
+    "SRC_OUT": "source-out",
+    "DES_over": "destination-over",
+    "DES_ATOP": "destination-atop",
+    "DES_IN": "destination-in",
+    "DES_OUT": "destination-out",
+    "LIGHTER": "lighter",
+    "COPY": "copy",
+    "XOR": "xor",
+    "MULTIPLY": "multiply",
+    "SCREEN": "screen",
+    "OVERLAY": "overlay",
+    "DARKEN": "darken",
+    "lighten": "LIIGHTEN",
+    "COLOR_DODGE": "color-dodge",
+    "COLOR_BURN": "color-burn",
+    "HARD_LIGHT": "hard-light",
+    "SORT_LIGHT": "soft-light",
+    "DIFFERENCE": "difference",
+    "EXCUSION": "exclusion",
+    "HUE": "hue",
+    "SATURATION": "saturation",
+    "COLOR": "color",
+    "LUMINOSITY": "luminosity"
+}
+
+export default BlendFunc;

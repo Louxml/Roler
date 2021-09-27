@@ -16,13 +16,60 @@
             overflow: hidden;
             background: #000;
         }
+        canvas{
+            position:absolute;
+        }
     </style>
 </head>
 <body>
 <script type="module">
-import Vec2 from "./public/math/vec2.js"
-let p = new Vec2(1, 0);
-console.log(p.rotate(90, new Vec2(2, 0)));
+import Vec2 from "./public/core/vec2.js"
+import Color from "./public/core/color.js";
+import Mat3 from "./public/core/mat3.js"
+import Render from "./public/node/CanvasRender.js"
+import Node from "./public/node/Node.js"
+import Sprite from "./public/node/Sprite.js"
+
+let render = new Render(window.innerWidth, window.innerHeight)
+document.body.append(render.canvas)
+
+
+let rect = []
+
+let temp = document.createElement("canvas").getContext("2d");
+temp.width = 10
+temp.height = 10
+let color = temp.createRadialGradient(5,5,0,5,5,5);
+color.addColorStop(0, "#ffffff");
+color.addColorStop(1, "#ffffff00");
+temp.fillStyle = color;
+// temp.fillStyle = "#fff"
+temp.beginPath()
+temp.arc(5, 5, 5, 0, 2*Math.PI);
+temp.closePath()
+// temp.fillRect(0, 0, 10, 10)
+temp.fill()
+console.log(temp)
+
+
+
+
+function update(dt){
+    render.update();
+}
+let time = 0
+function gameloop(dt){
+    requestAnimationFrame(gameloop);
+    let t = (dt - time) / 1000;
+    time = dt;
+    console.log(1/t|0)
+    update(t)
+    render.render()
+}
+requestAnimationFrame(gameloop);
+
+
+
 </script>
 </body>
 </html>

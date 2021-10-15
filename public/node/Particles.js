@@ -555,6 +555,13 @@ class Particles extends Node{
                     this.renderer.fillRect(0, 0, this.renderer.canvas.width, this.renderer.canvas.height);
                     this.renderer.restore()
                 }
+            },
+            getTransfrom(){
+                return new Mat3([
+                    Math.cos(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.w), Math.sin(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.h), this.x,
+                    -Math.sin(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.w), Math.cos(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.h), -this.y,
+                    0, 0, 1
+                ]);
             }
         }
     }
@@ -604,10 +611,10 @@ class Particles extends Node{
         this.#renderer.clearRect(0, 0, this.#renderer.canvas.width, this.#renderer.canvas.height);
         for(let o of this.#data){
             let t;
-            if(o.parent)t = o.parent.getWorldTransfrom().data;
-            else t = o.transform.data;
+            if(o.parent)t = Mat3.multiply(o.parent.getWorldTransfrom(), o.getTransfrom()).data;
+            else t = Mat3.multiply(o.transform, o.getTransfrom()).data;
             this.#renderer.save();
-            this.#renderer.setTransform(t[0] * (o.size / Particles.SIZE.w), t[3], t[1], t[4] * (o.size / Particles.SIZE.h), t[2] + o.x, t[5] + o.y);
+            this.#renderer.setTransform(t[0], t[3], t[1], t[4], t[2], t[5]);
             this.#renderer.globalAlpha = o.color.a/255;
             this.#renderer.drawImage(o.renderer.canvas, -Particles.SIZE.w/2, -Particles.SIZE.h/2);
             this.#renderer.restore();
@@ -790,7 +797,7 @@ class GravityParticles extends Particles{
             x = (x*100|0)/100;
             y = (y*100|0)/100;
             this.x += x;
-			this.y -= y;
+			this.y += y;
         }.bind(p)
         return p;
     }

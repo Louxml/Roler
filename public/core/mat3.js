@@ -108,8 +108,8 @@ class Mat3{
         
     }
 
-    clone(m){
-        return new Mat3(m.data);
+    clone(){
+        return new Mat3(this.data);
     }
 
     static get UNIT(){

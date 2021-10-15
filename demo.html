@@ -258,12 +258,12 @@
             </div>
             <div class="row">
                 <span>颜色</span>
-                <input type="range" id="startColorRange" min="0" max="1" step="0.01" value="0" oninput="setStart('alpha',this.value)">
+                <input type="range" id="startColorRange" min="0" max="255" step="1" value="0" oninput="setStart('alpha',this.value)">
                 <input type="color" id="startColorValue" onchange="setStart('color',this.value)">
             </div>
             <div class="row">
                 <span>颜色浮动</span>
-                <input type="range" id="startColorCycleRange" min="0" max="1" step="0.01" value="0" oninput="setStart('alphaCycle',this.value)">
+                <input type="range" id="startColorCycleRange" min="0" max="255" step="1" value="0" oninput="setStart('alphaCycle',this.value)">
                 <input type="color" id="startColorCycleValue" onchange="setStart('colorCycle',this.value)">
             </div>
             <div class="row">
@@ -291,12 +291,12 @@
             </div>
             <div class="row">
                 <span>颜色</span>
-                <input type="range" id="endColorRange" min="0" max="1" step="0.01" value="0" oninput="setEnd('alpha',this.value)">
+                <input type="range" id="endColorRange" min="0" max="255" step="1" value="0" oninput="setEnd('alpha',this.value)">
                 <input type="color" id="endColorValue" onchange="setEnd('color',this.value)">
             </div>
             <div class="row">
                 <span>颜色浮动</span>
-                <input type="range" id="endColorCycleRange" min="0" max="1" step="0.01" value="0" oninput="setEnd('alphaCycle',this.value)">
+                <input type="range" id="endColorCycleRange" min="0" max="255" step="1" value="0" oninput="setEnd('alphaCycle',this.value)">
                 <input type="color" id="endColorCycleValue" onchange="setEnd('colorCycle',this.value)">
             </div>
             <div class="row">
@@ -403,6 +403,7 @@ let setImage;
 import { GravityParticles, RadiusParticles } from "./public/node/Particles.js"
 import Render from "./public/node/CanvasRender.js"
 import Color from "./public/core/color.js"
+import Vec2 from "./public/core/vec2.js";
 var fps = null;
 window.onload = function(){
     fps = document.getElementById('fpsBox');
@@ -435,6 +436,8 @@ window.onload = function(){
 let render = new Render(window.innerWidth, window.innerHeight)
 document.body.insertBefore(render.canvas, document.body.firstChild)
 let particles = new GravityParticles()
+let pos = new Vec2(window.innerWidth/2, -window.innerHeight/2)
+particles.setPosition(pos)
 particles.play()
 render.add(particles)
 
@@ -455,6 +458,7 @@ requestAnimationFrame(gameloop);
 
 setValue = function(e,value){
     let text = document.getElementById(e+"Value");
+    value = Number(value)
     switch(e){
         case 'total':
             particles.setTotal(value);
@@ -486,10 +490,10 @@ setValue = function(e,value){
 setStart = function(key,value){
     if(key == 'alpha'){
         let color = particles.getStartColor();
-        color.a = value;
+        color.a = Number(value);
     }else if(key == 'alphaCycle'){
         let color = particles.getStartColorCycle();
-        color.a = value;
+        color.a = Number(value);
     }else if(key == 'color'){
         let color = particles.getStartColor();
         color.r = parseInt(value[1]+value[2],16);
@@ -500,20 +504,27 @@ setStart = function(key,value){
         color.r = parseInt(value[1]+value[2],16);
         color.g = parseInt(value[3]+value[4],16);
         color.b = parseInt(value[5]+value[6],16);
-    }else{
-        particles.setStart(key,value);
+    }else if(key == 'size'){
+        particles.setStartSize(Number(value))
+        document.getElementById("start"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }else if(key == 'sizeCycle'){
+        particles.setStartSizeCycle(Number(value))
+        document.getElementById("start"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }else if(key == 'spin'){
+        particles.setStartSpin(Number(value))
+        document.getElementById("start"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }else if(key == 'spinCycle'){
+        particles.setStartSpinCycle(Number(value))
         document.getElementById("start"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
     }
 }
 setEnd = function(key,value){
     if(key == 'alpha'){
         let color = particles.getEndColor();
-        color.a = value;
-        document.getElementById("endColorValue").value = value;
+        color.a = Number(value);
     }else if(key == 'alphaCycle'){
         let color = particles.getEndColorCycle();
-        color.a = value;
-        document.getElementById("endColorCycleValue").value = value;
+        color.a = Number(value);
     }else if(key == 'color'){
         let color = particles.getEndColor();
         color.r = parseInt(value[1]+value[2],16);
@@ -524,13 +535,23 @@ setEnd = function(key,value){
         color.r = parseInt(value[1]+value[2],16);
         color.g = parseInt(value[3]+value[4],16);
         color.b = parseInt(value[5]+value[6],16);
-    }else{
-        particles.setEnd(key,value);
+    }else if(key == 'size'){
+        particles.setEndSize(Number(value));
+        document.getElementById("end"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }else if(key == 'sizeCycle'){
+        particles.setEndSizeCycle(Number(value));
+        document.getElementById("end"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }else if(key == 'spin'){
+        particles.setEndSpin(Number(value));
+        document.getElementById("end"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }else if(key == 'spinCycle'){
+        particles.setEndSpinCycle(Number(value));
         document.getElementById("end"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
     }
 }
 
 setGravity = function(key,value){
+    value = Number(value)
     switch(key){
         case 'speed':
             particles.setSpeed(value);
@@ -542,12 +563,12 @@ setGravity = function(key,value){
         break;
         case 'width':
             var area = particles.getArea();
-            area.x = Number(value);
+            area.w = Number(value);
             document.getElementById("GwidthValue").value = value;
         break;
         case 'height':
             var area = particles.getArea();
-            area.y = Number(value);
+            area.h = Number(value);
             document.getElementById("GheightValue").value = value;
         break;
         case 'x':
@@ -580,6 +601,7 @@ setGravity = function(key,value){
 }
 
 setRadius = function(key,value){
+    value = Number(value)
     switch(key){
         case 'startRadius':
             particles.setStartRadius(value);
@@ -612,6 +634,7 @@ setMode = function(mode,div){
     if(mode == 0){
         render.remove(particles)
         particles = new GravityParticles();
+        particles.setPosition(pos)
         render.add(particles)
         particles.play()
         gravityTitle.className = "true";
@@ -633,6 +656,7 @@ setMode = function(mode,div){
         render.remove(particles)
         particles = new RadiusParticles();
         render.add(particles)
+        particles.setPosition(pos)
         particles.play()
         gravityTitle.className = "";
         radiusTitle.className = "true";
@@ -699,7 +723,9 @@ setImage = function(e){
 let isMove = false;
 render.canvas.onmousedown = function(e){
     isMove = true;
+    particles.stop()
     particles.position.set(e.x, -e.y);
+    particles.play()
 }
 render.canvas.onmousemove = function(e){
     if(isMove){

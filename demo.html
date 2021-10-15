@@ -398,6 +398,7 @@ let setTarget;
 let setAssetMode;
 let setRenderMode;
 let setImage;
+let updateData;
 </script>
 <script type="module">
 import { GravityParticles, RadiusParticles } from "./public/node/Particles.js"
@@ -407,6 +408,10 @@ import Vec2 from "./public/core/vec2.js";
 var fps = null;
 window.onload = function(){
     fps = document.getElementById('fpsBox');
+    setMode(0)
+}
+
+updateData = function(){
     getValue('total',particles.getTotal());
     getValue('duration',particles.getDuration());
     getValue('life',particles.getLife());
@@ -429,7 +434,6 @@ window.onload = function(){
     getColor('endColorRange',particles.getEndColor().a);
     var color = particles.getEndColor();
     getColor('endColorValue',new Color(color.r,color.g,color.b))
-    setMode(0);
 }
     
 // 创建场景
@@ -635,6 +639,21 @@ setMode = function(mode,div){
         render.remove(particles)
         particles = new GravityParticles();
         particles.setPosition(pos)
+
+        particles.setTotal(300);
+        particles.setEmission(200);
+        particles.setAngular(135);
+        particles.setAngularCycle(40);
+        particles.setStartSize(110);
+        particles.setStartSpin(720);
+        particles.setStartColor(new Color(51, 51, 255, 255))
+        particles.setEndColor(new Color(51, 51, 255, 0))
+        
+        particles.setSpeed(240);
+        particles.setSpeedCycle(10);
+        particles.area.set(20, 20);
+        particles.gravity.set(-1000, 740);
+
         render.add(particles)
         particles.play()
         gravityTitle.className = "true";
@@ -657,6 +676,17 @@ setMode = function(mode,div){
         particles = new RadiusParticles();
         render.add(particles)
         particles.setPosition(pos)
+
+
+        particles.setTotal(300);
+        particles.setEmission(200);
+        particles.setAngular(135);
+        particles.setAngularCycle(40);
+        particles.setStartSize(110);
+        particles.setStartSpin(720);
+        particles.setStartColor(new Color(51, 51, 255, 255))
+        particles.setEndColor(new Color(51, 51, 255, 0))
+
         particles.play()
         gravityTitle.className = "";
         radiusTitle.className = "true";
@@ -669,6 +699,7 @@ setMode = function(mode,div){
         getValue('RaccelTan',particles.getAccelTan());
         getValue('RaccelTanCycle',particles.getAccelTanCycle());
     }
+    updateData()
 }
 
 getValue = function(key,value){

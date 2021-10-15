@@ -60,12 +60,17 @@ let image = null;
 img.onload = function(){
     for(let i = 0;i < 1;i++){
         image = new Sprite(img);
-        image.position.set(0, -400);
-        image.rotation = 90
-        // image.scale.set(4, 4);
+        image.position.set(400, -400);
+        // image.rotation = 90
+        // image.scale.set(2, 2);
         image.color.set(255, 255, 255);
         render.add(image);
         rect.push(image);
+
+        let sp = new Sprite(img);
+        sp.position.set(400, 0)
+        image.add(sp);
+        render.add(sp)
     }
     
 }
@@ -88,7 +93,7 @@ p.setStartSize(40);
 p.setStartColor(new Color(26, 77, 200, 255))
 p.setEndColor(new Color(26, 77, 200, 0))
 
-render.add(p);
+// render.add(p);
 p.play();
 let btn = false;
 window.onmousedown = function(){

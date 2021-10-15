@@ -72,7 +72,7 @@ class Sprite extends Node{
     }
 
     getModleTransfrom(){
-        return [-this.#renderer.canvas.width * this.anchor.x, -this.#renderer.canvas.height * this.anchor.y];
+        return [-this.#renderer.canvas.width * this.anchor.x, -this.#renderer.canvas.height * (1-this.anchor.y)];
     }
 
 

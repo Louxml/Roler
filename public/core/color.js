@@ -11,8 +11,10 @@ class Color{
     }
 
     set r(v){
-        if(typeof v == "number" && v >= 0 && v <= 255){
-            this.#r = v;
+        if(typeof v == "number"){
+            if(v < 0)v = 0;
+            else if(v > 255)v = 255;
+            this.#r = v | 0;
         }else return;
     }
     
@@ -21,8 +23,10 @@ class Color{
     }
 
     set g(v){
-        if(typeof v == "number" && v >= 0 && v <= 255){
-            this.#g = v;
+        if(typeof v == "number"){
+            if(v < 0)v = 0;
+            else if(v > 255)v = 255;
+            this.#g = v | 0;
         }else return;
     }
     
@@ -31,8 +35,10 @@ class Color{
     }
 
     set b(v){
-        if(typeof v == "number" && v >= 0 && v <= 255){
-            this.#b = v;
+        if(typeof v == "number"){
+            if(v < 0)v = 0;
+            else if(v > 255)v = 255;
+            this.#b = v | 0;
         }else return;
     }
     
@@ -41,8 +47,10 @@ class Color{
     }
 
     set a(v){
-        if(typeof v == "number" && v >= 0 && v <= 255){
-            this.#a = v;
+        if(typeof v == "number"){
+            if(v < 0)v = 0;
+            else if(v > 255)v = 255;
+            this.#a = v | 0;
         }else return;
     }
     
@@ -57,8 +65,9 @@ class Color{
         this.a = a;
     }
 
-    toString(){
-        return `#${(0+this.#r.toString(16)).slice(-2)}${(0+this.#g.toString(16)).slice(-2)}${(0+this.#b.toString(16)).slice(-2)}${(0+this.#a.toString(16)).slice(-2)}`;
+    toString(n=4){
+        let s = `#${(0+this.#r.toString(16)).slice(-2)}${(0+this.#g.toString(16)).slice(-2)}${(0+this.#b.toString(16)).slice(-2)}${(0+this.#a.toString(16)).slice(-2)}`;
+        return s.substring(0, 2*n+1);
     }
 
     clone(){

@@ -71,6 +71,10 @@ class Sprite extends Node{
         this.image = img;
     }
 
+    getModleTransfrom(){
+        return [-this.#renderer.canvas.width * this.anchor.x, -this.#renderer.canvas.height * this.anchor.y];
+    }
+
 
     render(){
         if(this.#refrash){

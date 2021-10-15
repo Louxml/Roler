@@ -174,8 +174,8 @@ class Node{
 
     getTransfrom(){
         return new Mat3([
-            Math.cos(this.rotation * Math.PI / 180) * this.scale.x, -Math.sin(this.rotation * Math.PI / 180) * this.scale.y, this.position.x,
-            Math.sin(this.rotation * Math.PI / 180) * this.scale.x, Math.cos(this.rotation * Math.PI / 180) * this.scale.y, this.position.y,
+            Math.cos(this.rotation * Math.PI / 180) * this.scale.x, Math.sin(this.rotation * Math.PI / 180) * this.scale.y, this.position.x,
+            -Math.sin(this.rotation * Math.PI / 180) * this.scale.x, Math.cos(this.rotation * Math.PI / 180) * this.scale.y, -this.position.y,
             0, 0, 1
         ]);
     }
@@ -187,6 +187,10 @@ class Node{
 
     getRenderTransfrom(){
         return this.getWorldTransfrom();
+    }
+
+    getModleTransfrom(){
+        return [0, 0];
     }
 
     add(node){

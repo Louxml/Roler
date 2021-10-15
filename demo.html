@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>Network</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        html,body{
+            width:100%;
+            height:100%;
+            overflow: hidden;
+        }
+        canvas{
+            position:absolute;
+            background:#000;
+        }
+        #consoleBox{
+            position:absolute;
+            top:0;
+            right:0;
+            width:400px;
+            height:100%;
+            box-sizing:border-box;
+            background:#333;
+            transition:all .4s;
+        }
+        #consoleBox .scroll{
+            position:absolute;
+            box-sizing:border-box;
+            width:100%;
+            height:100%;
+            overflow:auto;
+            top:0;
+
+            padding-bottom:20px;
+        }
+        #consoleBox .row{
+            width:100%;
+            height:30px;
+        }
+        #consoleBox .row span{
+            display:inline-block;
+            width:100px;
+            text-align:center;
+            height:100%;
+            margin-left:10px;
+            line-height:30px;
+            color:#fff;
+            vertical-align: top;
+            cursor:pointer;
+            font-size:10pt;
+        }
+        #consoleBox .row span.true{
+            color:#69f;
+        }
+        #consoleBox .row span.title{
+            color:#f96
+        }
+        #consoleBox .row input[type='range']{
+            display:inline-block;
+            width:160px;
+            height:20px;
+            margin-top:5px;
+            vertical-align: top;
+        }
+        #consoleBox .row input[type='text'],
+        #consoleBox .row input[type='color']{
+            display:inline-block;
+            width:80px;
+            height:24px;
+            margin-top:3px;
+            margin-left:10px;
+            vertical-align: top;
+            border:none;
+            text-align:center;
+            outline:none;
+        }
+        #consoleBox .close{
+            position:absolute;
+            transform:translate(-100%,-50%);
+            width:50px;
+            height:100px;
+            top:50%;
+            left:0;
+            border-radius:50px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius:0;
+            line-height:100px;
+            color:#f33;
+            background:#333;
+            text-align:center;
+            cursor: pointer;
+        }
+        #consoleBox #gravity{
+            display: none;
+        }
+        #consoleBox #radius{
+            display: none;
+        }
+        #fpsBox{
+            position:absolute;
+            top:0;
+            left:0;
+            width:100px;
+            height:30px;
+            line-height:30px;
+            text-align:center;
+            color:#fff;
+            background:#000;
+        }
+        #consoleBox input[type="file"]{
+            width:200px;
+            height:30px;
+            color:#fff;
+        }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="fpsBox">60FPS</div>
+    <div id="consoleBox">
+        <div class="close" onclick="OpenConsole()">开关</div>
+        <div class="scroll">
+            <div class="row">
+                <span>粒子图片</span>
+                <select onchange="setTarget(this.value)">
+                    <option id="point" value="0" selected="selected">点</option>
+                    <option id="circle" value="1">圆</option>
+                    <option id="rect" value="2">方块</option>
+                    <option id="arc" value="3">圈</option>
+                    <option id="border" value="4">框</option>
+                </select>
+                <!-- <input type="file" id="pImage" accept="JEPG/PNG/JPG" onchange="setImage(this.value)"> -->
+            </div>
+            <div class="row">
+                <span>资源混合模式</span>
+                <select onchange="setAssetMode(this.value)">
+                    <option value="source-atop">source-atop</option>
+                    <option value="source-in" selected="selected">source-in</option>
+                    <option value="source-out">source-out</option>
+                    <option value="source-over">source-over</option>
+                    <option value="destination-atop">destination-atop</option>
+                    <option value="destination-in" >destination-in</option>
+                    <option value="destination-out">destination-out</option>
+                    <option value="destination-over">destination-over</option>
+                    <option value="lighter">lighter</option>
+                    <option value="copy">copy</option>
+                    <option value="xor">xor</option>
+                    <option value="multiply">multiply</option>
+                    <option value="screen">screen</option>
+                    <option value="overlay">overlay</option>
+                    <option value="darken">darken</option>
+                    <option value="lighten">lighten</option>
+                    <option value="color-dodge">color-dodge</option>
+                    <option value="color-burn">color-burn</option>
+                    <option value="hard-light">hard-light</option>
+                    <option value="soft-light">soft-light</option>
+                    <option value="difference">difference</option>
+                    <option value="exclusion">exclusion</option>
+                    <option value="hue">hue</option>
+                    <option value="saturation">saturation</option>
+                    <option value="color">color</option>
+                    <option value="luminosity">luminosity</option>
+                </select>
+            </div>
+            <div class="row">
+                <span>粒子混合模式</span>
+                <select onchange="setRenderMode(this.value)">
+                    <option value="source-atop">source-atop</option>
+                    <option value="source-in">source-in</option>
+                    <option value="source-out">source-out</option>
+                    <option value="source-over">source-over</option>
+                    <option value="destination-atop">destination-atop</option>
+                    <option value="destination-in" >destination-in</option>
+                    <option value="destination-out">destination-out</option>
+                    <option value="destination-over">destination-over</option>
+                    <option value="lighter" selected="selected">lighter</option>
+                    <option value="copy">copy</option>
+                    <option value="xor">xor</option>
+                    <option value="multiply">multiply</option>
+                    <option value="screen">screen</option>
+                    <option value="overlay">overlay</option>
+                    <option value="darken">darken</option>
+                    <option value="lighten">lighten</option>
+                    <option value="color-dodge">color-dodge</option>
+                    <option value="color-burn">color-burn</option>
+                    <option value="hard-light">hard-light</option>
+                    <option value="soft-light">soft-light</option>
+                    <option value="difference">difference</option>
+                    <option value="exclusion">exclusion</option>
+                    <option value="hue">hue</option>
+                    <option value="saturation">saturation</option>
+                    <option value="color">color</option>
+                    <option value="luminosity">luminosity</option>
+                </select>
+            </div>
+            <div class="row">
+                <span>粒子数量</span>
+                <input type="range" id="totalRange" min="0" max="1000" value="0" step="1" oninput="setValue('total',this.value)">
+                <input type="text" id="totalValue">
+            </div>
+            <div class="row">
+                <span>持续时长</span>
+                <input type="range" id="durationRange" min="-1" max="10000" value="0" oninput="setValue('duration',this.value)">
+                <input type="text" id="durationValue">
+            </div>
+            <div class="row">
+                <span>粒子生命周期</span>
+                <input type="range" id="lifeRange" min="0" max="10000" value="0" oninput="setValue('life',this.value)">
+                <input type="text" id="lifeValue">
+            </div>
+            <div class="row">
+                <span>生命周期浮动</span>
+                <input type="range" id="lifeCycleRange" min="0" max="10000" value="0" oninput="setValue('lifeCycle',this.value)">
+                <input type="text" id="lifeCycleValue">
+            </div>
+            <div class="row">
+                <span>发射速率</span>
+                <input type="range" id="emissionRange" min="0" max="1000" value="0" oninput="setValue('emission',this.value)">
+                <input type="text" id="emissionValue">
+            </div>
+            <div class="row">
+                <span>发射角度</span>
+                <input type="range" id="angularRange" min="-180" max="180" value="0" oninput="setValue('angular',this.value)">
+                <input type="text" id="angularValue">
+            </div>
+            <div class="row">
+                <span>角度浮动</span>
+                <input type="range" id="angularCycleRange" min="0" max="180" value="0" oninput="setValue('angularCycle',this.value)">
+                <input type="text" id="angularCycleValue">
+            </div>
+            <div class="row">
+                <span class="title">起始状态</span>
+            </div>
+            <div class="row">
+                <span>大小</span>
+                <input type="range" id="startSizeRange" min="0" max="400" value="0" oninput="setStart('size',this.value)">
+                <input type="text" id="startSizeValue">
+            </div>
+            <div class="row">
+                <span>大小浮动</span>
+                <input type="range" id="startSizeCycleRange" min="0" max="200" value="0" oninput="setStart('sizeCycle',this.value)">
+                <input type="text" id="startSizeCycleValue">
+            </div>
+            <div class="row">
+                <span>旋转</span>
+                <input type="range" id="startSpinRange" min="-360" max="360" value="0" oninput="setStart('spin',this.value)">
+                <input type="text" id="startSpinValue">
+            </div>
+            <div class="row">
+                <span>旋转浮动</span>
+                <input type="range" id="startSpinCycleRange" min="0" max="360" value="0" oninput="setStart('spinCycle',this.value)">
+                <input type="text" id="startSpinCycleValue">
+            </div>
+            <div class="row">
+                <span>颜色</span>
+                <input type="range" id="startColorRange" min="0" max="1" step="0.01" value="0" oninput="setStart('alpha',this.value)">
+                <input type="color" id="startColorValue" onchange="setStart('color',this.value)">
+            </div>
+            <div class="row">
+                <span>颜色浮动</span>
+                <input type="range" id="startColorCycleRange" min="0" max="1" step="0.01" value="0" oninput="setStart('alphaCycle',this.value)">
+                <input type="color" id="startColorCycleValue" onchange="setStart('colorCycle',this.value)">
+            </div>
+            <div class="row">
+                <span class="title">终止状态</span>
+            </div>
+            <div class="row">
+                <span>大小</span>
+                <input type="range" id="endSizeRange" min="0" max="400" value="0" oninput="setEnd('size',this.value)">
+                <input type="text" id="endSizeValue">
+            </div>
+            <div class="row">
+                <span>大小浮动</span>
+                <input type="range" id="endSizeCycleRange" min="0" max="200" value="0" oninput="setEnd('sizeCycle',this.value)">
+                <input type="text" id="endSizeCycleValue">
+            </div>
+            <div class="row">
+                <span>旋转</span>
+                <input type="range" id="endSpinRange" min="-360" max="360" value="0" oninput="setEnd('spin',this.value)">
+                <input type="text" id="endSpinValue">
+            </div>
+            <div class="row">
+                <span>旋转浮动</span>
+                <input type="range" id="endSpinCycleRange" min="0" max="360" value="0" oninput="setEnd('spinCycle',this.value)">
+                <input type="text" id="endSpinCycleValue">
+            </div>
+            <div class="row">
+                <span>颜色</span>
+                <input type="range" id="endColorRange" min="0" max="1" step="0.01" value="0" oninput="setEnd('alpha',this.value)">
+                <input type="color" id="endColorValue" onchange="setEnd('color',this.value)">
+            </div>
+            <div class="row">
+                <span>颜色浮动</span>
+                <input type="range" id="endColorCycleRange" min="0" max="1" step="0.01" value="0" oninput="setEnd('alphaCycle',this.value)">
+                <input type="color" id="endColorCycleValue" onchange="setEnd('colorCycle',this.value)">
+            </div>
+            <div class="row">
+                <span class="true" id="gravityMode" onclick="setMode(0)">重力模式</span>
+                <span class="" id="radiusMode" onclick="setMode(1)">半径模式</span>
+            </div>
+            <div id="gravity">
+                <div class="row">
+                    <span>速度</span>
+                    <input type="range" id="GspeedRange" min="0" max="1000" value="0" oninput="setGravity('speed',this.value)">
+                    <input type="text" id="GspeedValue">
+                </div>
+                <div class="row">
+                    <span>速度浮动</span>
+                    <input type="range" id="GspeedCycleRange" min="0" max="600" value="0" oninput="setGravity('speedCycle',this.value)">
+                    <input type="text" id="GspeedCycleValue">
+                </div>
+                <div class="row">
+                    <span>宽度</span>
+                    <input type="range" id="GwidthRange" min="0" max="1000" value="0" oninput="setGravity('width',this.value)">
+                    <input type="text" id="GwidthValue">
+                </div>
+                <div class="row">
+                    <span>高度</span>
+                    <input type="range" id="GheightRange" min="0" max="1000" value="0" oninput="setGravity('height',this.value)">
+                    <input type="text" id="GheightValue">
+                </div>
+                <div class="row">
+                    <span>重力X</span>
+                    <input type="range" id="GXRange" min="-1000" max="1000" value="0" oninput="setGravity('x',this.value)">
+                    <input type="text" id="GXValue">
+                </div>
+                <div class="row">
+                    <span>重力Y</span>
+                    <input type="range" id="GYRange" min="-1000" max="1000" value="0" oninput="setGravity('y',this.value)">
+                    <input type="text" id="GYValue">
+                </div>
+                <div class="row">
+                    <span>accelRad</span>
+                    <input type="range" id="GaccelRadRange" min="-600" max="600" value="0" oninput="setGravity('accelRad',this.value)">
+                    <input type="text" id="GaccelRadValue">
+                </div>
+                <div class="row">
+                    <span>accelRad浮动</span>
+                    <input type="range" id="GaccelRadCycleRange" min="0" max="600" value="0" oninput="setGravity('accelRadCycle',this.value)">
+                    <input type="text" id="GaccelRadCycleValue">
+                </div>
+                <div class="row">
+                    <span>accelTan</span>
+                    <input type="range" id="GaccelTanRange" min="-600" max="600" value="0" oninput="setGravity('accelTan',this.value)">
+                    <input type="text" id="GaccelTanValue">
+                </div>
+                <div class="row">
+                    <span>accelTan浮动</span>
+                    <input type="range" id="GaccelTanCycleRange" min="0" max="600" value="0" oninput="setGravity('accelTanCycle',this.value)">
+                    <input type="text" id="GaccelTanCycleValue">
+                </div>
+            </div>
+            <div id="radius">
+                <div class="row">
+                    <span>起始半径</span>
+                    <input type="range" id="startRadiusRange" min="0" max="1000" value="0" oninput="setRadius('startRadius',this.value)">
+                    <input type="text" id="startRadiusValue">
+                </div>
+                <div class="row">
+                    <span>起始半径浮动</span>
+                    <input type="range" id="startRadiusCycleRange" min="0" max="1000" value="0" oninput="setRadius('startRadiusCycle',this.value)">
+                    <input type="text" id="startRadiusCycleValue">
+                </div>
+                <div class="row">
+                    <span>终止半径</span>
+                    <input type="range" id="endRadiusRange" min="0" max="1000" value="0" oninput="setRadius('endRadius',this.value)">
+                    <input type="text" id="endRadiusValue">
+                </div>
+                <div class="row">
+                    <span>accelTan</span>
+                    <input type="range" id="RaccelTanRange" min="-600" max="600" value="0" oninput="setRadius('accelTan',this.value)">
+                    <input type="text" id="RaccelTanValue">
+                </div>
+                <div class="row">
+                    <span>accelTan浮动</span>
+                    <input type="range" id="RaccelTanCycleRange" min="0" max="600" value="0" oninput="setRadius('accelTanCycle',this.value)">
+                    <input type="text" id="RaccelTanCycleValue">
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+let setValue;
+let setStart;
+let setEnd;
+let setGravity;
+let setRadius;
+let setMode;
+let getValue;
+let getColor;
+let OpenConsole;
+let setTarget;
+let setAssetMode;
+let setRenderMode;
+let setImage;
+</script>
+<script type="module">
+import { GravityParticles, RadiusParticles } from "./public/node/Particles.js"
+import Render from "./public/node/CanvasRender.js"
+import Color from "./public/core/color.js"
+var fps = null;
+window.onload = function(){
+    fps = document.getElementById('fpsBox');
+    getValue('total',particles.getTotal());
+    getValue('duration',particles.getDuration());
+    getValue('life',particles.getLife());
+    getValue('lifeCycle',particles.getLifeCycle());
+    getValue('emission',particles.getEmission());
+    getValue('angular',particles.getAngular());
+    getValue('angularCycle',particles.getAngularCycle());
+    getValue('startSize',particles.getStartSize());
+    getValue('startSizeCycle',particles.getStartSizeCycle());
+    getValue('startSpin',particles.getStartSpin());
+    getValue('startSpinCycle',particles.getStartSpinCycle());
+    getColor('startColorRange',particles.getStartColor().a);
+    var color = particles.getStartColor();
+    getColor('startColorValue',new Color(color.r,color.g,color.b));
+
+    getValue('endSize',particles.getEndSize());
+    getValue('endSizeCycle',particles.getEndSizeCycle());
+    getValue('endSpin',particles.getEndSpin());
+    getValue('endSpinCycle',particles.getEndSpinCycle());
+    getColor('endColorRange',particles.getEndColor().a);
+    var color = particles.getEndColor();
+    getColor('endColorValue',new Color(color.r,color.g,color.b))
+    setMode(0);
+}
+    
+// 创建场景
+let render = new Render(window.innerWidth, window.innerHeight)
+document.body.insertBefore(render.canvas, document.body.firstChild)
+let particles = new GravityParticles()
+particles.play()
+render.add(particles)
+
+function update(dt){
+    render.update(dt);
+}
+let time = 0
+function gameloop(dt){
+    requestAnimationFrame(gameloop);
+    let t = (dt - time) / 1000;
+    time = dt;
+    if(fps)fps.innerHTML = (1/t|0) + "FPS/"+particles.getCount();
+    update(t * 1000)
+    render.render(t*1000)
+}
+requestAnimationFrame(gameloop);
+
+
+setValue = function(e,value){
+    let text = document.getElementById(e+"Value");
+    switch(e){
+        case 'total':
+            particles.setTotal(value);
+        break;
+        case 'duration':
+            particles.setDuration(value);
+            particles.play();
+        break;
+        case 'life':
+            particles.setLife(value);
+        break;
+        case 'lifeCycle':
+            particles.setLifeCycle(value);
+        break;
+        case 'emission':
+            particles.stop();
+            particles.setEmission(value);
+            particles.play();
+        break;
+        case 'angular':
+            particles.setAngular(value);
+        break;
+        case 'angularCycle':
+            particles.setAngularCycle(value);
+        break;
+    }
+    text.value = value;
+}
+setStart = function(key,value){
+    if(key == 'alpha'){
+        let color = particles.getStartColor();
+        color.a = value;
+    }else if(key == 'alphaCycle'){
+        let color = particles.getStartColorCycle();
+        color.a = value;
+    }else if(key == 'color'){
+        let color = particles.getStartColor();
+        color.r = parseInt(value[1]+value[2],16);
+        color.g = parseInt(value[3]+value[4],16);
+        color.b = parseInt(value[5]+value[6],16);
+    }else if(key == 'colorCycle'){
+        let color = particles.getStartColorCycle();
+        color.r = parseInt(value[1]+value[2],16);
+        color.g = parseInt(value[3]+value[4],16);
+        color.b = parseInt(value[5]+value[6],16);
+    }else{
+        particles.setStart(key,value);
+        document.getElementById("start"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }
+}
+setEnd = function(key,value){
+    if(key == 'alpha'){
+        let color = particles.getEndColor();
+        color.a = value;
+        document.getElementById("endColorValue").value = value;
+    }else if(key == 'alphaCycle'){
+        let color = particles.getEndColorCycle();
+        color.a = value;
+        document.getElementById("endColorCycleValue").value = value;
+    }else if(key == 'color'){
+        let color = particles.getEndColor();
+        color.r = parseInt(value[1]+value[2],16);
+        color.g = parseInt(value[3]+value[4],16);
+        color.b = parseInt(value[5]+value[6],16);
+    }else if(key == 'colorCycle'){
+        let color = particles.getEndColorCycle();
+        color.r = parseInt(value[1]+value[2],16);
+        color.g = parseInt(value[3]+value[4],16);
+        color.b = parseInt(value[5]+value[6],16);
+    }else{
+        particles.setEnd(key,value);
+        document.getElementById("end"+key.slice(0,1).toUpperCase() + key.slice(1)+"Value").value = value;
+    }
+}
+
+setGravity = function(key,value){
+    switch(key){
+        case 'speed':
+            particles.setSpeed(value);
+            document.getElementById("GspeedValue").value = value;
+        break;
+        case 'speedCycle':
+            particles.setSpeedCycle(value);
+            document.getElementById("GspeedCycleValue").value = value;
+        break;
+        case 'width':
+            var area = particles.getArea();
+            area.x = Number(value);
+            document.getElementById("GwidthValue").value = value;
+        break;
+        case 'height':
+            var area = particles.getArea();
+            area.y = Number(value);
+            document.getElementById("GheightValue").value = value;
+        break;
+        case 'x':
+            var g = particles.getGravity();
+            g.x = Number(value);
+            document.getElementById("GXValue").value = value;
+        break;
+        case 'y':
+            var g = particles.getGravity();
+            g.y = Number(value);
+            document.getElementById("GYValue").value = value;
+        break;
+        case 'accelRad':
+            particles.setAccelRad(value);
+            document.getElementById("GaccelRadValue").value = value;
+        break;
+        case 'accelRadCycle':
+            particles.setAccelRadCycle(value);
+            document.getElementById("GaccelRadCycleValue").value = value;
+        break;
+        case 'accelTan':
+            particles.setAccelTan(value);
+            document.getElementById("GaccelTanValue").value = value;
+        break;
+        case 'accelTanCycle':
+            particles.setAccelTanCycle(value);
+            document.getElementById("GaccelTanCycleValue").value = value;
+        break;
+    }
+}
+
+setRadius = function(key,value){
+    switch(key){
+        case 'startRadius':
+            particles.setStartRadius(value);
+            document.getElementById("startRadiusValue").value = value;
+        break;
+        case 'startRadiusCycle':
+            particles.setStartRadiusCycle(value)
+            document.getElementById("startRadiusCycleValue").value = value;
+        break;
+        case 'endRadius':
+            particles.setEndRadius(value)
+            document.getElementById("endRadiusValue").value = value;
+        break;
+        case 'accelTan':
+            particles.setAccelTan(value)
+            document.getElementById("RaccelTanValue").value = value;
+        break;
+        case 'accelTanCycle':
+            particles.setAccelTanCycle(value)
+            document.getElementById("RaccelTanCycleValue").value = value;
+        break;
+    }
+}
+
+setMode = function(mode,div){
+    let gravityTitle = document.getElementById('gravityMode');
+    let radiusTitle = document.getElementById('radiusMode');
+    let gravity = document.getElementById('gravity');
+    let radius = document.getElementById('radius');
+    if(mode == 0){
+        render.remove(particles)
+        particles = new GravityParticles();
+        render.add(particles)
+        particles.play()
+        gravityTitle.className = "true";
+        radiusTitle.className = "";
+        gravity.style = "display:block;"
+        radius.style = "display:none;";
+
+        getValue('Gspeed',particles.getSpeed());
+        getValue('GspeedCycle',particles.getSpeedCycle());
+        getValue('Gwidth',particles.getArea().w);
+        getValue('Gheight',particles.getArea().h);
+        getValue('GX',particles.getGravity().x);
+        getValue('GY',particles.getGravity().y);
+        getValue('GaccelRad',particles.getAccelRad());
+        getValue('GaccelRadCycle',particles.getAccelRadCycle());
+        getValue('GaccelTan',particles.getAccelTan());
+        getValue('GaccelTanCycle',particles.getAccelTanCycle());
+    }else if(mode = 1){
+        render.remove(particles)
+        particles = new RadiusParticles();
+        render.add(particles)
+        particles.play()
+        gravityTitle.className = "";
+        radiusTitle.className = "true";
+        gravity.style = "display:none;"
+        radius.style = "display:block;";
+
+        getValue('startRadius',particles.getStartRadius());
+        getValue('startRadiusCycle',particles.getStartRadiusCycle());
+        getValue('endRadius',particles.getEndRadius());
+        getValue('RaccelTan',particles.getAccelTan());
+        getValue('RaccelTanCycle',particles.getAccelTanCycle());
+    }
+}
+
+getValue = function(key,value){
+    var range = document.getElementById(key+"Range");
+    range.value = value;
+    var input = document.getElementById(key+"Value");
+    input.value = value;
+}
+getColor = function(id,value){
+    value = value.toString().substring(0,7);
+    let div = document.getElementById(id);
+    div.value = value;
+}
+
+OpenConsole = function(){
+    let right = document.getElementById("consoleBox").style.right;
+    if(right != "-400px"){
+        document.getElementById("consoleBox").style.right = "-400px"
+    }else{
+        document.getElementById("consoleBox").style.right = "0px";
+    }
+}
+setTarget = function(e){
+    particles.setTargetType(Number(e));
+}
+setAssetMode = function(e){
+    particles.setAssetBlendFunc(e);
+}
+setRenderMode = function(e){
+    particles.setRenderBlendFunc(e);
+}
+setImage = function(e){
+    var a = document.getElementById('pImage');
+    var reader = new FileReader();
+    var img=new Image();
+    let data = new ImageAsset(img);
+    reader.readAsArrayBuffer(a.files[0]);
+    reader.onload = function (event) {
+        var blob = new Blob([event.target.result]); // create blob...
+        window.URL = window.URL || window.webkitURL;
+        var blobURL = window.URL.createObjectURL(blob); // and get it's URL
+        
+        img.onload = function(e){
+            data.SetState(1);
+            data.SetSize(img.width,img.height);
+        }.bind(this);
+        img.src=blobURL;
+        console.log(data);
+    };
+    particles.setTarget(data);
+}
+let isMove = false;
+render.canvas.onmousedown = function(e){
+    isMove = true;
+    particles.position.set(e.x, -e.y);
+}
+render.canvas.onmousemove = function(e){
+    if(isMove){
+        particles.position.set(e.x, -e.y);
+    }
+}
+render.canvas.onmouseup = function(e){
+    isMove = false;
+}
+
+</script>
+</body>
+</html>

@@ -8,7 +8,7 @@ app.get('/',(req,res) => {
     res.sendFile(__dirname + '/index.html');
 });
 app.get('/demo',(req,res) => {
-    res.sendFile(__dirname + '/public/demo.html');
+    res.sendFile(__dirname + '/demo.html');
 });
 
 io.on('connection',(socket) => {

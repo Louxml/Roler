@@ -172,7 +172,7 @@ class Node{
         return this.order;
     }
 
-    getTransfrom(){
+    getTransform(){
         return new Mat3([
             Math.cos(this.rotation * Math.PI / 180) * this.scale.x, Math.sin(this.rotation * Math.PI / 180) * this.scale.y, this.position.x,
             -Math.sin(this.rotation * Math.PI / 180) * this.scale.x, Math.cos(this.rotation * Math.PI / 180) * this.scale.y, -this.position.y,
@@ -180,16 +180,16 @@ class Node{
         ]);
     }
 
-    getWorldTransfrom(){
-        if(this.parent == null)return this.getTransfrom();
-        return Mat3.multiply(this.parent.getWorldTransfrom(),this.getTransfrom());
+    getWorldTransform(){
+        if(this.parent == null)return this.getTransform();
+        return Mat3.multiply(this.parent.getWorldTransform(),this.getTransform());
     }
 
-    getRenderTransfrom(){
-        return this.getWorldTransfrom();
+    getRenderTransform(){
+        return this.getWorldTransform();
     }
 
-    getModleTransfrom(){
+    getModleTransform(){
         return [0, 0];
     }
 

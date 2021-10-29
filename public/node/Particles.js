@@ -492,7 +492,7 @@ class Particles extends Node{
         this.#assetBlend = v;
     }
 
-    getRenderTransfrom(){
+    getRenderTransform(){
         return Mat3.UNIT;
     }
 
@@ -524,7 +524,7 @@ class Particles extends Node{
             spin:0,
             refrash:true,
             parent: this.type == Particles.TYPE.WORLD ? null : this,
-            transform: this.getWorldTransfrom(),
+            transform: this.getWorldTransform(),
             life: life,
             totalLife: life,
             angular: Math.floor(Math.random() * (2* this.angularCycle + 1)) + this.angular - this.angularCycle,
@@ -556,7 +556,7 @@ class Particles extends Node{
                     this.renderer.restore()
                 }
             },
-            getTransfrom(){
+            getTransform(){
                 return new Mat3([
                     Math.cos(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.w), Math.sin(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.h), this.x,
                     -Math.sin(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.w), Math.cos(this.spin * Math.PI / 180) * (this.size / Particles.SIZE.h), -this.y,
@@ -611,8 +611,8 @@ class Particles extends Node{
         this.#renderer.clearRect(0, 0, this.#renderer.canvas.width, this.#renderer.canvas.height);
         for(let o of this.#data){
             let t;
-            if(o.parent)t = Mat3.multiply(o.parent.getWorldTransfrom(), o.getTransfrom()).data;
-            else t = Mat3.multiply(o.transform, o.getTransfrom()).data;
+            if(o.parent)t = Mat3.multiply(o.parent.getWorldTransform(), o.getTransform()).data;
+            else t = Mat3.multiply(o.transform, o.getTransform()).data;
             this.#renderer.save();
             this.#renderer.setTransform(t[0], t[3], t[1], t[4], t[2], t[5]);
             this.#renderer.globalAlpha = o.color.a/255;

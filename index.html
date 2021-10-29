@@ -30,6 +30,7 @@ import Render from "./public/node/CanvasRender.js"
 import Node from "./public/node/Node.js"
 import Sprite from "./public/node/Sprite.js"
 import { GravityParticles, RadiusParticles } from "./public/node/Particles.js";
+import Camera from "./public/node/Camera.js";
 
 let render = new Render(window.innerWidth, window.innerHeight)
 document.body.append(render.canvas)
@@ -57,6 +58,9 @@ let img = new Image()
 img.src = "./public/src/player.png";
 
 let image = null;
+let camera = new Camera();
+// camera.position.set(100, 40)
+
 img.onload = function(){
     for(let i = 0;i < 1;i++){
         image = new Sprite(img);
@@ -69,48 +73,41 @@ img.onload = function(){
 
         let sp = new Sprite(img);
         sp.position.set(400, 0)
+        sp.rotation = 45
         image.add(sp);
         render.add(sp)
     }
     
 }
 
-let p = new GravityParticles();
-p.position.set(300, -300)
-// p.setTargetType(2)
-p.setTotal(1000)
-p.setLife(1100)
-p.setLifeCycle(400)
-// p.setAngular(45)
-// p.setAngularCycle(50)
-p.setSpeed(60)
-p.setEmission(100)
-// p.setArea(new Vec2(20, 20))
-p.setGravity(new Vec2(0, 0));
-p.setStartSize(40);
-// p.setStartSpin(90)
-// p.setEndSize(40)
-p.setStartColor(new Color(26, 77, 200, 255))
-p.setEndColor(new Color(26, 77, 200, 0))
-
+// let p = new GravityParticles();
+// p.position.set(300, -300)
+// // p.setTargetType(2)
+// p.setTotal(1000)
+// p.setLife(1100)
+// p.setLifeCycle(400)
+// // p.setAngular(45)
+// // p.setAngularCycle(50)
+// p.setSpeed(60)
+// p.setEmission(100)
+// // p.setArea(new Vec2(20, 20))
+// p.setGravity(new Vec2(0, 0));
+// p.setStartSize(40);
+// // p.setStartSpin(90)
+// // p.setEndSize(40)
+// p.setStartColor(new Color(26, 77, 200, 255))
+// p.setEndColor(new Color(26, 77, 200, 0))
 // render.add(p);
-p.play();
-let btn = false;
-window.onmousedown = function(){
-    btn = true
-}
-window.onmousemove = function(e){
-    if(btn){
-        p.position.set(e.x, -e.y)
-    }
-}
-window.onmouseup = function(){
-    btn = false
-}
+// // p.play();
+
 
 function update(dt){
     render.update(dt);
     // console.log(p.getCount())
+
+    // camera.position.x += 1;
+    // camera.rotation++;
+    // render.setViewTransform(camera.getViewTransform())
 }
 let time = 0
 function gameloop(dt){

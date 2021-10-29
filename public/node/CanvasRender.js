@@ -1,3 +1,4 @@
+import Mat3 from "../core/mat3.js";
 import Vec2 from "../core/vec2.js";
 class CanvasRenderer{
 
@@ -5,6 +6,7 @@ class CanvasRenderer{
     #refrash = true;
     #renderer;
     #data = [];
+    #viewTransform = Mat3.UNIT;
     constructor(w = 0, h = 0){
         this.size = new Vec2(w, h);
         this.#renderer = document.createElement("canvas").getContext("2d");
@@ -26,6 +28,23 @@ class CanvasRenderer{
         return this.#renderer.canvas;
     }
 
+    set viewTransform(v){
+        if(v.constructor.name === Mat3.name){
+            this.#viewTransform = v;
+        }else return;
+    }
+    get viewTransform(){
+        return this.#viewTransform;
+    }
+
+    setViewTransform(v){
+        this.viewTransform = v
+    }
+
+    getViewTransform(){
+        return this.viewTransform;
+    }
+
     getCount(){
         return this.#data.length;
     }
@@ -44,9 +63,9 @@ class CanvasRenderer{
         this.#renderer.canvas.width = this.#renderer.canvas.width;
         for(let o of this.#data){
             if(!o.renderer || !o.renderer.canvas)continue;
-            let t = o.getRenderTransfrom().data;
+            let t = Mat3.multiply(this.#viewTransform, o.getRenderTransform()).data;
             let c = o.renderer.canvas;
-            let m = o.getModleTransfrom();
+            let m = o.getModleTransform();
             this.#renderer.save();
             this.#renderer.globalAlpha = o.alpha;
             this.#renderer.imageSmoothingEnabled = !o.pixel;
@@ -65,6 +84,9 @@ class CanvasRenderer{
         if(index != -1){
             this.#data.splice(index, 1);
         }
+    }
+    clear(){
+        this.#data = [];
     }
 }
 

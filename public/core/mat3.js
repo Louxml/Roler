@@ -72,42 +72,6 @@ class Mat3{
         return this;
     }
 
-    setTranslate(){
-
-    }
-
-    setRotate(){
-
-    }
-
-    setScale(){
-
-    }
-
-    translate(){
-
-    }
-
-    rotate(){
-
-    }
-
-    scale(){
-
-    }
-
-    getTranslate(){
-        
-    }
-
-    getRotate(){
-        
-    }
-
-    getScale(){
-        
-    }
-
     clone(){
         return new Mat3(this.data);
     }
@@ -139,6 +103,28 @@ Mat3.isIdentity = function(a){
 }
 Mat3.getInversed = function(a){
     return a.clone().inversed();
+}
+Mat3.translate = function(x, y){
+    return new Mat3([
+        1, 0, x,
+        0, 1, y,
+        0, 0, 1
+    ]);
+}
+Mat3.rotate = function(deg){
+    return new Mat3([
+        Math.cos(deg * Math.PI / 180), -Math.sin(deg * Math.PI / 180), 0,
+        Math.sin(deg * Math.PI / 180), Math.cos(deg * Math.PI / 180), 0,
+        0, 0, 1
+    ]);
+}
+Mat3.scale = function(x, y){
+    if(!y)y=x;
+    return new Mat3([
+        x, 0, 0,
+        0, y, 0,
+        0, 0, 1
+    ]);
 }
 
 export default Mat3;

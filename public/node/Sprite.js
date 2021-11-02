@@ -71,7 +71,7 @@ class Sprite extends Node{
         this.image = img;
     }
 
-    getModleTransform(){
+    getVertex(){
         return [-this.#renderer.canvas.width * this.anchor.x, -this.#renderer.canvas.height * (1-this.anchor.y)];
     }
 

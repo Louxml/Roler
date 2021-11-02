@@ -172,24 +172,24 @@ class Node{
         return this.order;
     }
 
-    getTransform(){
+    getMat3(){
         return new Mat3([
-            Math.cos(this.rotation * Math.PI / 180) * this.scale.x, Math.sin(this.rotation * Math.PI / 180) * this.scale.y, this.position.x,
-            -Math.sin(this.rotation * Math.PI / 180) * this.scale.x, Math.cos(this.rotation * Math.PI / 180) * this.scale.y, -this.position.y,
+            Math.cos(this.rotation * Math.PI / 180) * this.scale.x, -Math.sin(this.rotation * Math.PI / 180) * this.scale.y, this.position.x,
+            Math.sin(this.rotation * Math.PI / 180) * this.scale.x, Math.cos(this.rotation * Math.PI / 180) * this.scale.y, this.position.y,
             0, 0, 1
         ]);
     }
 
-    getWorldTransform(){
-        if(this.parent == null)return this.getTransform();
-        return Mat3.multiply(this.parent.getWorldTransform(),this.getTransform());
+    getModelMat3(){
+        if(this.parent == null)return this.getMat3();
+        return Mat3.multiply(this.parent.getModelMat3(),this.getMat3());
     }
 
-    getRenderTransform(){
-        return this.getWorldTransform();
+    getRenderMat3(){
+        return this.getModelMat3();
     }
 
-    getModleTransform(){
+    getVertex(){
         return [0, 0];
     }
 

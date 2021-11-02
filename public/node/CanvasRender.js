@@ -6,7 +6,7 @@ class CanvasRenderer{
     #refrash = true;
     #renderer;
     #data = [];
-    #viewTransform = Mat3.UNIT;
+    #viewMatrix = Mat3.UNIT;
     constructor(w = 0, h = 0){
         this.size = new Vec2(w, h);
         this.#renderer = document.createElement("canvas").getContext("2d");
@@ -28,21 +28,29 @@ class CanvasRenderer{
         return this.#renderer.canvas;
     }
 
-    set viewTransform(v){
+    set viewMatrix(v){
         if(v.constructor.name === Mat3.name){
-            this.#viewTransform = v;
+            this.#viewMatrix = v;
         }else return;
     }
-    get viewTransform(){
-        return this.#viewTransform;
+    get viewMatrix(){
+        return this.#viewMatrix.clone();
     }
 
-    setViewTransform(v){
-        this.viewTransform = v
+    setViewMatrix(v){
+        this.viewMatrix = v
     }
 
-    getViewTransform(){
-        return this.viewTransform;
+    getViewMatrix(){
+        return this.viewMatrix;
+    }
+
+    getScreenMat3(){
+        return new Mat3([
+            1, 0, this.#renderer.canvas.width/2,
+            0, 1, -this.#renderer.canvas.height/2,
+            0, 0, 1
+        ]);
     }
 
     getCount(){
@@ -63,20 +71,26 @@ class CanvasRenderer{
         this.#renderer.canvas.width = this.#renderer.canvas.width;
         for(let o of this.#data){
             if(!o.renderer || !o.renderer.canvas)continue;
-            let t = Mat3.multiply(this.#viewTransform, o.getRenderTransform()).data;
+            // 模型矩阵
+            let t = o.getRenderMat3();
+            // 观察矩阵
+            t = this.getViewMatrix().multiply(t)
+            // 视口矩阵
+            t = this.getScreenMat3().multiply(t).data
             let c = o.renderer.canvas;
-            let m = o.getModleTransform();
+            let m = o.getVertex();
             this.#renderer.save();
             this.#renderer.globalAlpha = o.alpha;
             this.#renderer.imageSmoothingEnabled = !o.pixel;
-            this.#renderer.setTransform(t[0], t[3], t[1], t[4], t[2], t[5]);
-            this.#renderer.drawImage(c, m[0], m[1])
+            this.#renderer.setTransform(t[0], -t[3], -t[1], t[4], t[2], -t[5]);
+            this.#renderer.drawImage(c, m[0], m[1]);
             this.#renderer.restore();
         }
     }
 
     add(obj){
         this.#data.push(obj);
+        // console.log(Mat3.multiply(this.#viewMatrix, obj.getRenderTransform()).data)
     }
 
     remove(obj){

@@ -64,8 +64,8 @@ let camera = new Camera();
 img.onload = function(){
     for(let i = 0;i < 1;i++){
         image = new Sprite(img);
-        image.position.set(400, -400);
-        // image.rotation = 90
+        // image.position.set(400, 400);
+        // image.rotation = 30
         // image.scale.set(2, 2);
         image.color.set(255, 255, 255);
         render.add(image);
@@ -103,11 +103,12 @@ img.onload = function(){
 
 function update(dt){
     render.update(dt);
+    // image.rotation++;
     // console.log(p.getCount())
 
     // camera.position.x += 1;
     // camera.rotation++;
-    // render.setViewTransform(camera.getViewTransform())
+    render.setViewMatrix(camera.getViewMat3())
 }
 let time = 0
 function gameloop(dt){

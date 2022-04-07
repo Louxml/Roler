@@ -2,7 +2,8 @@ var express = require("express")
 var app = express();
 var http = require('http').createServer(app);
 
-app.use('/package',express.static('package'));
+app.use('/packages',express.static('packages'));
+app.use('/test', express.static("test"));
 app.get('/',(req,res) => {
     res.sendFile(__dirname + '/index.html');
 });

@@ -1,0 +1,1 @@
+import "../packages/app/test/Application.test.js";

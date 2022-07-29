@@ -1,7 +1,7 @@
 import { Application } from "../src/Application.js";
 
-let app = new Application({
-    renderer: "webgl",
+const app = new Application({
+    render: "webgl",
     width:window.innerWidth, height:window.innerHeight,
     target:document.body
 });

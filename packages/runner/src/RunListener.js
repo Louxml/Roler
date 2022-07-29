@@ -1,3 +1,4 @@
+import { UPDATE_PRIORITY } from "./const.js";
 
 export class RunListener{
 
@@ -12,7 +13,7 @@ export class RunListener{
      * 链表前置监听器
      * @public
      */
-    previous = null;
+    prev = null;
 
     /**
      * 链表后置监听器
@@ -55,32 +56,27 @@ export class RunListener{
      * @param {boolean} once 是否仅一次
      * @param {number} priority 优先级
      */
-    constructor(fn = ()=>{}, context = null, once = false, priority = 0){
+    constructor(fn = ()=>{}, context = null, once = false, priority = UPDATE_PRIORITY.NORMAL){
         this._fn = fn;
         this._context = context;
         this._once = once;
-        this._priority = priority;
+        this.priority = priority;
     }
 
     /**
      * 触发监听
      * @param {number} deltatime 时间戳
+     * @public
      * @returns 返回下一个监听器
      */
     emit(deltatime){
-        if (this._fn){
-            if (this._context){
-                this._fn.call(this._context, deltatime);
-            }else{
-                this._fn(deltatime);
-            }
-        }
+        // 判断函数是否存在
+        this._fn && this._fn.call(this._context || this, deltatime);
 
         const next = this.next;
 
-        if (this._once){
-            this.destroy(true);
-        }
+        // 仅一次则注销
+        this._once && this.destroy(true);
 
         return next;
     }
@@ -89,6 +85,7 @@ export class RunListener{
      * 判断是否相匹配
      * @param {function} fn 函数
      * @param {Object} context 上下文
+     * @public
      * @returns 
      */
     match(fn = ()=>{}, context = null){
@@ -99,35 +96,37 @@ export class RunListener{
     /**
      * 监听器链表连接
      * @param {RunListener} next 
+     * @oublic
      */
     connect(next){
-        next.previous = this;
+        next.prev = this;
         next.next = this.next;
         if (this.next){
-            this.next.previous = next;
+            this.next.prev = next;
         }
         this.next = next;
     }
 
     /**
      * 注销监听器
+     * @public
      */
     destroy(){
         this._destroyed = true;
         this._fn = null;
         this._context = null;
 
-        if (this.previous){
-            this.previous.next = this.next;
+        if (this.prev){
+            this.prev.next = this.next;
         }
 
         if (this.next){
-            this.next.previous = this.previous;
+            this.next.prev = this.prev;
         }
 
         const next = this.next;
 
-        this.previous = null;
+        this.prev = null;
         this.next = null;
 
         return next;

@@ -6,11 +6,11 @@ import { config } from './config.js'
 
 export class Application{
 
-    // 场景
-    SceneManager;
+    // 场景管理器
+    scenes;
 
     // 主循环
-    Runner;
+    runner;
 
     // HTMLElement
     target;
@@ -22,8 +22,9 @@ export class Application{
         // 配置覆盖
         Object.assign(config, options);
 
-        this.Runner = new Runner();
-        this.SceneManager = new SceneManager();
+        this.runner = new Runner();
+        // 场景管理器
+        this.scenes = new SceneManager(this.runner);
         this.target = config.target;
 
         // 渲染器创建

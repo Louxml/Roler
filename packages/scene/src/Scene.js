@@ -1,16 +1,7 @@
-import { SceneManager } from "./SceneManager.js";
-
 /**
  * 场景
  */
 export class Scene{
-
-    /**
-     * 场景ID
-     * @number
-     * @private
-     */
-    _uid;
     
     /**
      * 场景名称
@@ -24,20 +15,19 @@ export class Scene{
      * @Array
      * @private
      */
-    child = [];
+    children = [];
 
     /**
      * 场景状态
-     * 0：进入场景，1：运行中，2：退出场景，3：删除场景
+     * 0：进入场景，1：运行中，2：退出场景，3：重置场景
      * @number
      * @protected
      */
     _state = 0;
 
     constructor(name=null, options={}){
-        if (typeof name !== "string")name = null;
+        if (typeof name !== "string")name = "scene";
         this.name = name;
-        SceneManager.getInstance().addScene(this);
     }
 
     // 生命周期函数
@@ -57,6 +47,7 @@ export class Scene{
             this.onEnter();
             this._state = 1
         }
+        // 执行子节点的_onEnter
     }
 
     /**
@@ -77,6 +68,7 @@ export class Scene{
         if (this._state === 1){
             this.onUpdate(dt);
         }
+        // 执行子节点的_onUpdate
     }
 
     /**
@@ -91,27 +83,26 @@ export class Scene{
      * @protected
      */
     _onExit(){
-        if (this._state !== 3 || this._state !== 4) return;
+        // 执行子节点的_onExit
 
-        this.onExit();
-        this._state = 0;
+        if(this._state === 2){
+            this.onExit();
+            this._state = 3;
+        }
+        
         
     }
 
     /**
-     * 退出场景
+     * 销毁场景
      * @public
      */
-    exit(){
-        this._state = 3
-        // 执行场景内对象 onExit 事件
-        for(let c of this.child){
-            c.exit()
+    destory(){
+        this._state = 2;
+        // 执行场景内对象 destory 事件
+        for(let c of this.children){
+            c.destory()
         }
-    }
-
-    _onRemove(){
-        
     }
 
 }

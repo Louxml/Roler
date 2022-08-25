@@ -1,5 +1,4 @@
 
-import { Runner } from "../../runner/src/index.js"
 import { Scene } from "./Scene.js";
 
 /**
@@ -23,35 +22,40 @@ export class SceneManager{
      * 当前活动场景
      * @private
      */
-    _activeScene = null;
+    _main = null;
 
     /**
-     * 即将激活index
-     * @number
+     * 即将激活场景
      * @protected
      */
-    _index = -1;
+    _preScene = null;
 
 
     static getInstance(){
         return SceneManager._instance
     }
 
-    get activeScene(){
-        return this._activeScene; 
+    get main(){
+        return this._main; 
     }
 
-    constructor(){
+    constructor(runner){
         if (new.target !== SceneManager) return;
         if (SceneManager._instance) return SceneManager._instance;
         SceneManager._instance = this;
 
-        Runner.system.add(this._update, this)
+        runner.add(this._onUpdate, this)
 
 
         return this;
     }
 
+    /**
+     * 添加场景到场景列表
+     * @param {Scene} scene 场景
+     * @public
+     * @return this 返回改对象（用于链式调用）
+     */
     addScene(scene){
         if (!(scene instanceof Scene)){
             throw "Error scene";
@@ -59,56 +63,119 @@ export class SceneManager{
         if (this.scenes.includes(scene)){
             throw "This scene does exist in the SceneManger."
         }
-        
-        scene._uid = this.scenes.length;
-        // 场景重命名
-        if (!scene.name){
-            scene.name = `Scene${scene._uid}`;
-        }
+
         this.scenes.push(scene);
-    }
-
-    removeScene(scene){
-        let index = 0;
-        this.scenes = this.scenes.filter((v, i) => {
-            if (v === scene)return false;
-            v._uid = index++;
-            return true;
-        });
         
-    }
-
-    getSceneIndex(scene){
-        if (scene instanceof Scene) return this.scenes.indexOf(scene);
-        else if (typeof scene === "string") return this.scenes.findIndex((v) => v.name == scene);  
-        else if (typeof scene === "number")  return scene;
-        return -1;
-    }
-
-    findScene(scene){
-        const index = this.getSceneIndex(scene);
-        if (index >= 0){
-            return this.scenes[index];
-        }else return null;
-        
-    }
-
-    startScene(scene){
-        const index = this.getSceneIndex(scene)
-        if (index < 0)throw "This scene does not exist in the SceneManger."
-        this._index = index;
+        return this;
     }
 
     /**
-     * 
+     * 从场景列表里移除场景
+     * @param {Scene} scene 场景
+     * @public
+     * @return this 返回改对象（用于链式调用）
      */
-    _update(dt){
-        this._activeScene = this.scenes[this._index];
-        if (this._activeScene){
-            this._activeScene._onEnter();
-            this._activeScene._onUpdate(dt);
-            this._activeScene._onExit();
-            this._activeScene._onRemove();
+    removeScene(scene){
+        if (!(scene instanceof Scene)){
+            throw "Error scene";
+        }
+        if (!this.scenes.includes(scene)){
+            throw "This scene does no exist in the SceneManger."
+        }
+
+        // 移除当前场景（预备移除处理）
+        if(scene === this._main)this._main = null;
+
+        // 移除将跳转场景
+        if(scene === this._preScene)this._preScene = null;
+
+        // 移除
+        this.scenes = this.scenes.filter((v, i) => {
+            if (v === scene)return false;
+            return true;
+        });
+
+        return this;
+    }
+
+    /**
+     * 通过名字获取场景
+     * @param {String} name 场景名字
+     * @returns 场景
+     */
+    getSceneByName(name){
+        if(typeof name != "string") throw "Name Error";
+
+        const scene = this.scenes.find((v) => {
+            return v.name === name
+        })
+
+        return scene;
+    }
+
+    /**
+     * 获取当前场景
+     * @returns 主场景
+     */
+    getMainScene(){
+        return this.main;
+    }
+
+    /**
+     * 获取场景列表
+     * @returns 场景列表
+     */
+    getSceneList(){
+        return this.scenes
+    }
+
+    /**
+     * 开始场景
+     * @param {Scene} scene 场景
+     * @public
+     * @return this 返回改对象（用于链式调用）
+     */
+    startScene(scene){
+        // 场景名字
+        if(typeof scene === "string")scene = this.getSceneByName(scene);
+
+        if (!(scene instanceof Scene)){
+            throw "Error scene";
+        }
+
+        if (!this.scenes.includes(scene)){
+            throw "This scene does no exist in the SceneManger."
+        }
+
+        this._preScene = scene;
+        if(this._main){
+            this._main.destory();
+        }else{
+            this._main = this._preScene;
+            this._preScene = null;
+        }
+
+        return this;
+    }
+
+    /**
+     * 更新
+     */
+    _onUpdate(dt){
+        if(this._main && this._main._state === 3){
+            this._main._state = 0;
+            this._main = null;
+        }
+
+        if(this._preScene){
+            this._main = this._preScene;
+            this._preScene = null;
+        }
+        
+        if (this._main){
+            this._main._onEnter();
+            this._main._onUpdate(dt);
+            this._main._onExit();
         }
     }
 }

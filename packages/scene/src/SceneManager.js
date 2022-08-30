@@ -39,13 +39,12 @@ export class SceneManager{
         return this._main; 
     }
 
-    constructor(runner){
+    constructor(game){
         if (new.target !== SceneManager) return;
         if (SceneManager._instance) return SceneManager._instance;
         SceneManager._instance = this;
 
-        runner.add(this._onUpdate, this)
-
+        game.runner.add(this.onUpdate, this)
 
         return this;
     }
@@ -160,13 +159,16 @@ export class SceneManager{
 
     /**
      * 更新
+     * @private
      */
-    _onUpdate(dt){
+    onUpdate(dt){
+        // 销毁主场景重置
         if(this._main && this._main._state === 3){
             this._main._state = 0;
             this._main = null;
         }
 
+        // 更新主场景
         if(this._preScene){
             this._main = this._preScene;
             this._preScene = null;

@@ -1,6 +1,6 @@
 
 import { Runner } from '../../runner/src/index.js';
-import { SceneManager } from '../../scene/src/index.js';
+import { Scene, SceneManager } from '../../scene/src/index.js';
 
 import { config } from './config.js'
 
@@ -23,9 +23,11 @@ export class Application{
         Object.assign(config, options);
 
         this.runner = new Runner();
-        // 场景管理器
-        this.scenes = new SceneManager(this.runner);
         this.target = config.target;
+        
+        // 场景管理器
+        this.scenes = new SceneManager(this);
+        
 
         // 渲染器创建
         // let canvas = document.createElement("canvas");

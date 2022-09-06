@@ -162,8 +162,29 @@ export class Mat3{
         return new Mat3(this.data);
     }
 
+    /**
+     * 逆矩阵
+     * @public
+     * @returns this
+     */
     inverse(){
-        
+        const d = this.data;
+        const det = d[0]*(d[4]*d[8] - d[5]*d[7]) + d[1]*(d[5]*d[6] - d[3]*d[8]) + d[2]*(d[3]*d[7] - d[4]*d[6]);
+        const res = new Array(9).fill(0);
+
+        if(det != 0){
+            res[0] = (d[4]*d[8] - d[5]*d[7])/det;
+            res[1] = (d[7]*d[2] - d[8]*d[1])/det;
+            res[2] = (d[1]*d[5] - d[2]*d[4])/det;
+            res[3] = (d[5]*d[6] - d[3]*d[8])/det;
+            res[4] = (d[8]*d[0] - d[2]*d[6])/det;
+            res[5] = (d[2]*d[3] - d[0]*d[5])/det;
+            res[6] = (d[3]*d[7] - d[4]*d[6])/det;
+            res[7] = (d[6]*d[1] - d[0]*d[7])/det;
+            res[8] = (d[0]*d[4] - d[1]*d[3])/det;
+        }
+
+        return this.set(res)
     }
 
     toString(){

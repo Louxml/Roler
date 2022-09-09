@@ -338,6 +338,12 @@ export class Mat3{
     }
 
     toString(){
-        return `[Roler/math:Mat3 data = ${this.data}`;
+        let str = "[Roler/math:Mat3 data =";
+        const d = this.data;
+        for(let i = 0;i < 9;i++){
+            if(i%3==0)str += "\n";
+            str += "\t" + d[i];
+        }
+        return str;
     }
 }

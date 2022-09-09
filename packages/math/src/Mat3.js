@@ -233,7 +233,7 @@ export class Mat3{
 
     /**
      * 设置模型矩阵
-     * Translate * Rotation * Skew * Scale * Pivot
+     * （Translate * Rotation * Skew * Scale * Pivot）
      * @param {Number} tx x位移
      * @param {Number} ty y位移
      * @param {Number} r 弧度
@@ -260,6 +260,7 @@ export class Mat3{
 
     /**
      * 分解矩阵输出Transform属性
+     * （缩放分解会分到Skew里）
      * @param {Transform} transform 变换属性
      * @public
      * @returns Transform

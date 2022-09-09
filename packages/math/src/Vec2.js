@@ -1,6 +1,7 @@
 
 /**
  * 二维向量
+ * 注意：每次只会改变一次(x或y)
  */
 export class Vec2{
 
@@ -22,6 +23,14 @@ export class Vec2{
 
     get y(){
         return this.#y;
+    }
+
+    set x(v){
+        this.#x = v;
+    }
+
+    set y(v){
+        this.#y = v;
     }
 
     /**
@@ -69,8 +78,8 @@ export class Vec2{
     }
 
     constructor(x = 0, y = 0){
-        this.#x = x;
-        this.#y = y;
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -80,7 +89,7 @@ export class Vec2{
      * @returns 二维向量
      */
     clone(){
-        return new Vec2(this.#x, this.#y);
+        return new Vec2(this.x, this.y);
     }
 
     /**
@@ -88,11 +97,11 @@ export class Vec2{
      * @param {Number} x 
      * @param {Number} y 默认用x的值
      * @public
-     * @returns 二维向量 （链式调用）
+     * @returns this （链式调用）
      */
     set(x = 0, y = x){
-        this.#x = x;
-        this.#y = y;
+        this.x = x;
+        this.y = y;
         return this;
     }
 
@@ -103,18 +112,18 @@ export class Vec2{
      * @returns 是否相等
      */
     equals(v){
-        return this.#x === v.x && this.#y === v.y;
+        return this.x === v.x && this.y === v.y;
     }
 
     /**
      * 向量相加
      * @param {Vec2} v 二维向量
      * @public
-     * @returns 二维向量
+     * @returns this
      */
     add(v){
-        this.#x += v.x;
-        this.#y += v.y;
+        this.x += v.x;
+        this.y += v.y;
         return this;
     }
 
@@ -122,11 +131,11 @@ export class Vec2{
      * 向量相减
      * @param {Vec2} v 二维向量
      * @public
-     * @returns 二维向量
+     * @returns this
      */
     sub(v){
-        this.#x -= v.x;
-        this.#y -= v.y;
+        this.x -= v.x;
+        this.y -= v.y;
         return this;
     }
 
@@ -134,31 +143,31 @@ export class Vec2{
      * 向量点乘
      * @param {Vec2} v 二维向量
      * @public
-     * @returns 数值
+     * @returns 数值结果
      */
     dot(v){
-        return this.#x * v.x + this.#y * v.y
+        return this.x * v.x + this.y * v.y
     }
 
     /**
      * 向量叉乘
      * @param {Vec2} v 二维向量
      * @public
-     * @returns 数值
+     * @returns 数值结果
      */
     cross(v){
-        return this.#x * v.y - this.#y * v.x;
+        return this.x * v.y - this.y * v.x;
     }
 
     /**
      * 向量缩放
      * @param {Number} s 缩放比例
      * @public
-     * @returns 二维向量
+     * @returns this
      */
     scale(s){
-        this.#x *= s;
-        this.#y *= s;
+        this.x *= s;
+        this.y *= s;
         return this;
     }
 
@@ -168,7 +177,16 @@ export class Vec2{
      * @returns 角度
      */
     angle(){
-        return Math.atan2(this.#y, this.#x) * 180 / Math.PI;
+        return this.radian() * 180 / Math.PI;
+    }
+
+    /**
+     * 向量与x轴夹角
+     * @public
+     * @returns 弧度
+     */
+    radian(){
+        return Math.atan2(this.y, this.x);
     }
 
     /**
@@ -180,14 +198,19 @@ export class Vec2{
         return this.scale(1/this.length());
     }
 
+    /**
+     * 旋转
+     * @param {Number} deg 角度
+     * @param {Vec2} v 旋转点
+     * @public
+     * @returns this
+     */
     rotate(deg, v = Vec2.ZERO){
-        this.sub(v);
         const r = deg / 180 * Math.PI;
-        const x = this.#x;
-        const y = this.#y;
-        this.#x = x * Math.cos(r) - y * Math.sin(r);
-        this.#y = x * Math.sin(r) + y * Math.cos(r);
-        this.add(v);
+        const x = this.x - v.x;
+        const y = this.y - v.y;
+        this.x = x * Math.cos(r) - y * Math.sin(r) + v.x;
+        this.y = x * Math.sin(r) + y * Math.cos(r) + v.y;
         return this;
     }
 
@@ -197,7 +220,7 @@ export class Vec2{
      * @returns 数值
      */
     lengthSquared(){
-        return this.#x ** 2 + this.#y ** 2;
+        return this.x ** 2 + this.y ** 2;
     }
 
     /**
@@ -209,14 +232,12 @@ export class Vec2{
         return Math.sqrt(this.lengthSquared());
     }
 
-
-
     /**
      * 字符串形式（多用于调试）
      * @pubic
      * @returns 对象字符串输出
      */
     toString(){
-        return `[Roler/math:Vec2 x=${this.#x} y=${this.#y}]`;
+        return `[Roler/math:Vec2 x=${this.x} y=${this.y}]`;
     }
 }

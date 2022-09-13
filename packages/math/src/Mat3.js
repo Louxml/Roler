@@ -237,16 +237,16 @@ export class Mat3{
      * @param {Number} tx x位移
      * @param {Number} ty y位移
      * @param {Number} r 弧度
-     * @param {Number} sx x缩放
-     * @param {Number} sy y缩放
      * @param {Number} kx x倾斜偏移
      * @param {Number} ky y倾斜偏移
+     * @param {Number} sx x缩放
+     * @param {Number} sy y缩放
      * @param {Number} px x偏移
      * @param {Number} py y偏移
      * @public
      * @return this
      */
-    setTransform(tx = 0, ty = 0, r = 0, sx = 1, sy = 1, kx = 0, ky = 0, px = 0, py = 0){
+    setTransform(tx = 0, ty = 0, r = 0, kx = 0, ky = 0, sx = 1, sy = 1, px = 0, py = 0){
         const d = [1, 0, 0, 0, 1, 0, 0, 0, 1];
         d[0] = Math.cos(r + ky) * sx;
         d[3] = Math.sin(r + ky) * sx;

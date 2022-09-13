@@ -28,6 +28,6 @@ class TestScene extends Scene{
         console.log("Exit")
     }
 }
-let test = new TestScene("test");
-SceneManager.getInstance().addScene(test).startScene(test);
-console.log(SceneManager.getInstance().getMainScene());
+// let test = new TestScene("test");
+// SceneManager.getInstance().addScene(test).startScene(test);
+// console.log(SceneManager.getInstance().getMainScene());

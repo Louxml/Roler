@@ -1,4 +1,4 @@
-import { DEG_TO_RAD } from "./const.js";
+
 import { Mat3 } from "./Mat3.js";
 import { ObservableVec2 } from "./ObservableVec2.js";
 
@@ -59,7 +59,6 @@ export class Transform{
         this.#skew = new ObservableVec2(0, 0, this.onChange, this);
         this.#scale = new ObservableVec2(1, 1, this.onChange, this);
         this.#pivot = new ObservableVec2(0, 0, this.onChange, this);
-
         this.rotation = 0;
     }
 
@@ -78,7 +77,7 @@ export class Transform{
      */
     updateLocalTransform(){
         if(this.#localID === this.#currentLoaclID)return;
-        this.localTransform.setTransform(this.position.x, this.position.y, DEG_TO_RAD(this.rotation), this.skew.x, this.skew.y, this.scale.x, this.scale.y, this.pivot.x, this.pivot.y);
+        this.localTransform.setTransform(this.position.x, this.position.y, this.rotation, this.skew.x, this.skew.y, this.scale.x, this.scale.y, this.pivot.x, this.pivot.y);
         this.#currentLoaclID = this.#localID;
         // 强制更新全局矩阵
         this.#parentID = -1;

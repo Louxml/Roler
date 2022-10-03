@@ -1,5 +1,6 @@
 import { Mat3 } from "../src/Mat3.js";
 import { ObservableVec2 } from "../src/ObservableVec2.js";
+import { Size } from "../src/Size.js";
 import { Vec2 } from "../src/Vec2.js";
 
 
@@ -30,3 +31,8 @@ let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 m.set(arr);
 
 // console.log(m.toString())
+
+
+let size = new Size(100, 100);
+
+console.log(size.toString())

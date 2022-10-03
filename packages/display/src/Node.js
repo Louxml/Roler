@@ -1,4 +1,4 @@
-import { DEG_TO_RAD, RAD_TO_DEG, Transform } from "../../math/src/index.js";
+import { DEG_TO_RAD, RAD_TO_DEG, Transform, Size } from "../../math/src/index.js";
 
 /**
  * Node 节点对象
@@ -52,6 +52,24 @@ export class Node{
      * @private
      */
     destroyed = false;
+
+    /**
+     * 局部层级
+     * @public
+     */
+    zIndex = 0;
+    
+    /**
+     * 全局层级
+     * @public
+     */
+    worldZIndex = 0;
+
+    /**
+     * 节点大小尺寸
+     * @public
+     */
+    size;
 
     get x(){
         return this.transform.position.x;
@@ -121,8 +139,25 @@ export class Node{
         return this.#worldAlpha
     }
 
+    set width(v){
+        this.size.width = v;
+    }
+
+    get width(){
+        return this.size.width;
+    }
+
+    set height(v){
+        this.size.height = v;
+    }
+
+    get height(){
+        return this.size.height;
+    }
+
     constructor(){
         this.transform = new Transform();
+        this.size = new Size();
     }
 
     /**
@@ -185,6 +220,42 @@ export class Node{
      */
     getWorldAlpha(){
         return this.worldAlpha
+    }
+
+    /**
+     * 设置局部层级
+     * @public
+     * @param {Number} v 层级
+     */
+    setZIndex(v){
+        this.zIndex = Number(v);
+    }
+
+    /**
+     * 获取局部层级
+     * @public
+     * @returns 层级
+     */
+    getZIndex(){
+        return this.zIndex;
+    }
+
+    /**
+     * 设置全局层级
+     * @public
+     * @param {Number} v 层级
+     */
+    setWorldZIndex(v){
+        this.worldZIndex = Number(v);
+    }
+
+    /**
+     * 获取全局层级
+     * @public
+     * @returns 层级
+     */
+    getWorldZIndex(){
+        return this.worldZIndex
     }
 
     /**

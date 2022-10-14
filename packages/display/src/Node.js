@@ -1,4 +1,4 @@
-import { DEG_TO_RAD, RAD_TO_DEG, Transform, Size } from "../../math/src/index.js";
+import { DEG_TO_RAD, RAD_TO_DEG, Transform, ObservableSize, ObservableVec2 } from "../../math/src/index.js";
 
 /**
  * Node 节点对象
@@ -69,7 +69,20 @@ export class Node{
      * 节点大小尺寸
      * @public
      */
-    size;
+    #size;
+
+    /**
+     * 锚点
+     * @private
+     */
+    #anchor;
+
+    /**
+     * 状态
+     * 0:onEnter，1:onUpdate/Render，2:onExit
+     * @protected
+     */
+    _stats = 0;
 
     get x(){
         return this.transform.position.x;
@@ -135,8 +148,24 @@ export class Node{
         this.transform.pivot.set(v.x, v.y);
     }
 
+    get anchor(){
+        return this.#anchor
+    }
+
+    set anchor(v){
+        this.#anchor.set(v.x, v.y);
+    }
+
     get worldAlpha(){
         return this.#worldAlpha
+    }
+
+    get size(){
+        return this.#size
+    }
+
+    set size(v){
+        this.#size.set(v.widtgh, v.height);
     }
 
     set width(v){
@@ -157,7 +186,16 @@ export class Node{
 
     constructor(){
         this.transform = new Transform();
-        this.size = new Size();
+        this.#size = new ObservableSize(0, 0, this._onSizeChange, this);
+        this.#anchor = new ObservableVec2(0, 0, this._onAnchorChange, this);
+    }
+
+    _onSizeChange(){
+        this._onAnchorChange()
+    }
+
+    _onAnchorChange(){
+        
     }
 
     /**
@@ -263,6 +301,7 @@ export class Node{
      * @private
      */
     update(){
+        if(!this.parent)return;
         this.transform.updateTransform(this.parent.transform)
 
         this.#worldAlpha = this.alpha * this.parent.worldAlpha;
@@ -326,7 +365,12 @@ export class Node{
             throw "this node is exist in children.";
         }
         node.parent = this;
+
+        // 更新父级transform
+        node.transform._parentID = -1
         this.#children.push(node);
+        // 处理更改父节点的情况
+        if (node._stats == 2)node._stats = 1;
     }
 
     /**
@@ -341,6 +385,54 @@ export class Node{
         }
         this.#children.splice(index, 1)
         node.parent = null;
+        node._stats = 2;
+    }
+
+
+    // 生命周期
+
+    _onEnter(){
+        if(this._stats === 0 && this.enable){
+            this.onEnter();
+            this._stats = 1;
+        }
+        // 执行子节点_onEnter
+        for(const node of this.getChildren()){
+            node._onEnter();
+        }
+    }
+
+    _onUpdate(dt){
+        if(this._stats === 1 && this.enable){
+            this.update();
+            this.onUpdate(dt)
+        }
+        // 执行子节点_OnUpdate
+        for(const node of this.getChildren()){
+            node._onUpdate(dt);
+        }
+    }
+
+    _onExit(){
+        if(this._stats === 2){
+            this.onExit()
+        }
+        // 执行子节点_onExit
+        for(const node of this.getChildren()){
+            node._onExit();
+        }
+    }
+
+    onEnter(){
+
+    }
+
+    onUpdate(){
+
+    }
+
+    onExit(){
+
     }
 
 }

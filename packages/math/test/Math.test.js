@@ -14,9 +14,9 @@ v.rotate(90, new Vec2(1, 1))
 // console.log(v, Vec2.getProject(v, Vec2.UNIT_X))
 
 
-let v1 = new ObservableVec2(12, 10, function(){
-    console.log(this)
-},{a:1});
+// let v1 = new ObservableVec2(12, 10, function(){
+//     console.log(this)
+// },{a:1});
 
 // let v2 = v1.add(new Vec2(2, 2))
 // console.log(ObservableVec2.getProject(v1, Vec2.UNIT_X))
@@ -24,15 +24,15 @@ let v1 = new ObservableVec2(12, 10, function(){
 
 
 
-let m = new Mat3()
+// let m = new Mat3()
 
-let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+// let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-m.set(arr);
+// m.set(arr);
 
 // console.log(m.toString())
 
 
-let size = new Size(100, 100);
+// let size = new Size(100, 100);
 
-console.log(size.toString())
+// console.log(size.toString())

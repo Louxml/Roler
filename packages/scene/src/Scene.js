@@ -1,3 +1,5 @@
+import { Node } from "../../display/src/Node.js";
+
 /**
  * 场景
  */
@@ -11,11 +13,11 @@ export class Scene{
     name;
 
     /**
-     * 孩子节点
+     * 场景根节点
      * @Array
      * @private
      */
-    children = [];
+    root = new Node();
 
     /**
      * 场景状态
@@ -30,17 +32,13 @@ export class Scene{
         this.name = name;
     }
 
-    // 生命周期函数
-    /**
-     * 进入场景
-     * @override
-     */
-    onEnter(){
-
+    addChild(node){
+        this.root.addChild(node);
     }
 
+    // 生命周期函数
     /**
-     * @private
+     * @protected
      */
     _onEnter(){
         if (this._state === 0){
@@ -48,6 +46,41 @@ export class Scene{
             this._state = 1
         }
         // 执行子节点的_onEnter
+        this.root._onEnter();
+    }
+
+    /**
+     * 
+     * @param {number} dt 时间粒子
+     * @protected
+     */
+    _onUpdate(dt){
+        // 执行子节点的_onUpdate
+        this.root._onUpdate(dt);
+        if (this._state === 1){
+            this.onUpdate(dt);
+        }
+    }
+
+    /**
+     * @protected
+     */
+    _onExit(){
+        // 执行子节点的_onExit
+        this.root._onExit();
+
+        if(this._state === 2){
+            this.onExit();
+            this._state = 3;
+        }
+    }
+    
+    /**
+     * 进入场景
+     * @override
+     */
+    onEnter(){
+
     }
 
     /**
@@ -60,36 +93,10 @@ export class Scene{
     }
 
     /**
-     * 
-     * @param {number} dt 时间粒子
-     * @protected
-     */
-    _onUpdate(dt){
-        if (this._state === 1){
-            this.onUpdate(dt);
-        }
-        // 执行子节点的_onUpdate
-    }
-
-    /**
      * 退出场景，常在切换场景时调用
      * @override
      */
     onExit(){
-        
-    }
-
-    /**
-     * @protected
-     */
-    _onExit(){
-        // 执行子节点的_onExit
-
-        if(this._state === 2){
-            this.onExit();
-            this._state = 3;
-        }
-        
         
     }
 
@@ -100,9 +107,7 @@ export class Scene{
     destory(){
         this._state = 2;
         // 执行场景内对象 destory 事件
-        for(let c of this.children){
-            c.destory()
-        }
+        this.root.destroy()
     }
 
 }

@@ -1,3 +1,3 @@
-import { Runner } from "../src/index.js"
+import { Runner } from "../src/index.js";
 
-console.log(Runner.system)
+// console.log(Runner.system)

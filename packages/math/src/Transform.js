@@ -21,7 +21,7 @@ export class Transform{
 
     #localID = 0;
 
-    #parentID = 0;
+    _parentID = 0;
 
     _worldID = 0;
 
@@ -69,7 +69,6 @@ export class Transform{
     onChange(){
         // 矩阵更新
         this.#localID++;
-        console.trace("Transform")
     }
 
     /**
@@ -80,7 +79,7 @@ export class Transform{
         this.localTransform.setTransform(this.position.x, this.position.y, this.rotation, this.skew.x, this.skew.y, this.scale.x, this.scale.y, this.pivot.x, this.pivot.y);
         this.#currentLoaclID = this.#localID;
         // 强制更新全局矩阵
-        this.#parentID = -1;
+        this._parentID = -1;
     }
 
     /**
@@ -89,9 +88,9 @@ export class Transform{
      */
     updateTransform(parentTransform){
         this.updateLocalTransform()
-        if(this.#parentID === parentTransform._worldID)return;
-        this.worldTransform = parentTransform.clone().multiply(this.localTransform);
-        this.#parentID = parentTransform._worldID;
+        if(this._parentID === parentTransform._worldID)return;
+        this.worldTransform = parentTransform.worldTransform.clone().multiply(this.localTransform);
+        this._parentID = parentTransform._worldID;
         // 标记全局矩阵更新
         this._worldID++;
     }

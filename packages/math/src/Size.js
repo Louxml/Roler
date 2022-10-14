@@ -78,6 +78,15 @@ export class Size{
     }
 
     /**
+     * 复制对象
+     * @public
+     * @returns Size
+     */
+    clone(){
+        return new Size(this.width, this.height);
+    }
+
+    /**
      * 字符串形式（多用于调试）
      * @pubic
      * @returns 对象字符串输出

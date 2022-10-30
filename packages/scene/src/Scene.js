@@ -104,9 +104,9 @@ export class Scene{
      * 销毁场景
      * @public
      */
-    destory(){
+    destroy(){
         this._state = 2;
-        // 执行场景内对象 destory 事件
+        // 执行场景内对象 destroy 事件
         this.root.destroy()
     }
 

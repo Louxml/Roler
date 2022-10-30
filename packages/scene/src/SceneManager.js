@@ -148,7 +148,7 @@ export class SceneManager{
 
         this._preScene = scene;
         if(this._main){
-            this._main.destory();
+            this._main.destroy();
         }else{
             this._main = this._preScene;
             this._preScene = null;

@@ -40,9 +40,9 @@ class TestScene extends Scene{
             this.f = false;
             this.t = 0;
 
-            console.log("destory")
+            console.log("destroy")
 
-            this.destory();
+            this.destroy();
         }
     }
 

@@ -50,10 +50,10 @@ class Extension{
      * @static
      * @private
      */
-    static #queue = {};
+    static #queue = Object.create(null);
 
     static get queue(){
-        return this.#queue
+        return Object.assign({}, this.#queue);
     }
 
     /**
@@ -191,7 +191,7 @@ class Extension{
         const removeHandlers = this.#removeHandlers
 
         // 该类型的方法已被注册
-        if(addHandlers[type]|| removeHandlers[type]){
+        if(addHandlers[type] || removeHandlers[type]){
             throw new Error(`Extension type ${type} already has a handler`);
         }
 

@@ -1,4 +1,6 @@
 
+import { Adapter } from "../../../browser/src/index.js";
+import { Size } from "../../../math/src/index.js";
 import { Extension, ExtensionType } from "../../../extensions/src/index.js";
 
 
@@ -13,14 +15,26 @@ export class ViewSystem{
      */
     static extension = {
         type: ExtensionType.RendererSystem,
-        name: "_view",
+        name: "view",
+    }
+
+    
+    /**
+     * 默认配置
+     * @ignore
+     */
+    static defaultOtions = {
+        width: 800,
+        height: 600,
+        resolution: 1,
+        autoDensity: false
     }
 
     /**
      * 渲染器
-     * @private
+     * @public
      */ 
-    #renderer;
+    renderer;
 
     /**
      * 分辨率/屏幕像素比
@@ -28,21 +42,20 @@ export class ViewSystem{
      */
     resolution;
 
-
-    // screen;
-
     /**
      * Canvas节点
      * @public
      */
     element;
 
-    get renderer(){
-        return this.renderer;
-    }
+    /**
+     * 根据宽高自动设置css宽高
+     * @public
+     */
+    autoDensity;
 
     constructor(renderer){
-        this.#renderer  = renderer;
+        this.renderer  = renderer;
     }
 
     /**
@@ -51,8 +64,17 @@ export class ViewSystem{
      * @param {Object} options 配置
      */
     init(options){
-        this.resolution = options.resolution || 1;//默认值取设置
-        this.element = options.view;    //默认创建
+        options = Object.assign({}, ViewSystem.defaultOtions, options);
+
+        this.screen = new Size(options.width, options.height);
+
+        this.resolution = options.resolution;
+
+        this.element = options.element || Adapter.createCanvas();
+
+        this.autoDensity = options.autoDensity
+
+        document.body.appendChild(this.element)
     }
 
     /**
@@ -62,11 +84,23 @@ export class ViewSystem{
      * @param {Number} height 屏幕像素高度
      */
     resizeView(width, height){
+        // canvas分辨率（实际缓冲区大小）
         this.element.width = Math.round(width * this.resolution);
         this.element.height = Math.round(height * this.resolution);
 
-
         // 通知渲染器视图大小改变
+        const screenWidth = this.element.width / this.resolution;
+        const screenHeight = this.element.height / this.resolution;
+
+        this.screen.set(screenWidth. screenHeight);
+
+        if (this.autoDensity){
+            this.element.style.width = `${screenWidth}px`;
+            this.element.style.height = `${screenHeight}px`;
+        }
+
+        // 通知视图大小调整
+        // this.renderer.runner.resize.emit(this.screen.width. this.screen.height)
 
     }
 
@@ -83,7 +117,8 @@ export class ViewSystem{
 
         this.renderer = null;
         this.element = null;
+        this.screen = null;
     }
 }
 
-// Extension.add(ViewSystem);
+Extension.add(ViewSystem);

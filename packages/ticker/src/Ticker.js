@@ -1,25 +1,32 @@
 import { UPDATE_PRIORITY } from "./const.js";
-import { RunListener } from "./RunListener.js";
+import { TickerListener } from "./TickerListener.js";
 
 // 暂定常量
 const deltatime = 1/60
 
 // 默认配置
 const config = {
-    autoStart: false
+    autoStart: false,
+    speed: 1
 }
 
 /**
- * 运行器
+ * 循环器
  * 可优化：
  * 1、还没考虑帧率的问题，默认requestAnimationFrame帧率（最高帧率）
  */
-export class Runner{
+export class Ticker{
     /**
-     * 类实例
+     * 基础实例
      * @private
      */
     static _system;
+
+    /**
+     * 共享实例
+     * @private
+     */
+    static _shared;
     /**
      * id
      * @private
@@ -30,7 +37,7 @@ export class Runner{
      * 主体
      * @private
      */
-    _runner;
+    _tick;
 
     /**
      * 监听器链表
@@ -41,9 +48,25 @@ export class Runner{
     /**
      * 是否开始
      * @Boolean
-     * @private
+     * @public
      */
-    _started = false;
+    started = false;
+
+
+    /**
+     * 速度
+     * @Number
+     * @public
+     */
+    speed = 1;
+
+
+    /**
+     * 受速度影响的时间
+     * @Number
+     * @public
+     */
+    _elapsedtime = 0;
 
     /**
      * 是否受保护
@@ -67,9 +90,20 @@ export class Runner{
     _deltatime = 0;
 
 
-    static get system(){
-        return Runner._system;
-    }
+    /**
+     * 最小延迟
+     * @Number
+     * @private
+     */
+    _minDeltatime = Infinity;
+
+    /**
+     * 最大延迟
+     * @Number
+     * @private
+     */
+    _maxDeltatime = 0;
+
 
     /**
      * 创建运行器
@@ -82,29 +116,24 @@ export class Runner{
     constructor(options = {}){
         // 设置
         // 只能 new 创建
-        if (new.target !== Runner) return;
-        if (!Runner._system){
-            this._started = true;
-            this._protected = true
-            Runner._system = this;
-        }
+        if (new.target !== Ticker) return;
 
         // 配置
-        Object.assign(config, options);
+        options = Object.assign(this, config, options);
 
         // 链表的控制节点
-        this._head = new RunListener(null, null, false, Infinity);
+        this._head = new TickerListener(null, null, false, Infinity);
 
 
-        this._runner = (time = performance.now()) => {
-            if (this._started){
+        this._tick = (time = performance.now()) => {
+            this._requestId = null;
+            if (this.started){
                 this._update(time)
-                if (this._started){
-                    this._requestId = requestAnimationFrame(this._runner);
+                if (this.started){
+                    this._requestId = requestAnimationFrame(this._tick);
                 }
             }
         }
-        this._runner()
     }
 
     /**
@@ -113,8 +142,8 @@ export class Runner{
      * @returns this 返回改对象（用于链式调用）
      */
     start(){
-        if (!this._started){
-            this._started = true;
+        if (!this.started){
+            this.started = true;
             this._requestAnimationFrame()
         }
         return this;
@@ -126,9 +155,9 @@ export class Runner{
      * @returns this 返回改对象（用于链式调用）
      */
     stop(){
-        if (this._started){
-            this._started = false;
-            this._cancelAnimationFrame()
+        if (this.started){
+            this.started = false;
+            this._cancelAnimationFrame();
         }
         return this;
     }
@@ -143,7 +172,7 @@ export class Runner{
      * @returns this 返回改对象（用于链式调用）
      */
     add(fn = ()=>{}, context = null, once = false, priority = UPDATE_PRIORITY.NORMAL){
-        let listener = new RunListener(fn, context, once, priority);
+        let listener = new TickerListener(fn, context, once, priority);
         this._addListener(listener)
         return this;
     }
@@ -157,7 +186,7 @@ export class Runner{
      * @returns this 返回改对象（用于链式调用）
      */
     addOnce(fn = ()=>{}, context = null, priority = UPDATE_PRIORITY.NORMAL){
-        let listener = new RunListener(fn, context, this, priority);
+        let listener = new TickerListener(fn, context, this, priority);
         this._addListener(listener)
         return this;
     }
@@ -196,14 +225,14 @@ export class Runner{
             }
 
             this._head.destroy()
-            this._runner = null;
+            this._tick = null;
             this._head = null;
         }
     }
 
     /**
      * 添加监听器
-     * @param {RunListener} listener 
+     * @param {TickerListener} listener 
      * @private
      */
     _addListener(listener){
@@ -213,6 +242,8 @@ export class Runner{
             pre = pre.next;
         }
         pre.connect(listener);
+
+        if (this.autoStart)this.start()
     }
 
     /**
@@ -221,7 +252,8 @@ export class Runner{
      */
     _requestAnimationFrame(){
         if (this._requestId === null){
-            this._requestId = requestAnimationFrame(this._runner);
+            this._lasttime = performance.now();
+            this._requestId = requestAnimationFrame(this._tick);
         }
     }
 
@@ -242,16 +274,57 @@ export class Runner{
      * @private
      */
     _update(time){
-        this._deltatime = time - this._lasttime;
-        
-        const head = this._head;
-        let listener = head.next;
-        while (listener){
-            // 执行更新事件
-            listener = listener.emit(this._deltatime)
+        if (time > this._lasttime){
+            this._elapsedtime = time - this._lasttime;
+
+            this._deltatime = this._elapsedtime * this.speed;
+
+            const head = this._head;
+            let listener = head.next;
+            while (listener){
+                // 执行更新事件
+                listener = listener.emit(this._deltatime)
+            }
+
+            if (!head.next)this.stop();
+        }else{
+            this._deltatime = this._elapsedtime = 0;
         }
 
         // 更新上一次时间戳
         this._lasttime = time;
+    }
+
+
+    /**
+     * 共享实例
+     * @static
+     * @public
+     */
+    static get shared(){
+        if (!Ticker._shared){
+            const shared = Ticker._shared = new Ticker();
+
+            shared.autoStart = true;
+            shared._protected = true;
+        }
+
+        return Ticker._shared;
+    }
+
+    /**
+     * 基础实例
+     * @static
+     * @public
+     */
+    static get system(){
+        if (!Ticker._system){
+            const system = Ticker._system = new Ticker();
+
+            system.autoStart = true;
+            system._protected = true;
+        }
+
+        return Ticker._system;
     }
 }

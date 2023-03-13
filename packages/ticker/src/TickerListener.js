@@ -1,6 +1,6 @@
 import { UPDATE_PRIORITY } from "./const.js";
 
-export class RunListener{
+export class TickerListener{
 
     /**
      * 优先级
@@ -95,7 +95,7 @@ export class RunListener{
     
     /**
      * 监听器链表连接
-     * @param {RunListener} next 
+     * @param {TickerListener} next 
      * @oublic
      */
     connect(next){

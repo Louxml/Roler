@@ -89,22 +89,6 @@ export class Ticker{
      */
     _deltatime = 0;
 
-
-    /**
-     * 最小延迟
-     * @Number
-     * @private
-     */
-    _minDeltatime = Infinity;
-
-    /**
-     * 最大延迟
-     * @Number
-     * @private
-     */
-    _maxDeltatime = 0;
-
-
     /**
      * 创建运行器
      * option：{
@@ -293,6 +277,16 @@ export class Ticker{
 
         // 更新上一次时间戳
         this._lasttime = time;
+    }
+
+
+    /**
+     * 帧率（每秒运行次数）
+     * @Number
+     * @public
+     */
+    get FPS(){
+        return 1000 / this._elapsedtime;
     }
 
 

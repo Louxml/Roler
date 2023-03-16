@@ -83,11 +83,31 @@ export class Ticker{
     _lasttime = 0;
 
     /**
+     * 上一帧的时间戳
+     */
+    _lastframe = 0;
+
+    /**
      * 时间差
      * @Number
      * @private
      */
     _deltatime = 0;
+
+    /**
+     * 最小延迟，影响最大帧率
+     * @Number
+     * @private
+     */
+    _minelapsedtime = 0;
+    
+
+    /**
+     * 最大延迟，影响最小帧率
+     * @Number
+     * @private
+     */
+    _maxelapsedtime = 100;
 
     /**
      * 创建运行器
@@ -237,6 +257,7 @@ export class Ticker{
     _requestAnimationFrame(){
         if (this._requestId === null){
             this._lasttime = performance.now();
+            this._lastframe = this._lasttime;
             this._requestId = requestAnimationFrame(this._tick);
         }
     }
@@ -258,24 +279,32 @@ export class Ticker{
      * @private
      */
     _update(time){
-        if (time > this._lasttime){
-            this._elapsedtime = time - this._lasttime;
+        const delta = time - this._lastframe;
 
-            this._deltatime = this._elapsedtime * this.speed;
+        if (delta < this._minelapsedtime)return;
 
-            const head = this._head;
-            let listener = head.next;
-            while (listener){
-                // 执行更新事件
-                listener = listener.emit(this._deltatime)
-            }
+        // 实际时间差
+        this._elapsedtime = time - this._lasttime;
+        this._elapsedtime = Math.min(this._elapsedtime, this._maxelapsedtime);
 
-            if (!head.next)this.stop();
-        }else{
-            this._deltatime = this._elapsedtime = 0;
+        // 基于速度的时间差
+        this._deltatime = this._elapsedtime * this.speed;
+
+        // 运行
+        const head = this._head;
+        let listener = head.next;
+        while (listener){
+            // 执行更新事件
+            listener = listener.emit(this._deltatime)
         }
 
-        // 更新上一次时间戳
+        // 如果没有，则停止
+        if (!head.next)this.stop();
+
+        // 更新上一帧的理论时间戳
+        this._lastframe = time - (delta % (this._minelapsedtime || 1));
+
+        // 更新上一帧时间戳
         this._lasttime = time;
     }
 
@@ -287,6 +316,46 @@ export class Ticker{
      */
     get FPS(){
         return 1000 / this._elapsedtime;
+    }
+
+    /**
+     * 获取配置的最小帧率
+     * @Number
+     * @public
+     */
+    get minFPS(){
+        return Math.round(1000 / this._maxelapsedtime * 10) / 10;
+    }
+
+    /**
+     * 设置最小帧率
+     * @Number
+     * @public
+     */
+    set minFPS(fps){
+        const minFPS = Math.max(1, Math.min(this.maxFPS, fps));
+
+        this._maxelapsedtime = 1000 / minFPS;
+    }
+
+    /**
+     * 获取配置的最大帧率
+     * @Number
+     * @public
+     */
+    get maxFPS(){
+        return Math.round(1000 / this._minelapsedtime * 10) / 10;
+    }
+
+    /**
+     * 设置最大帧率
+     * @Number
+     * @public
+     */
+    set maxFPS(fps){
+        const maxFPS = Math.max(this.minFPS, fps);
+
+        this._minelapsedtime = 1000 / maxFPS;
     }
 
 

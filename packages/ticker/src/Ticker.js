@@ -122,6 +122,7 @@ export class Ticker{
         // 只能 new 创建
         if (new.target !== Ticker) return;
 
+        // TODO  这里有风险覆盖自身属性
         // 配置
         options = Object.assign(this, config, options);
 

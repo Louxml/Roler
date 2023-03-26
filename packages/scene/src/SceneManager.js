@@ -44,7 +44,7 @@ export class SceneManager{
         if (SceneManager._instance) return SceneManager._instance;
         SceneManager._instance = this;
 
-        game.runner.add(this.onUpdate, this)
+        game.ticker.add(this.onUpdate, this)
 
         return this;
     }

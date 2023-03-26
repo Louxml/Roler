@@ -1,5 +1,5 @@
 
-import { Runner } from '../../runner/src/index.js';
+import { Ticker } from '../../ticker/src/index.js';
 import { Scene, SceneManager } from '../../scene/src/index.js';
 
 import { config } from './config.js'
@@ -20,10 +20,11 @@ export class Application{
 
     constructor(options){
         // 配置覆盖
-        Object.assign(config, options);
+        options = Object.assign({}, config, options);
 
-        this.runner = new Runner();
         this.target = config.target;
+
+        this.ticker = new Ticker();
         
         // 场景管理器
         this.scenes = new SceneManager(this);

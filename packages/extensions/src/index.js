@@ -69,7 +69,14 @@ class Extension{
                 throw new Error('Extension class must have an extension object');
             }
 
-            const metaData = ext.extension
+            let metaData = ext.extension
+
+            // 将String类型封装对象
+            if (typeof metaData === "string"){
+                metaData = {
+                    type: [metaData]
+                }
+            }
 
             // 将string类型的type转成Array类型
             if(typeof metaData.type === "string"){

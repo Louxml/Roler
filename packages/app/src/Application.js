@@ -1,41 +1,41 @@
 
-import { Ticker } from '../../ticker/src/index.js';
-import { Scene, SceneManager } from '../../scene/src/index.js';
-
+import { Extension, ExtensionType } from '../../extensions/src/index.js';
 import { config } from './config.js'
 
 export class Application{
-
-    // 场景管理器
-    scenes;
-
-    // 主循环
-    runner;
-
-    // HTMLElement
-    target;
-
-    // 渲染器
-    renderer;
+    
+    /**
+     * 插件列表
+     * 所有功能组件系统
+     */
+    static _plugins = [];
 
     constructor(options){
         // 配置覆盖
         options = Object.assign({}, config, options);
 
-        this.target = config.target;
+        // 正序初始化插件
+        Application._plugins.forEach((plugin) => {
+            plugin.init.call(this, options);
+        })
+    }
 
-        this.ticker = new Ticker();
-        
-        // 场景管理器
-        this.scenes = new SceneManager(this);
-        
+    /**
+     * 销毁
+     * @public
+     */
+    destroy(){
+        const plugins = Application._plugins.slice(0);
 
-        // 渲染器创建
-        // let canvas = document.createElement("canvas");
-        // canvas.width = options.width
-        // canvas.height = options.height
-        // this.renderer = canvas.getContext(options.render);
-        // this.target.append(this.renderer.canvas)
+        // 反序
+        plugins.reverse();
+
+        // 反序销毁插件
+        plugins.forEach((plugin) => {
+            plugin.destroy.call(this);
+        })
     }
 
 }
+
+Extension.handleByList(ExtensionType.Application, Application._plugins);

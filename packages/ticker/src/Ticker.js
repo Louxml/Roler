@@ -7,7 +7,9 @@ const deltatime = 1/60
 // 默认配置
 const config = {
     autoStart: false,
-    speed: 1
+    speed: 1,
+    minFPS: 10,
+    maxFPS: Infinity,
 }
 
 /**
@@ -122,9 +124,15 @@ export class Ticker{
         // 只能 new 创建
         if (new.target !== Ticker) return;
 
-        // TODO  这里有风险覆盖自身属性
         // 配置
-        options = Object.assign(this, config, options);
+        options = Object.assign({}, config, options);
+
+        this.autoStart = options.autoStart;
+        this.speed = options.speed;
+        this.minFPS = options.minFPS;
+        this.maxFPS = options.maxFPS;
+
+
 
         // 链表的控制节点
         this._head = new TickerListener(null, null, false, Infinity);

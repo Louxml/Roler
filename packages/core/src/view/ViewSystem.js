@@ -18,6 +18,10 @@ export class ViewSystem{
         name: "view",
     }
 
+    get name(){
+        return ViewSystem.extension.name || ViewSystem.name;
+    }
+
     
     /**
      * 默认配置

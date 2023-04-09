@@ -1,5 +1,7 @@
 import {ViewSystem} from "../src/view/ViewSystem.js"
 
+import { Renderer } from "../src/index.js"
+
 // console.log({ViewSystem})
 
 // let a = new ViewSystem()
@@ -17,3 +19,10 @@ import {ViewSystem} from "../src/view/ViewSystem.js"
 // }
 
 // console.log(a)
+
+function test1(){
+    console.log(new Renderer())
+}
+
+
+// test1();

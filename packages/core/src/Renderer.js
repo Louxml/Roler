@@ -10,6 +10,7 @@ export class Renderer extends SystemManager{
     }
 
     /**
+     * TODO 独立到PluginSystem中
      * 插件列表
      * @static
      */
@@ -19,7 +20,7 @@ export class Renderer extends SystemManager{
      * 系统列表
      * @static
      */
-    static _systems = {};
+    static _systems = [];
 
     /**
      * 检查环境是否支持
@@ -81,6 +82,6 @@ export class Renderer extends SystemManager{
 
 }
 
-Extension.handleByMap(ExtensionType.RendererPlugin, Renderer._plugins);
-Extension.handleByMap(ExtensionType.RendererSystem, Renderer._systems);
+// Extension.handleByMap(ExtensionType.RendererPlugin, Renderer._plugins);
+Extension.handleByList(ExtensionType.RendererSystem, Renderer._systems);
 Extension.add(Renderer)

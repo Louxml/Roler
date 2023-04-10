@@ -9,7 +9,8 @@ export class StartupSystem extends System{
 
     static extension = {
         type: ExtensionType.RendererSystem,
-        name: "startup"
+        name: "startup",
+        priority: -1
     }
 
     /**
@@ -25,7 +26,7 @@ export class StartupSystem extends System{
     }
 
     init(){
-        console.log("init")
+        console.log(`Roler-dev ${"v0.0.1"} is Running!`);
     }
 
     run(options){

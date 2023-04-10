@@ -23,11 +23,12 @@ export class SystemManager{
     setup(options){
         this.addRunners(options.runners);
 
-        const systems = options.systems || {};
+        const systems = options.systems || [];
 
-        for (const i in systems){
-            this.addSystem(systems[i]);
-        }
+        systems.forEach(system => {
+            this.addSystem(system)
+        })
+
     }
     
 

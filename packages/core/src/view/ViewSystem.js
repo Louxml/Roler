@@ -71,7 +71,7 @@ export class ViewSystem extends System{
 
         this.resolution = options.resolution;
 
-        this.element = options.element || Adapter.createCanvas();
+        this.element = options.element || Adapter.createCanvas(this.screen.width, this.screen.height);
 
         this.autoDensity = options.autoDensity
 

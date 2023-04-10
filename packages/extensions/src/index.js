@@ -24,7 +24,7 @@ const ExtensionType = {
 const Data = {
     type: ['type'],
     name: "name",
-    priority: -1,
+    priority: 0,
     ref: {}
 }
 
@@ -96,8 +96,8 @@ class Extension{
                 throw new Error('This extension is name type error.')
             }
 
-            // 默认值：-1
-            metaData.priority ??= -1;
+            // 默认值：0
+            metaData.priority ??= 0;
             
             // priority类型错误
             if(typeof metaData.priority !== "number"){
@@ -248,7 +248,7 @@ class Extension{
     /**
      * 为某一类型插件添加列表管理容器
      * 这个容器用到了拓展的 priority 属性，优先级越高越在前，列表呈降序
-     * 没有 priority 属性，默认-1
+     * 没有 priority 属性，默认0
      * @static
      * @param {ExtensionType} type 插件类型
      * @param {Array} list 插件存储列表

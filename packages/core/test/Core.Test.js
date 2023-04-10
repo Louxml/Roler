@@ -2,6 +2,8 @@ import {ViewSystem} from "../src/view/ViewSystem.js"
 
 import { Renderer } from "../src/index.js"
 
+import { System } from "../src/system/System.js";
+
 // console.log({ViewSystem})
 
 // let a = new ViewSystem()
@@ -21,8 +23,21 @@ import { Renderer } from "../src/index.js"
 // console.log(a)
 
 function test1(){
-    console.log(new Renderer())
+    const r = new Renderer()
+    console.log(r)
+    console.log(r.startup);
 }
 
+function test2(){
+    console.log(new Plugin())
+}
+
+function test3(){
+    console.log(new ViewSystem())
+}
 
 // test1();
+
+// test2();
+
+// test3();

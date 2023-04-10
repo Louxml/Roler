@@ -51,7 +51,7 @@ export class SystemManager{
      * @param {String} name 子系统名字
      */
     addSystem(ClassRef){
-        const system = new ClassRef();
+        const system = new ClassRef(this);
         const name = system.name;
 
         if (this[name]){

@@ -1,4 +1,5 @@
 
+import { System } from "../index.js";
 import { Adapter } from "../../../browser/src/index.js";
 import { Size } from "../../../math/src/index.js";
 import { Extension, ExtensionType } from "../../../extensions/src/index.js";
@@ -7,7 +8,7 @@ import { Extension, ExtensionType } from "../../../extensions/src/index.js";
 /**
  * 视图系统
  */
-export class ViewSystem{
+export class ViewSystem extends System{
 
     /**
      * 拓展属性
@@ -17,17 +18,12 @@ export class ViewSystem{
         type: ExtensionType.RendererSystem,
         name: "view",
     }
-
-    get name(){
-        return ViewSystem.extension.name || ViewSystem.name;
-    }
-
     
     /**
      * 默认配置
      * @ignore
      */
-    static defaultOtions = {
+    static defaultOptions = {
         width: 800,
         height: 600,
         resolution: 1,
@@ -59,6 +55,7 @@ export class ViewSystem{
     autoDensity;
 
     constructor(renderer){
+        super();
         this.renderer  = renderer;
     }
 
@@ -68,7 +65,7 @@ export class ViewSystem{
      * @param {Object} options 配置
      */
     init(options){
-        options = Object.assign({}, ViewSystem.defaultOtions, options);
+        options = Object.assign({}, ViewSystem.defaultOptions, options);
 
         this.screen = new Size(options.width, options.height);
 

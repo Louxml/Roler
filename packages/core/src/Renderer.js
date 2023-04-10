@@ -9,9 +9,16 @@ export class Renderer extends SystemManager{
         priority: 1,
     }
 
+    /**
+     * 插件列表
+     * @static
+     */
     static _plugins = {};
 
-
+    /**
+     * 系统列表
+     * @static
+     */
     static _systems = {};
 
     /**
@@ -35,7 +42,31 @@ export class Renderer extends SystemManager{
         }
 
         this.setup(config);
+
+        this.startup.run(options)
     }
+
+    // TODO
+    render(){
+
+    }
+
+    // TODO
+    resize(){
+
+    }
+
+    // TODO
+    reset(){
+
+    }
+
+    // TODO
+    clear(){
+
+    }
+
+
 
     /**
      * 销毁渲染器

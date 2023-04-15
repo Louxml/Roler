@@ -1,6 +1,7 @@
 
 import { ExtensionType, Extension } from "../../extensions/src/index.js";
 import { SystemManager } from "./system/SystemManager.js";
+import { Adapter } from "../../browser/src/index.js";
 
 
 export class Renderer extends SystemManager{
@@ -26,8 +27,14 @@ export class Renderer extends SystemManager{
      * 检查环境是否支持
      * @returns 环境是否支持
      */
-    static test(){
+    static test(options){
         // TODO 环境支持情况检查
+        if (options.render != "webgl"){
+            return false
+        }
+
+        return Adapter.isWebGLSupported();
+
         return true
     }
 

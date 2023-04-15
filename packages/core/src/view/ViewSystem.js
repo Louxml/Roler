@@ -37,6 +37,13 @@ export class ViewSystem extends System{
     renderer;
 
     /**
+     * 屏幕大小
+     * @Size
+     * @public
+     */
+    screen;
+
+    /**
      * 分辨率/屏幕像素比
      * @public
      */
@@ -65,6 +72,8 @@ export class ViewSystem extends System{
      * @param {Object} options 配置
      */
     init(options){
+
+        console.log(options)
         options = Object.assign({}, ViewSystem.defaultOptions, options);
 
         this.screen = new Size(options.width, options.height);
@@ -93,7 +102,7 @@ export class ViewSystem extends System{
         const screenWidth = this.element.width / this.resolution;
         const screenHeight = this.element.height / this.resolution;
 
-        this.screen.set(screenWidth. screenHeight);
+        this.screen.set(screenWidth, screenHeight);
 
         if (this.autoDensity){
             this.element.style.width = `${screenWidth}px`;

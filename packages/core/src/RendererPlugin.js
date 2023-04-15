@@ -40,14 +40,14 @@ export class RendererPlugin{
     }
 
     /**
-     * 自动生成渲染器
+     * 自动创建渲染器
      * @static
      * @param {Object} options 选项配置
      * @returns 渲染器实例
      */
     static autoDetectRenderer(options){
         for (const RendererType of this._renderers){
-            if (RendererType.test()){
+            if (RendererType.test(options)){
                 return new RendererType(options);
             }
         }

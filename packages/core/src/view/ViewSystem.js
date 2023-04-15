@@ -71,7 +71,7 @@ export class ViewSystem extends System{
      * @public
      * @param {Object} options 配置
      */
-    init(options){
+    init(options){  
         options = Object.assign({}, ViewSystem.defaultOptions, options);
 
         this.screen = new Size(options.width, options.height);
@@ -80,7 +80,7 @@ export class ViewSystem extends System{
 
         this.element = options.element || Adapter.createCanvas(this.screen.width, this.screen.height);
 
-        this.autoDensity = options.autoDensity
+        this.autoDensity = !!options.autoDensity
 
         document.body.appendChild(this.element)
     }
@@ -108,8 +108,7 @@ export class ViewSystem extends System{
         }
 
         // 通知视图大小调整
-        // this.renderer.runner.resize.emit(this.screen.width. this.screen.height)
-
+        this.renderer.runners.resize.emit(this.screen.width, this.screen.height);
     }
 
     /**
@@ -119,8 +118,8 @@ export class ViewSystem extends System{
      * @param {Boolean} removeView 是否移除canvas节点
      */
     destroy(removeView){
-        if (removeView && this.element && this.element.parentNode){
-            this.element.parentNode.removeChild(this.element);
+        if (removeView){
+            this.element.parentNode?.removeChild(this.element);
         }
 
         this.renderer = null;

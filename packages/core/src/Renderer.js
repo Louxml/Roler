@@ -34,8 +34,6 @@ export class Renderer extends SystemManager{
         }
 
         return Adapter.isWebGLSupported();
-
-        return true
     }
 
     constructor(options){
@@ -59,9 +57,12 @@ export class Renderer extends SystemManager{
 
     }
 
-    // TODO
-    resize(){
-
+    /**
+     * ViewSystem的外部调用方法
+     * 修改屏幕尺寸大小
+     */
+    resize(screenWidth,screenHeight){
+        this.view.resizeView(screenWidth, screenHeight);
     }
 
     // TODO
@@ -85,6 +86,30 @@ export class Renderer extends SystemManager{
         this.runners.destroy.emit();
 
         super.destroy();
+    }
+
+    /**
+     * ViewSystem的内部属性
+     * 屏幕尺寸大小
+     */
+    get screen(){
+        return this.view.screen;
+    }
+
+    /**
+     * 获取分辨率宽度
+     * @Number
+     */
+    get width(){
+        return this.view.element.width;
+    }
+
+    /**
+     * 获取分辨率高度
+     * @Number
+     */
+    get height(){
+        return this.view.element.height;
     }
 
 }

@@ -30,7 +30,11 @@ export class StartupSystem extends System{
     }
 
     run(options){
-        this.renderer.runners.init.emit(options);
+        const renderer = this.renderer;
+        
+        renderer.runners.init.emit(options);
+
+        renderer.resize(renderer.screen.width, renderer.screen.height);
     }
 
     destroy(){

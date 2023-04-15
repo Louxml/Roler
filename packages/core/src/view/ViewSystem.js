@@ -72,8 +72,6 @@ export class ViewSystem extends System{
      * @param {Object} options 配置
      */
     init(options){
-
-        console.log(options)
         options = Object.assign({}, ViewSystem.defaultOptions, options);
 
         this.screen = new Size(options.width, options.height);

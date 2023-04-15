@@ -6,8 +6,8 @@ import { Application } from "../src/Application.js";
 
 function test1(){
     const app = new Application({
-        render: "canvas",
-        // width:window.innerWidth, height:window.innerHeight,
+        render: "webgl",
+        width:window.innerWidth, height:window.innerHeight,
         target:document.body
     });
 

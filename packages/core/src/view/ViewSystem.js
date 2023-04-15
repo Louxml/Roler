@@ -17,6 +17,7 @@ export class ViewSystem extends System{
     static extension = {
         type: ExtensionType.RendererSystem,
         name: "view",
+        priority: 100
     }
     
     /**
@@ -71,7 +72,7 @@ export class ViewSystem extends System{
      * @public
      * @param {Object} options 配置
      */
-    init(options){  
+    init(options){
         options = Object.assign({}, ViewSystem.defaultOptions, options);
 
         this.screen = new Size(options.width, options.height);

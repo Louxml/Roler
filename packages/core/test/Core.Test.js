@@ -29,7 +29,7 @@ function test1(){
 }
 
 function test2(){
-    console.log(new Plugin())
+    console.log(new System())
 }
 
 function test3(){

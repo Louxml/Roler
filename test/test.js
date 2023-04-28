@@ -1,6 +1,8 @@
 // export * from "../packages/math/test/Math.test.js";
 // export * from "../packages/math/test/Transform.test.js";
 
+export * from "../packages/color/test/Color.test.js";
+
 export * from "../packages/ticker/test/Ticker.test.js";
 // export * from "../packages/scene/test/Scene.test.js";
 // export * from "../packages/display/test/Display.test.js";

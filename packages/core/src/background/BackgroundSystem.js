@@ -27,9 +27,7 @@ export class BackgroundSystem extends System{
         clearBeforeRender: true
     }
 
-    backgroundColor;
-
-    backgroundAlpha;
+    _color;
 
     clearBeforeRender;
     
@@ -37,17 +35,43 @@ export class BackgroundSystem extends System{
     constructor(){
         super();
 
-        this.backgroundColor = new Color(0, 0, 0);
-
-        this.backgroundAlpha = 1;
+        this._color = new Color(0x0);
 
         this.clearBeforeRender = true;
     }
 
-    init(){
-        
+    init(options){
+        const defaults = BackgroundSystem.defaultOptions;
+        const config = {};
+        Object.keys(defaults).map((key) => {
+            config[key] = options[key] || defaults[key]
+        });
+
+        this.color = config.backgroundColor;
+        this.alpha = config.backgroundAlpha;
+        this.clearBeforeRender = config.clearBeforeRender;
     }
 
+    get color(){
+        return this._color.value;
+    }
+
+    set color(value){
+        this._color.value = value;
+    }
+
+    get alpha(){
+        return this._color.alpha;
+    }
+
+    set alpha(value){
+        this._color.setAlpha(value);
+    }
+
+
+    get backgroundColor(){
+        return this._color;
+    }
 
     destroy(){
 

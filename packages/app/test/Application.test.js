@@ -8,7 +8,8 @@ function test1(){
     const app = new Application({
         render: "webgl",
         width:window.innerWidth, height:window.innerHeight,
-        target:document.body
+        target:document.body,
+        backgroundColor: 0X6699ff
     });
 
     console.log(app);

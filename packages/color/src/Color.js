@@ -40,10 +40,14 @@ export class Color{
     
 
     set(r = 1.0, g = 1.0, b = 1.0, a = 1.0){
-        this._color[0] = r;
-        this._color[1] = g;
-        this._color[2] = b;
-        this._color[3] = a;
+        this._color[0] = Math.min(Math.max(r, 0), 1);
+        this._color[1] = Math.min(Math.max(g, 0), 1);
+        this._color[2] = Math.min(Math.max(b, 0), 1);
+        this._color[3] = Math.min(Math.max(a, 0), 1);
+    }
+
+    setAlpha(a = 1){
+        this._color[3] = Math.min(Math.max(a, 0), 1);
     }
 
     get red(){
@@ -232,9 +236,9 @@ export class Color{
         const hex = parseInt(str.slice(0, 6), 16);
         const alpha = parseInt(str.slice(6, 8) || "ff", 16);
         this.set(
-            (hex >> 16) & 0xFF / 255,
-            (hex >> 8) & 0xFF / 255,
-            hex & 0xFF / 255,
+            ((hex >> 16) & 0xFF) / 255,
+            ((hex >> 8) & 0xFF) / 255,
+            (hex & 0xFF) / 255,
             alpha / 255
         );
     }

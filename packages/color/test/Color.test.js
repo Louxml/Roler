@@ -8,6 +8,7 @@ function test1(){
     console.log(c.toHSLAString())
     console.log(c.toHSVAString())
     console.log(c.toHexString())
+    console.log(c.value)
 
     // 0xffffff
     // 0xffffffff

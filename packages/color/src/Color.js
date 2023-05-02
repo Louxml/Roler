@@ -49,29 +49,33 @@ export class Color{
     setAlpha(a = 1){
         this._color[3] = Math.min(Math.max(a, 0), 1);
     }
+    
+    get alpha(){
+        return this._color[3];
+    }
 
-    get red(){
+    get r(){
         return Math.round(this._color[0] * 255);
     }
 
-    get green(){
+    get g(){
         return Math.round(this._color[1] * 255);
     }
 
-    get blue(){
+    get b(){
         return Math.round(this._color[2] * 255);
     }
 
-    get alpha(){
+    get a(){
         return Math.round(this._color[3] * 255);
     }
 
     get rgba(){
-        return [this.red, this.green, this.blue, this.alpha];
+        return [this.r, this.g, this.b, this.a];
     }
 
     get rgb(){
-        return [this.red, this.green, this.blue];
+        return [this.r, this.g, this.b];
     }
 
     get hsl(){
@@ -150,7 +154,7 @@ export class Color{
         const c = this.rgb;
         let value = 0;
         for (let i in c){
-            value += Math.round(c[i]*255) * Math.pow(16, (2-i)*2);
+            value += c[i] << (8 * (2 - i));
         }
 
         return value;
@@ -333,8 +337,8 @@ export class Color{
     toHexAString(){
         const k = [0, 1, 2, 3 ,4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f'];
         let a = ""
-        a += k[this.alpha >> 4];
-        a += k[this.alpha & 0xf];
+        a += k[this.a >> 4];
+        a += k[this.a & 0xf];
         return this.toHexString() + a;
     }
 

@@ -25,8 +25,8 @@ export class Color{
     constructor(...value){
         this._color = new Float32Array(4).fill(1);
 
-
-        this.normalize(value);
+        value = value.length === 1 ? value[0] : value;
+        this.value = value;
     }
 
     static HEX_PATTERN = /^(#|0x)?(([a-f0-9]{3}){1,2}|([a-f0-9]{4}){1,2}?)$/i;
@@ -160,77 +160,80 @@ export class Color{
         return value;
     }
 
-    normalize(value){
-        //TODO value 是数组
-        const length = value.length;
-        const type = typeof value[0];
+    set value(v){
+        if (v instanceof Color){
+            this._color.set(v._color);
+        }else if (v === null){
+            throw new Error('Cannot set Color to null');
+        }else if (v !== null){
+            this.normalize(v);
+        }
+    }
 
-        if (length === 1){
-            value = value[0]
-            if (type == 'number'){
-                this.setValue(value)
-            }else if (type === 'string'){
-                value = value.replaceAll(" ","")
-                let match;
-                if (Color.HEX_PATTERN.exec(value)){
-                    this.setHex(value);
-                }else if (match = Color.RGBA_PATTERN.exec(value)){
-                    this.setRGBA(
-                        parseInt(match[2]),
-                        parseInt(match[3]),
-                        parseInt(match[4]),
-                        parseInt(match[5] || 255)
-                    );
-                }else if (match = Color.HSLA_PATTERN.exec(value)){
-                    this.setHSLA(
-                        parseInt(match[2]),
-                        parseFloat(match[3]),
-                        parseFloat(match[4]),
-                        parseFloat(match[5] || 100.0)
-                    );
-                }else if (match = Color.HSVA_PATTERN.exec(value)){
-                    this.setHSVA(
-                        parseInt(match[2]),
-                        parseFloat(match[3]),
-                        parseFloat(match[4]),
-                        parseFloat(match[5] || 100.0)
-                    );
-                }
-            }else if (type === 'object'){
-                if (value.r >=0 && value.g >=0 && value.b >= 0){
-                    this.setRGBA(
-                        value.r,
-                        value.g,
-                        value.b,
-                        value.a
-                    );
-                }else if (value.h >= 0 && value.s >= 0 && value.l >= 0){
-                    this.setHSLA(
-                        value.h,
-                        value.s,
-                        value.l,
-                        value.a
-                    );
-                }else if (value.h >= 0 && value.s >= 0 && value.v >= 0){
-                    this.setHSVA(
-                        value.h,
-                        value.s,
-                        value.v,
-                        value.a
-                    );
-                }
-            }
-            
-        }else if (length >= 3 && length <= 4 && type === 'number'){
+    normalize(value){
+        const type = typeof value;
+        if (value instanceof Array){
             this.set(...value);
+        }else if (type == 'number'){
+            this.setValue(value);
+        }else if (type === 'string'){
+            value = value.replaceAll(" ","")
+            let match;
+            if (Color.HEX_PATTERN.exec(value)){
+                this.setHex(value);
+            }else if (match = Color.RGBA_PATTERN.exec(value)){
+                this.setRGBA(
+                    parseInt(match[2]),
+                    parseInt(match[3]),
+                    parseInt(match[4]),
+                    parseInt(match[5] || 255)
+                );
+            }else if (match = Color.HSLA_PATTERN.exec(value)){
+                this.setHSLA(
+                    parseInt(match[2]),
+                    parseFloat(match[3]),
+                    parseFloat(match[4]),
+                    parseFloat(match[5] || 100.0)
+                );
+            }else if (match = Color.HSVA_PATTERN.exec(value)){
+                this.setHSVA(
+                    parseInt(match[2]),
+                    parseFloat(match[3]),
+                    parseFloat(match[4]),
+                    parseFloat(match[5] || 100.0)
+                );
+            }
+        }else if (type === 'object'){
+            if (value.r >=0 && value.g >=0 && value.b >= 0){
+                this.setRGBA(
+                    value.r,
+                    value.g,
+                    value.b,
+                    value.a
+                );
+            }else if (value.h >= 0 && value.s >= 0 && value.l >= 0){
+                this.setHSLA(
+                    value.h,
+                    value.s,
+                    value.l,
+                    value.a
+                );
+            }else if (value.h >= 0 && value.s >= 0 && value.v >= 0){
+                this.setHSVA(
+                    value.h,
+                    value.s,
+                    value.v,
+                    value.a
+                );
+            }
         }
     }
 
     setValue(value = 0xffffff){
         this.set(
-            (value >> 16) & 0xFF / 255,
-            (value >> 8) & 0xFF / 255,
-            value & 0xFF / 255,
+            ((value >> 16) & 0xFF) / 255,
+            ((value >> 8) & 0xFF) / 255,
+            (value & 0xFF) / 255,
         );
     }
 

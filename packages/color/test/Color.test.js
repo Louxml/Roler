@@ -9,6 +9,7 @@ function test1(){
     console.log(c.toHSVAString())
     console.log(c.toHexString())
     console.log(c.value)
+    
 
     // 0xffffff
     // 0xffffffff
@@ -39,7 +40,7 @@ function test1(){
 }
 
 function test2(){
-    // console.log(new Color("#9b793a").toHexAString())
+    // console.log(new Color(0x6699ff).toHexAString())
     // console.log(new Color("rgba(1, 1, 1, 1)").toHexAString())
     // console.log(new Color("hsla(39, 45.54, 41.76, 100)").toHexAString())
     // console.log(new Color("hsva(39, 62.58, 60.78, 100)").toHexAString())

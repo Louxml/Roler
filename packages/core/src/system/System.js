@@ -12,6 +12,21 @@ export class System{
 
     }
 
+    /**
+     * 混合配置
+     * @param {Object} defaultOptions 默认配置
+     * @param {Object} options 选项配置
+     * @returns 混合配置
+     */
+    optionsAssign(defaultOptions, options){
+        const config = {};
+        Object.keys(defaultOptions).map((key) => {
+            config[key] = options[key] || defaultOptions[key];
+        });
+
+        return config
+    }
+
     init(){
         
     }

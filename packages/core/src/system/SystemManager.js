@@ -72,8 +72,8 @@ export class SystemManager{
      * @param {Runner} runner 运行器
      * @param {Object} optinos 配置列表，用于各自系统的调用参数
      */
-    emitWithCustomOptions(runner, optinos){
-        runner.item.forEach(system => {
+    emitWithCustomOptions(runner, options){
+        runner.items.forEach(system => {
             system[runner.name](options[system.name]);
         })
     }

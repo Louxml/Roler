@@ -22,13 +22,27 @@ export class Runner{
     }
 
     /**
-     * 运行（执行）
+     * 顺序运行（执行）
      * @param  {...any} args 参数列表
      * @returns this 链式调用
      */
     emit(...args){
         const { name ,items } = this;
         for (let i = 0, len = items.length; i < len; i++){
+            items[i][name](...args);
+        }
+
+        return this;
+    }
+
+    /**
+     * 逆序运行（执行）
+     * @param  {...any} args 参数列表
+     * @returns this 链式调用
+     */
+    reverseEmit(...args){
+        const { name ,items } = this;
+        for (let i = items.length - 1, len = 0; i >= len; i--){
             items[i][name](...args);
         }
 

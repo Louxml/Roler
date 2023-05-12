@@ -118,7 +118,7 @@ export class ViewSystem extends System{
      * @public
      * @param {Boolean} removeView 是否移除canvas节点
      */
-    destroy(removeView){
+    destroy(removeView = false){
         if (removeView){
             this.element.parentNode?.removeChild(this.element);
         }

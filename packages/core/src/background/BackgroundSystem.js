@@ -30,7 +30,6 @@ export class BackgroundSystem extends System{
     _color;
 
     clearBeforeRender;
-    
 
     constructor(){
         super();

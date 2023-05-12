@@ -82,8 +82,9 @@ export class Renderer extends SystemManager{
      * @oublic
      */
     destroy(){
-        // 销毁运行器，顺序执行
-        this.runners.destroy.emit();
+        // 销毁运行器，逆序执行
+        this.runners.destroy.reverseEmit();
+
 
         super.destroy();
     }
@@ -110,6 +111,28 @@ export class Renderer extends SystemManager{
      */
     get height(){
         return this.view.element.height;
+    }
+
+    /**
+     * 获取Canvas节点
+     */
+    get canvas(){
+        return this.view.element;
+    }
+
+    /**
+     * 获取上下文环境对象
+     */
+    get gl(){
+        return this.context.gl;
+    }
+
+    /**
+     * 获取上下文唯一标识
+     * @Number
+     */
+    get CONTEXT_UID(){
+        return this.context.CONTEXT_UID;
     }
 
 }

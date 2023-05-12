@@ -41,10 +41,11 @@ export class BackgroundSystem extends System{
     }
 
     init(options){
+        const alpha = options.backgroundAlpha;
         options = this.optionsAssign(BackgroundSystem.defaultOptions, options);
 
         this.color = options.backgroundColor;
-        this.alpha = options.backgroundAlpha;
+        this.alpha = alpha || this.alpha;
         this.clearBeforeRender = options.clearBeforeRender;
     }
 

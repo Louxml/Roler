@@ -9,7 +9,8 @@ function test1(){
         render: "webgl",
         width:window.innerWidth, height:window.innerHeight,
         target:document.body,
-        backgroundColor: 0X6699ff
+        backgroundColor: {r:0x33, g:0x66, b:0xff, a:0x22},
+        backgroundAlpha: 0.5
     });
 
     console.log(app);

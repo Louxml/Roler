@@ -251,9 +251,6 @@ export class Color{
     }
 
     setRGBA(r = 255, g = 255, b = 255, a = 255){
-        r = Math.max(Math.min(r, 255), 0)
-        g = Math.max(Math.min(g, 255), 0)
-        b = Math.max(Math.min(b, 255), 0)
         this.set(r/255, g/255, b/255, a/255);
     }
 

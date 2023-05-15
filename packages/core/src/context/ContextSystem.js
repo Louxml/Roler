@@ -164,33 +164,44 @@ export class ContextSystem extends System{
         const { gl } = this;
         const common = {
             loseContext: gl.getExtension("WEBGL_lose_context"),
-            anisotropicFiltering: gl.getExtension("EXT_texture_filter_anisotropic")
+            anisotropicFiltering: gl.getExtension("EXT_texture_filter_anisotropic"),
+            floatTextureLinear: gl.getExtension("OES_texture_float_linear"),
+
+            astc: gl.getExtension("WEBGL_compressed_texture_astc"),
+            atc: gl.getExtension("WEBGL_compressed_texture_atc"),
+            etc: gl.getExtension("WEBGL_compressed_texture_etc"),
+            etc1: gl.getExtension("WEBGL_compressed_texture_etc1"),
+            pvrtc: gl.getExtension("WEBGL_compressed_texture_pvrtc") || gl.getExtension("WEBKIT_WEBGL_compressed_texture_pvrtc"),
+            s3tc: gl.getExtension("WEBGL_compressed_texture_s3tc"),
+            s3tc_sRGB: gl.getExtension("WEBGL_compressed_texture_s3tc_srgb"),
+
         }
 
-        // TODO 没加完
-        const webgl1 = [
-            "ANGLE_instanced_arrays",
-            "EXT_blend_minmax",
-            "EXT_frag_depth",
-            "EXT_sRGB",
-            "EXT_shader_texture_lod",
-            "OES_element_index_uint",
-            "OES_fbo_render_mipmap",
-            "OES_standard_derivatives",
-            "OES_texture_float",
-            "OES_texture_float_linear",
-            "OES_texture_half_float",
-            "OES_texture_half_float_linear",
-            "OES_vertex_array_object"
-        ]
-
-        const webgl2 = [
-            "EXT_color_buffer_float",
-            
-
-        ]
-
-        Object.assign(this.extensions, common);
+        if (this.webGLVersion === 1){
+            Object.assign(this.extensions, common, {
+                instanceArray: gl.getExtension("ANGLE_instanced_arrays"),
+                blendMinMax: gl.getExtension("EXT_blend_minmax"),
+                fragDepth: gl.getExtension("EXT_frag_depth"),
+                sRGB: gl.getExtension("EXT_sRGB"),
+                shaderTextureLod: gl.getExtension("EXT_shader_texture_lod"),
+                unit32ElementIndex: gl.getExtension("OES_element_index_uint"),
+                fboRenderMipmap: gl.getExtension("OES_fbo_render_mipmap"),
+                standardDerivatives: gl.getExtension("OES_standard_derivatives"),
+                // float or half float
+                floatTexture: gl.getExtension("OES_texture_float"),
+                textureHalfFloat: gl.getExtension("OES_texture_half_float"),
+                textureHalfFloatLinear: gl.getExtension("OES_texture_half_float_linear"),
+    
+                vertexArrayObject: gl.getExtension("OES_vertex_array_object"),
+                colorBufferFloat: gl.getExtension("WEBGL_color_buffer_float"),
+                depthTexture: gl.getExtension("WEBGL_depth_texture"),
+                drawBuffers: gl.getExtension("WEBGL_draw_buffers"),
+            });
+        }else if (this.webGLVersion === 2){
+            Object.assign(this.extensions, common, {
+                colorBufferFloat: gl.getExtension("EXT_color_buffer_float"),
+            })
+        }
     }
 
     /**

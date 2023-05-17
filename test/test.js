@@ -3,6 +3,8 @@
 
 export * from "../packages/color/test/Color.test.js";
 
+export * from "../packages/constants/test/Constants.test.js";
+
 export * from "../packages/ticker/test/Ticker.test.js";
 // export * from "../packages/scene/test/Scene.test.js";
 // export * from "../packages/display/test/Display.test.js";

@@ -1,4 +1,5 @@
 
+import { BLEND_MODES } from "../../../constants/src/index.js";
 
 const BLEND = 0;
 const OFFSET = 1;
@@ -11,12 +12,29 @@ export class State{
     /**
      * 状态数据
      * @Number
-     * @public
+     * @private
      */
     #data;
 
+    /**
+     * 混合模式
+     * @Number
+     * @private
+     */
+    #blendMode;
+
+    /**
+     * 多边形偏移量
+     * @Number
+     * @private
+     */
+    #polygonOffset;
+
     constructor(){
         this.#data = 0;
+        
+        this.#blendMode = BLEND_MODES.NORMAL;
+        this.#polygonOffset = 0;
 
         this.blend = true;
         this.depthMask = true;
@@ -75,7 +93,7 @@ export class State{
     }
 
     /**
-     * 是否开启深度缓冲区
+     * 是否开启写入深度缓冲区
      * @default true
      */
     get depthMask(){
@@ -96,6 +114,32 @@ export class State{
 
     set clockwiseFrontFace(value){
         this.#data ^= (this.clockwiseFrontFace ^ !!value) << WINDING;
+    }
+
+    /**
+     * 混合模式
+     * @default BLEND_MODES.NORMAL
+     */
+    get blendMode(){
+        return this.#blendMode;
+    }
+
+    set blendMode(value){
+        this.blend = value !== BLEND_MODES.NONE;
+        this.#blendMode = value;
+    }
+
+    /**
+     * 多边形深度偏移量
+     * @default false
+     */
+    get polygonOffset(){
+        return this.#polygonOffset;
+    }
+
+    set polygonOffset(value){
+        this.offsets = !!value;
+        this.#polygonOffset = value;
     }
 
     toString(){

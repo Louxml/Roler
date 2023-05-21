@@ -36,8 +36,8 @@ export class State{
         this.#blendMode = BLEND_MODES.NORMAL;
         this.#polygonOffset = 0;
 
-        this.blend = true;
-        this.depthMask = true;
+        // this.blend = true;
+        // this.depthMask = true;
     }
 
     get data(){

@@ -8,3 +8,6 @@ export * from "./Renderer.js";
 export * from "../src/RendererPlugin.js";
 
 export * from "./state/State.js";
+
+export * from "./buffer/Buffer.js";
+// export * from "./buffer/GLBuffer.js";

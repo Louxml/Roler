@@ -1,6 +1,6 @@
 import {ViewSystem} from "../src/view/ViewSystem.js"
 
-import { Renderer } from "../src/index.js"
+import { Renderer, Buffer } from "../src/index.js"
 
 import { System } from "../src/system/System.js";
 
@@ -36,8 +36,14 @@ function test3(){
     console.log(new ViewSystem())
 }
 
+function test4(){
+    console.log(new Buffer())
+}
+
 // test1();
 
 // test2();
 
 // test3();
+
+// test4()

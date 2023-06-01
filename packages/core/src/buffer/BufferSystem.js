@@ -135,7 +135,7 @@ export class BufferSystem extends System{
             gl.deleteBuffer(glBuffer.buffer);
         }
 
-        delete buffer.glBuffer[this.CONTEXT_UID];
+        delete buffer.glBuffer[CONTEXT_UID];
     }
 
     /**

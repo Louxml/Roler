@@ -28,6 +28,12 @@ export class StateSystem extends System{
     renderer;
 
     /**
+     * 上下文环境
+     * @private
+     */
+    gl;
+
+    /**
      * 状态值
      * @public
      */
@@ -92,9 +98,9 @@ export class StateSystem extends System{
     }
 
     contextChange(){
-        const gl = this.renderer.gl;
+        this.gl = this.renderer.gl;
 
-        this.mapWebGLBlendModes(gl);
+        this.mapWebGLBlendModes(this.gl);
 
         this.reset();
     }
@@ -149,7 +155,7 @@ export class StateSystem extends System{
      * @param {Boolean} value 是否开启混合模式
      */
     setBlend(value){
-        const { gl } = this.renderer;
+        const { gl } = this;
 
         gl[value ? 'enable' : 'disable'](gl.BLEND);
         
@@ -173,7 +179,7 @@ export class StateSystem extends System{
         this.blendMode = value;
 
         const mode = this.blendModes[value];
-        const gl = this.renderer.gl;
+        const gl = this.gl;
 
         if (mode.length === 2){
             gl.blendFunc(mode[0], mode[1]);
@@ -193,7 +199,7 @@ export class StateSystem extends System{
      * @param {Boolean} value 是否开启多边形偏移
      */
     setOffset(value){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
 
         gl[value ? 'enable' : 'disable'](gl.POLYGON_OFFSET_FILL);
 
@@ -204,7 +210,7 @@ export class StateSystem extends System{
 
     // TODO 学习polygonOffset方法细节
     setPolygonOffset(value){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
 
         this.polygonOffset = value;
         gl.polygonOffset(1, value);
@@ -215,7 +221,7 @@ export class StateSystem extends System{
      * @param {Boolean} value 是否剔除面
      */
     setCullFace(value){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
         gl[value ? 'enable' : 'disable'](gl.CULL_FACE);
     }
     
@@ -224,7 +230,7 @@ export class StateSystem extends System{
      * @param {Boolean} value 是否开启深度测试
      */
     setDepthTest(value){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
         gl[value ? 'enable' : 'disable'](gl.DEPTH_TEST);
     }
 
@@ -233,7 +239,7 @@ export class StateSystem extends System{
      * @param {Boolean} value 是否顺时针为正面
      */
     setFrontFace(value){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
         gl.frontFace(gl[value ? 'CW' : 'CCW']);
     }
 
@@ -242,12 +248,12 @@ export class StateSystem extends System{
      * @param {Boolean} value 是否开启深度模板
      */
     setDepthMask(value){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
         gl.depthMask(value);
     }
 
     reset(){
-        const gl = this.renderer.gl;
+        const gl = this.gl;
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
 
         this.forceState(this.defaultState);

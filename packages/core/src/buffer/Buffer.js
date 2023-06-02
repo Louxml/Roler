@@ -42,7 +42,7 @@ export class Buffer{
     disposeRunner;
 
     constructor(data, _static = true, index = false){
-        this.data = data || new Float32Array(1);
+        this.data = new Float32Array(data);
 
         this.glBuffer = {};
         this.#updateID = 0;

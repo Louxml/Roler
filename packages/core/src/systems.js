@@ -6,3 +6,4 @@ export * from "./startup/StartupSystem.js";
 export * from "./context/ContextSystem.js";
 export * from "./state/StateSystem.js";
 export * from "./buffer/BufferSystem.js";
+export * from "./geometry/GeometrySystem.js";

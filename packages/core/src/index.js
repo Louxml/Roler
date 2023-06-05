@@ -11,3 +11,5 @@ export * from "./state/State.js";
 
 export * from "./buffer/Buffer.js";
 // export * from "./buffer/GLBuffer.js";
+
+export * from "./geometry/Geometry.js";

@@ -4,6 +4,27 @@ import { Runner } from "../../../runner/src/Runner.js";
 
 let UID = 0;
 
+// 支持的数据类型
+const map = {
+    // Float64Array,
+    Float32Array,
+    Uint32Array,
+    Int32Array,
+    Uint16Array,
+    // Int16Array,
+    Uint8Array,
+    // Int8Array
+}
+
+// 类型转换
+const typed = (data) => {
+    for (let k in map){
+        if (data instanceof map[k])return data;
+    }
+
+    return new Float32Array(data);
+}
+
 export class Buffer{
 
     /**
@@ -42,7 +63,8 @@ export class Buffer{
     disposeRunner;
 
     constructor(data, _static = true, index = false){
-        this.data = new Float32Array(data);
+        data = typed(data)
+        this.data = data;
 
         this.glBuffer = {};
         this.#updateID = 0;
@@ -60,9 +82,7 @@ export class Buffer{
      * @param {number[] | Float32Array} data 数据
      */
     update(data = this.data){
-        if (data instanceof Array){
-            data = new Float32Array(data);
-        }
+        data = typed(data);
         this.data = data;
         this.#updateID++;
     }
@@ -74,6 +94,10 @@ export class Buffer{
         this.disposeRunner.emit(this, false);
     }
 
+    /**
+     * 销毁
+     * @public
+     */
     destroy(){
         this.dispose();
 
@@ -93,10 +117,6 @@ export class Buffer{
     }
 
     static from(data = []){
-        if (data instanceof Array){
-            data = new Float32Array(data);
-        }
-
         return new Buffer(data);
     }
 }

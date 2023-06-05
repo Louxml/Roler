@@ -37,7 +37,10 @@ function test3(){
 }
 
 function test4(){
-    console.log(new Buffer())
+    let a = new Buffer()
+    a.update([1,2,3,4,5])
+    // let a = Buffer.from([1,2])
+    console.log(a);
 }
 
 // test1();
@@ -46,4 +49,4 @@ function test4(){
 
 // test3();
 
-// test4()
+// test4();

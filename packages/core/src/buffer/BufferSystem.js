@@ -12,7 +12,7 @@ export class BufferSystem extends System{
     static extension = {
         type: ExtensionType.RendererSystem,
         name: "buffer",
-        priority: 60
+        priority: 50
     }
 
     /**

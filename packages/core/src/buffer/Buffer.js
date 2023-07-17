@@ -101,6 +101,7 @@ export class Buffer{
     destroy(){
         this.dispose();
 
+        this.disposeRunner.destroy();
         this.data = null;
     }
 

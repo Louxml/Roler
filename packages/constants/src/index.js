@@ -55,3 +55,13 @@ export const DRAW_MODES = {
     TRIANGLE_STRIP: 5,
     TRIANGLE_FAN: 6,
 }
+
+// Shader Precision 精度
+export const PRECISION = {
+    // 低精度
+    LOW: "lowp",
+    // 中等精度
+    MEDIUM: "mediump",
+    // 高精度
+    HIGH: "highp"
+}

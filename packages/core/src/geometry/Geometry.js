@@ -148,8 +148,19 @@ export class Geometry{
         return this;
     }
 
+    /**
+     * 获取index buffer对象
+     * @returns index Buffer对象
+     */
     getIndex(){
         return this.indexBuffer;
+    }
+
+    /**
+     * 结构优化，buffer融合，数据交叉读取
+     */
+    interleave(){
+
     }
 
     /**
@@ -167,12 +178,21 @@ export class Geometry{
     destroy(){
         this.dispose();
 
+        this.disposeRunner.destroy();
         this.buffers = null;
         this.attributes = null;
         this.indexBuffer = null;
     }
 
+    /**
+     * 对象克隆
+     */
     clone(){
 
+    }
+
+    // 几何形混合
+    static merge(...geometries){
+        
     }
 }

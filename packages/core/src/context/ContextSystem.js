@@ -164,38 +164,38 @@ export class ContextSystem extends System{
         const { gl } = this;
         const common = {
             loseContext: gl.getExtension("WEBGL_lose_context"),
-            anisotropicFiltering: gl.getExtension("EXT_texture_filter_anisotropic"),
-            floatTextureLinear: gl.getExtension("OES_texture_float_linear"),
+            // anisotropicFiltering: gl.getExtension("EXT_texture_filter_anisotropic"),
+            // floatTextureLinear: gl.getExtension("OES_texture_float_linear"),
 
-            astc: gl.getExtension("WEBGL_compressed_texture_astc"),
-            atc: gl.getExtension("WEBGL_compressed_texture_atc"),
-            etc: gl.getExtension("WEBGL_compressed_texture_etc"),
-            etc1: gl.getExtension("WEBGL_compressed_texture_etc1"),
-            pvrtc: gl.getExtension("WEBGL_compressed_texture_pvrtc") || gl.getExtension("WEBKIT_WEBGL_compressed_texture_pvrtc"),
-            s3tc: gl.getExtension("WEBGL_compressed_texture_s3tc"),
-            s3tc_sRGB: gl.getExtension("WEBGL_compressed_texture_s3tc_srgb"),
+            // astc: gl.getExtension("WEBGL_compressed_texture_astc"),
+            // atc: gl.getExtension("WEBGL_compressed_texture_atc"),
+            // etc: gl.getExtension("WEBGL_compressed_texture_etc"),
+            // etc1: gl.getExtension("WEBGL_compressed_texture_etc1"),
+            // pvrtc: gl.getExtension("WEBGL_compressed_texture_pvrtc") || gl.getExtension("WEBKIT_WEBGL_compressed_texture_pvrtc"),
+            // s3tc: gl.getExtension("WEBGL_compressed_texture_s3tc"),
+            // s3tc_sRGB: gl.getExtension("WEBGL_compressed_texture_s3tc_srgb"),
 
         }
 
         if (this.webGLVersion === 1){
             Object.assign(this.extensions, common, {
                 instanceArray: gl.getExtension("ANGLE_instanced_arrays"),
-                blendMinMax: gl.getExtension("EXT_blend_minmax"),
-                fragDepth: gl.getExtension("EXT_frag_depth"),
-                sRGB: gl.getExtension("EXT_sRGB"),
-                shaderTextureLod: gl.getExtension("EXT_shader_texture_lod"),
+                // blendMinMax: gl.getExtension("EXT_blend_minmax"),
+                // fragDepth: gl.getExtension("EXT_frag_depth"),
+                // sRGB: gl.getExtension("EXT_sRGB"),
+                // shaderTextureLod: gl.getExtension("EXT_shader_texture_lod"),
                 unit32ElementIndex: gl.getExtension("OES_element_index_uint"),
-                fboRenderMipmap: gl.getExtension("OES_fbo_render_mipmap"),
-                standardDerivatives: gl.getExtension("OES_standard_derivatives"),
-                // float or half float
-                floatTexture: gl.getExtension("OES_texture_float"),
-                textureHalfFloat: gl.getExtension("OES_texture_half_float"),
-                textureHalfFloatLinear: gl.getExtension("OES_texture_half_float_linear"),
+                // fboRenderMipmap: gl.getExtension("OES_fbo_render_mipmap"),
+                // standardDerivatives: gl.getExtension("OES_standard_derivatives"),
+                // // float or half float
+                // floatTexture: gl.getExtension("OES_texture_float"),
+                // textureHalfFloat: gl.getExtension("OES_texture_half_float"),
+                // textureHalfFloatLinear: gl.getExtension("OES_texture_half_float_linear"),
     
                 vertexArrayObject: gl.getExtension("OES_vertex_array_object"),
-                colorBufferFloat: gl.getExtension("WEBGL_color_buffer_float"),
-                depthTexture: gl.getExtension("WEBGL_depth_texture"),
-                drawBuffers: gl.getExtension("WEBGL_draw_buffers"),
+                // colorBufferFloat: gl.getExtension("WEBGL_color_buffer_float"),
+                // depthTexture: gl.getExtension("WEBGL_depth_texture"),
+                // drawBuffers: gl.getExtension("WEBGL_draw_buffers"),
             });
         }else if (this.webGLVersion === 2){
             Object.assign(this.extensions, common, {

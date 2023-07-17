@@ -1,6 +1,6 @@
 import {ViewSystem} from "../src/view/ViewSystem.js"
 
-import { Renderer, Buffer } from "../src/index.js"
+import { Renderer, Buffer, Program } from "../src/index.js"
 
 import { System } from "../src/system/System.js";
 
@@ -43,6 +43,10 @@ function test4(){
     console.log(a);
 }
 
+function test5(){
+    let p = new Program();
+}
+
 // test1();
 
 // test2();
@@ -50,3 +54,5 @@ function test4(){
 // test3();
 
 // test4();
+
+test5()

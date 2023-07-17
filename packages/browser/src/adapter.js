@@ -19,7 +19,6 @@ export const Adapter = {
         return canvas;
     },
 
-
     getCanvasRenderingContext2D: () => CanvasRenderingContext2D,
 
     getWebGLRenderingContext: () => WebGLRenderingContext,

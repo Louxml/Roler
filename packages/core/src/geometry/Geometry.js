@@ -73,7 +73,7 @@ export class Geometry{
     /**
      * 添加属性数据
      * @param {String} id 属性名字
-     * @param {Buffer ｜ Float32Array ｜ number[]} buffer 数据
+     * @param {Buffer | Float32Array | number[]} buffer 数据
      * @param {Number} size 单个元素的大小
      * @param {Boolean} normalized 是否归一化
      * @param {Number} type 枚举的数据类型

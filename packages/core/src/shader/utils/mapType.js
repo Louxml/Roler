@@ -5,7 +5,7 @@ const TYPES = {
     FLOAT:          "float",
     FLOAT_VEC2:     "vec2",
     FLOAT_VEC3:     "vec3",
-    FLOAT_VEC$:     "vec4",
+    FLOAT_VEC4:     "vec4",
     
     INT:            "int",
     INT_VEC2:       "ivec2",

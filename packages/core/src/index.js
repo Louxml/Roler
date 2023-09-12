@@ -15,3 +15,4 @@ export * from "./buffer/Buffer.js";
 export * from "./geometry/Geometry.js";
 
 export * from "./shader/Program.js";
+export * from "./shader/Shader.js";

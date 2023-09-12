@@ -62,14 +62,6 @@ export class ShaderSystem extends System{
         this.gl = this.renderer.gl;
 
         this.reset();
-
-
-        // TODO test
-        let program = new Program();
-        let shader = new Shader(program);
-        this.bind(shader);
-
-        this.setUniforms([1,2,3,4])
     }
 
     /**
@@ -80,6 +72,9 @@ export class ShaderSystem extends System{
      */
     bind(shader, isAsync){
         shader.disposeRunner.add(this);
+
+        // TODO globalUniform初始化值
+        shader.uniforms.globals = this.renderer.globalUniform
 
         const gl = this.gl;
         // TODO 这里为什么用最新的上下文
@@ -108,7 +103,7 @@ export class ShaderSystem extends System{
 
         const shader = this.shader.program;
         const glProgram = shader.glPrograms[CONTEXT_UID];
-        // TODO 同步绑定数据
+        // TODO 绑定数据
     }
 
     // 同步uniformGroup
@@ -120,13 +115,14 @@ export class ShaderSystem extends System{
             glProgram.uniformUpdateGroups[group.id] = group.updateID;
 
             this.syncUniforms(group, glProgram, syncData);
-
         }
 
     }
 
+    //TODO 优化uniform数据同步的方法（不用Function）
     syncUniforms(group, glProgram, syncData){
-        const syncFUnc = group.syncUniforms[this.shader.program.id] || this.createSyncGroups(group);
+        const syncFunc = group.syncUniforms[this.shader.program.id] || this.createSyncGroups(group);
+        syncFunc(glProgram.uniformData, group.uniforms, this.renderer, syncData);
     }
 
     /**
@@ -157,8 +153,6 @@ export class ShaderSystem extends System{
         const uniforms = group.uniforms;
 
         const str = [`${preFix}-`];
-
-        console.log(uniforms);
 
         for (const i in uniforms){
             str.push(i);

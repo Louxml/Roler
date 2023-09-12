@@ -1,7 +1,10 @@
 
 import { System } from "../index.js";
-
 import { Extension, ExtensionType } from "../../../extensions/src/index.js";
+
+import { Program, Shader, Buffer, Geometry } from "../index.js";
+import { DRAW_MODES } from "../../../constants/src/index.js";
+
 
 
 export class GeometrySystem extends System{
@@ -38,8 +41,16 @@ export class GeometrySystem extends System{
      */
     isUint32ElementIndex;
 
+    /**
+     * 当前激活几何体
+     * @private
+     */
+    #activeGeometry;
+
     constructor(renderer){
         super();
+
+        this.#activeGeometry = null;
 
         this.renderer = renderer;
     }
@@ -53,9 +64,9 @@ export class GeometrySystem extends System{
         this.disposeAll(true)
         
         const gl = this.gl = this.renderer.gl;
-        const context = this.renderer.context;
-
         this.CONTEXT_UID = this.renderer.CONTEXT_UID;
+
+        const context = this.renderer.context;
 
         if (context.webGLVersion !== 2){
 
@@ -71,11 +82,81 @@ export class GeometrySystem extends System{
             gl.drawArraysInstanced = instanceArray ? instanceArray.drawArraysInstancedANGLE : () => null;
         }
 
-        this.isUint32ElementIndex = context.webGLVersion === 2 || !!context.extensions.unit32ElementIndex;
+        this.isUint32ElementIndex = context.webGLVersion === 2 || !!context.extensions.unit32ElementIndex;        
     }
 
     bind(geometry, shader){
-        // shader = shader || this.renderer.shader.shader;
+        shader = shader || this.renderer.shader.shader;
+
+        this.#activeGeometry = geometry;
+
+        this.renderer.shader.bind(shader);
+
+        this.activateVao(geometry, shader.program);
+
+        this.updateBuffers()
+    }
+
+    /**
+     * TODO 可优化 VAO、Instance
+     * 激活Geometry对象的attribute属性设置
+     * @param {Geometry} geometry Geometry对象
+     * @param {Program} program Program对象
+     */
+    activateVao(geometry, program){
+        const {gl, CONTEXT_UID} = this;
+
+        const bufferSystem = this.renderer.buffer;
+
+        const buffers = geometry.buffers;
+        const attributes = geometry.attributes;
+
+        for (const id in attributes){
+            const attribute = attributes[id]
+            const buffer = buffers[attribute.buffer]
+
+            if (program.attributeData[id]){
+                // TODO 可优化如果同上一个是同一个buffer，不需要多次绑定
+                bufferSystem.bind(buffer);
+
+                const location = program.attributeData[id].location;
+
+                gl.enableVertexAttribArray(location);
+
+                gl.vertexAttribPointer(
+                    location,
+                    attribute.size,
+                    attribute.type || gl.FLOAT,
+                    attribute.normalized,
+                    attribute.stride,
+                    attribute.start
+                );
+            }
+        }
+    }
+    
+    /**
+     * 更新当前活动Geometry对象的Buffer
+     * @public
+     */
+    updateBuffers(){
+        const geometry = this.#activeGeometry;
+        const bufferSystem = this.renderer.buffer;
+
+        for (let i = 0; i < geometry.buffers.length; i++){
+            const buffer = geometry.buffers[i];
+            
+            bufferSystem.update(buffer);
+        }
+    }
+
+    draw(type, size = 0, start = 0){
+        const gl = this.gl;
+        const geometry = this.#activeGeometry;
+
+        size = size || geometry.getSize();
+
+        gl.drawArrays(type, start, size);
     }
 
     dispose(geometry, contextLost){

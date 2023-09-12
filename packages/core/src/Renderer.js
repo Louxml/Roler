@@ -2,6 +2,8 @@
 import { ExtensionType, Extension } from "../../extensions/src/index.js";
 import { SystemManager } from "./system/SystemManager.js";
 import { Adapter } from "../../browser/src/index.js";
+import { UniformGroup } from "./shader/UniformGroup.js";
+import { Mat3 } from "../../math/src/Mat3.js";
 
 
 export class Renderer extends SystemManager{
@@ -39,6 +41,9 @@ export class Renderer extends SystemManager{
     constructor(options){
         super();
 
+        this.globalUniform = new UniformGroup({
+            u_projectMatrix: new Mat3()
+        }, true);
 
         const config ={
             runners: [

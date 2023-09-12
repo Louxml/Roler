@@ -34,7 +34,7 @@ export class Geometry{
 
     /**
      * attribute对象列表
-     * @Array
+     * @Object
      * @public
      */
     attributes;
@@ -60,7 +60,7 @@ export class Geometry{
      */
     instanced;
 
-    constructor(buffers = [], attributes = []){
+    constructor(buffers = [], attributes = {}){
         this.buffers = buffers;
         this.attributes = attributes;
         this.indexBuffer = null;
@@ -99,7 +99,7 @@ export class Geometry{
             return this;
         }
 
-        const bufferIndex = this.buffers.indexOf(buffer)
+        let bufferIndex = this.buffers.indexOf(buffer)
         if (bufferIndex === -1){
             this.buffers.push(buffer);
             bufferIndex = this.buffers.length - 1;
@@ -157,6 +157,21 @@ export class Geometry{
     }
 
     /**
+     * 获取数据数量
+     * @returns 顶点数据数量
+     */
+    getSize(){
+        for (const i in this.attributes) {
+            const attribute = this.attributes[i];
+            const buffer = this.buffers[attribute.buffer];
+            const data = buffer.data;
+
+            return data.length / ((attribute.stride / (data.byteLength / data.length)) || attribute.size);
+        }
+    }
+
+    /**
+     * TODO
      * 结构优化，buffer融合，数据交叉读取
      */
     interleave(){

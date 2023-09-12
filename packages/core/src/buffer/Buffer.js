@@ -44,9 +44,9 @@ export class Buffer{
     /**
      * buffer类型
      * @type {BUFFER_TYPE}
-     * @public
+     * @private
      */
-    type;
+    #type;
 
     /**
      * 更新标记
@@ -61,6 +61,12 @@ export class Buffer{
      * @public
      */
     disposeRunner;
+
+    /**
+     * WebGLBuffer存储字典
+     * @public
+     */
+    glBuffer;
 
     constructor(data, _static = true, index = false){
         data = typed(data)
@@ -110,11 +116,15 @@ export class Buffer{
     }
 
     get index(){
-        return this.type === BUFFER_TYPE.ELEMENT_ARRAY_BUFFER;
+        return this.#type === BUFFER_TYPE.ELEMENT_ARRAY_BUFFER;
     }
 
     set index(value){
-        this.type = value ? BUFFER_TYPE.ELEMENT_ARRAY_BUFFER : BUFFER_TYPE.ARRAY_BUFFER;
+        this.#type = value ? BUFFER_TYPE.ELEMENT_ARRAY_BUFFER : BUFFER_TYPE.ARRAY_BUFFER;
+    }
+
+    get type(){
+        return this.#type;
     }
 
     static from(data = []){

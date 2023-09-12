@@ -2,15 +2,27 @@
 
 export class GLProgram{
 
+    /**
+     * WebGLProgram
+     * @public
+     */
     program;
 
+    /**
+     * uniform数据接口结构
+     * @public
+     */
     uniformData;
 
-    uniformGroups;
+    // uniformGroups;
 
+    /**
+     * uniformGroup更新标记列表
+     * @public
+     */
     uniformUpdateGroups;
 
-    uniformBufferBindings;
+    // uniformBufferBindings;
 
     /**
      * 
@@ -21,16 +33,17 @@ export class GLProgram{
         this.program = program;
         this.uniformData = uniformData;
 
-        this.uniformGroups = {};
         this.uniformUpdateGroups = {};
-        this.uniformBufferBindings = {};
+        // this.uniformGroups = {};
+        // this.uniformBufferBindings = {};
     }
 
     destroy(){
         this.uniformData = null;
-        this.uniformGroups = null;
         this.uniformUpdateGroups = null;
-        this.uniformBufferBindings = null;
+
+        // this.uniformGroups = null;
+        // this.uniformBufferBindings = null;
         this.program = null;
     }
 }

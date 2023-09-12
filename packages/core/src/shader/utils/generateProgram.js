@@ -179,7 +179,7 @@ export function generateProgram(gl, program){
     gl.deleteShader(vertexShader);
     gl.deleteShader(fragmentShader);
 
-    // console.log(program.uniformData);
+    // console.log(program);
 
     const glProgram = new GLProgram(webGLProgram, program.uniformData);
 

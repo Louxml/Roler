@@ -31,7 +31,7 @@ export class Renderer extends SystemManager{
      */
     static test(options){
         // TODO 环境支持情况检查
-        if (options.render != "webgl"){
+        if (options.render !== 'webgl' && options.render !== 'webgl2'){
             return false
         }
 

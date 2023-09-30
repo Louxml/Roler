@@ -82,6 +82,7 @@ export class ContextSystem extends System{
     }
 
     init(options){
+        const render = options.render
         options = this.optionsAssign(ContextSystem.defaultOptions, options)
 
         const alpha = this.renderer.background.alpha < 1;
@@ -90,6 +91,7 @@ export class ContextSystem extends System{
         this.preserveDrawingBuffer = options.preserveDrawingBuffer
 
         this.initFromOptions({
+            render: render,
             alpha,
             stencil: true,
             antialias: options.antialias,
@@ -141,8 +143,11 @@ export class ContextSystem extends System{
      */
     createContext(canvas, options){
         let gl;
+        const render = options.render
         // webgl2
-        gl = canvas.getContext('webgl2', options);
+        if (render === 'webgl2'){
+            gl = canvas.getContext('webgl2', options);
+        }
 
         // webgl1
         if (!gl){

@@ -83,6 +83,8 @@ export class BufferSystem extends System{
      * @param {Buffer} buffer Buffer对象
      */
     bind(buffer){
+
+        // TODO 优化多次绑定同一个buffer
         const { CONTEXT_UID, gl } = this;
         
         const glBuffer = buffer.glBuffer[CONTEXT_UID] || this.createGLBuffer(buffer);

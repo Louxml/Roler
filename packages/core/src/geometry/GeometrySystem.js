@@ -2,8 +2,7 @@
 import { System } from "../index.js";
 import { Extension, ExtensionType } from "../../../extensions/src/index.js";
 
-import { Program, Shader, Buffer, Geometry } from "../index.js";
-import { DRAW_MODES } from "../../../constants/src/index.js";
+import { Program } from "../index.js";
 
 
 
@@ -82,15 +81,13 @@ export class GeometrySystem extends System{
             gl.drawArraysInstanced = instanceArray ? instanceArray.drawArraysInstancedANGLE : () => null;
         }
 
-        this.isUint32ElementIndex = context.webGLVersion === 2 || !!context.extensions.unit32ElementIndex;        
+        this.isUint32ElementIndex = context.webGLVersion === 2 || !!context.extensions.unit32ElementIndex;
     }
 
     bind(geometry, shader){
         shader = shader || this.renderer.shader.shader;
 
         this.#activeGeometry = geometry;
-
-        this.renderer.shader.bind(shader);
 
         this.activateVao(geometry, shader.program);
 
@@ -159,6 +156,10 @@ export class GeometrySystem extends System{
         gl.drawArrays(type, start, size);
     }
 
+    unbind(){
+
+    }
+
     dispose(geometry, contextLost){
         if (!this.managedGeometries[geometry.id]){
             return;
@@ -183,7 +184,6 @@ export class GeometrySystem extends System{
 
         // TODO 处理VAO数据
     }
-
 
     disposeAll(contextLost){
         for (let id in this.managedGeometries){

@@ -4,6 +4,6 @@
 const target = document.body
 
 export const config = {
-    render: "webgl",
+    render: "webgl2",
     target:  target,
 }

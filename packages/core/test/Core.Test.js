@@ -1,6 +1,6 @@
 import {ViewSystem} from "../src/view/ViewSystem.js"
 
-import { Renderer, Buffer, Program } from "../src/index.js"
+import { Renderer, Buffer, Program, BaseTexture, Texture } from "../src/index.js"
 
 import { System } from "../src/system/System.js";
 
@@ -47,6 +47,31 @@ function test5(){
     let p = new Program();
 }
 
+function test6(){
+    // let tex = new BaseTexture("a.b.cc.png");
+    // console.log(tex);
+
+    const image = new Image();
+    let url = 'https://www.runoob.com/try/demo_source/logo.png'
+    // url = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJ'
+    //         + 'AAAADUlEQVQYV2P4GvD7PwAHvgNAdItKlAAAAABJRU5ErkJggg==';
+    image.src = url;
+
+
+    Texture.fromLoader(image, 'foo.pnf', 'foo').then((texture) => {
+        let img = texture.baseTexture.resource.source
+        img.style = "position:absolute;left:0px";
+        document.body.append(img);
+    })
+
+    // Texture.fromURL(image.src).then((texture) => {
+    //     let img = texture.baseTexture.resource.source
+    //     img.style = "position:absolute;left:0px;width:100px;";
+    //     document.body.append(img);
+    // })
+
+}
+
 // test1();
 
 // test2();
@@ -56,3 +81,5 @@ function test5(){
 // test4();
 
 // test5()
+
+test6();

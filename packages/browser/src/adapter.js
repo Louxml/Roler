@@ -2,6 +2,8 @@
 
 let supported;
 
+let tempAnchor;
+
 export const Adapter = {
     
     /**
@@ -65,5 +67,29 @@ export const Adapter = {
         
         return supported;
         
-    }
+    },
+    
+    determineCrossOrigin: (url, loc = globalThis.location) => {
+        if (url.startsWith('data:')){
+            return '';
+        }
+
+        if (!tempAnchor){
+            tempAnchor = document.createElement('a');
+        }
+
+        // url补全
+        tempAnchor.href = url;
+        url = tempAnchor.href;
+
+        const urlData = new URL(url);
+
+        const samePort = (!urlData.port && loc.port === '') || (urlData.port === loc.port);
+
+        if (urlData.hostname !== loc.hostname || !samePort || urlData.protocol !== loc.protocol){
+            return 'anonymous';
+        }
+
+        return '';
+    },
 }

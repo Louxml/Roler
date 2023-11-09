@@ -65,3 +65,49 @@ export const PRECISION = {
     // 高精度
     HIGH: "highp"
 }
+
+// 纹理环绕模式
+export const WRAP_MODES = {
+    // 拉伸
+    CLAMP: 0x812F,
+    // 平铺
+    REPEAT: 0x2901,
+    // 镜像平铺
+    MIRRORED_REPEAT: 0x8370,
+}
+
+// 缩放模式
+export const SCALE_MODES = {
+    // 最近
+    NEAREST: 0,
+
+    // 线性
+    LINEAR: 1,
+}
+
+
+// 透明模式
+export const ALPHA_MODE = {
+
+    // 源不是预乘的，不预乘Alpha
+    NPM: 0,
+
+    // 默认选项，源不是预乘的，需要预乘Alpha
+    UNPACK: 1,
+
+    // 源是预乘的
+    PMA: 2,
+}
+
+// 各种target类型
+export const TARGETS = {
+    // 二维纹理
+    TEXTURE_2D: 0x0DE1,
+}
+
+// 像素数据格式
+export const FORMATS  = {
+    RGBA: 0x1908,
+
+    RGB: 0x1907,
+}

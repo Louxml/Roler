@@ -51,7 +51,7 @@ export class Program{
     uniformData;
 
     // TODO extra 可添加拓展数据
-    constructor(vertexSrc, fragmentSrc, name = "role-shader"){
+    constructor(vertexSrc, fragmentSrc, name = "roler-shader"){
         this.id = UID++;
 
         this.vertexSrc = vertexSrc || Program.defaultVertex;

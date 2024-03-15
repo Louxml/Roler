@@ -47,7 +47,7 @@ export class BaseImageResource extends Resource{
 
 
     /**
-     * TODO 上传纹理至GPU
+     * 上传纹理至GPU
      */
     upload(renderer, baseTexture, glTexture, source){
         const gl = renderer.gl;
@@ -83,6 +83,7 @@ export class BaseImageResource extends Resource{
     /**
      * 检查宽度/高度是否修改，调整大小会导致baseTexture更新
      * 会触发onResize、onUpdate事件
+     * @override
      */
     update(){
         if (this.destroyed) return;

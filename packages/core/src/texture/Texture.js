@@ -17,6 +17,11 @@ export class Texture{
         this.baseTexture = baseTexture;
     }
 
+
+    getBaseTexture(){
+        return this.baseTexture;
+    }
+
     static fromURL(url, options = {}){
         options.resourceOptions = Object.assign({autoLoad: false}, options.resourceOptions);
 

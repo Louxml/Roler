@@ -61,7 +61,7 @@ function test6(){
     Texture.fromLoader(image, 'foo.pnf', 'foo').then((texture) => {
         let img = texture.baseTexture.resource.source
         img.style = "position:absolute;left:0px";
-        document.body.append(img);
+        // document.body.append(img);
     })
 
     // Texture.fromURL(image.src).then((texture) => {

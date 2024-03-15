@@ -146,10 +146,10 @@ export class Resource{
 
 
     /**
-     * TODO
+     * @abstract
      */
-    style(){
-
+    style(renderer, baseTexture, glTexture){
+        return false;
     }
 
     /**

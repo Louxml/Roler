@@ -124,6 +124,7 @@ export const FORMATS  = {
     RGB: 0x1907,
 }
 
+// 纹理数据存储格式
 export const TYPES = {
     //
     BYTE: 0x1400,

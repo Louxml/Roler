@@ -4,7 +4,9 @@ import { BaseTexture, System, Texture } from "../index.js";
 
 import { Extension, ExtensionType } from "../../../extensions/src/index.js";
 import { GLTexture } from "./GLTexture.js";
-import { MIPMAP_MODES, SCALE_MODES, WRAP_MODES } from "../../../constants/src/index.js";
+import { MIPMAP_MODES, SAMPLER_TYPES, SCALE_MODES, TYPES, WRAP_MODES } from "../../../constants/src/index.js";
+import { mapTypeAndFormatToInternalFormat } from "./utils/mapTypeAndFormatToInternalFormat.js";
+import { mapInternalFormatToSamplerType } from "./utils/mapInternalFornatToSamplerTypes.js";
 
 
 export class TextureSystem extends System{
@@ -24,6 +26,24 @@ export class TextureSystem extends System{
     gl;
 
     CONTEXT_UID;
+
+    /**
+     * WebGL版本
+     * @Number
+     */
+    webGLVersion;
+
+    /**
+     * 内部数据格式
+     * @private
+     */
+    internalFormats;
+
+    /**
+     * 纹理采样器类型
+     * @private
+     */
+    samplerTypes;
 
     /**
      * 绑定的纹理列表
@@ -87,6 +107,11 @@ export class TextureSystem extends System{
 
         const gl = this.gl = this.renderer.gl;
         this.CONTEXT_UID  = this.renderer.CONTEXT_UID;
+        this.webGLVersion = this.renderer.context.webGLVersion;
+
+        // 处理格式
+        this.internalFormats = mapTypeAndFormatToInternalFormat();
+        this.samplerTypes = mapInternalFormatToSamplerType();
 
         // 初始化绑定纹理列表
         this.maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
@@ -252,7 +277,15 @@ export class TextureSystem extends System{
      * @private
      */
     initTextureType(texture, glTexture){
+        const format = this.internalFormats[texture.type]?.[texture.format] ?? texture.format;
+        glTexture.internalFormat = format;
+        glTexture.samplerType = this.samplerTypes[format] ?? SAMPLER_TYPES.FLOAT;
 
+        if (this.webGLVersion === 2 &&  glTexture.type == TYPES.HALF_FLOAT){
+            glTexture.type = this.gl.HALF_FLOAT;
+        }else{
+            glTexture.type = texture.type;
+        }
     }
 
     /**
@@ -264,7 +297,7 @@ export class TextureSystem extends System{
         const { renderer, CONTEXT_UID } = this;
         const glTexture = texture.glTextures[CONTEXT_UID];
 
-        // this.initTextureType(texture, glTexture);
+        this.initTextureType(texture, glTexture);
 
         if (texture.resource?.upload(renderer, texture, glTexture)){
             // 上传成功

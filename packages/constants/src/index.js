@@ -119,31 +119,229 @@ export const TARGETS = {
 
 // 像素数据格式
 export const FORMATS  = {
+    /**
+     * rgba四个分量
+     * @default 6408
+     */
     RGBA: 0x1908,
 
+    /**
+     * rgb三个分量
+     * @default 6407
+     */
     RGB: 0x1907,
+
+    /**
+     * rg两个分量
+     * @default 33319
+     */
+    RG: 0x8227,
+
+    /**
+     * r一个分量
+     * @default 6403
+     */
+    RED: 0x1903,
+
+    /**
+     * RGBA整型四个分量
+     * @default 36249
+     */
+    RGBA_INTEGER: 0x8d99,
+
+    /**
+     * RGB整型三个分量
+     * @default 36248
+     */
+    RGB_INTEGER: 0x8d98,
+
+    /**
+     * RG整型两个分量
+     * @default 33320
+     */
+    RG_INTEGER: 0x8228,
+
+    /**
+     * R整型一个分量
+     * @default 36244
+     */
+    RED_INTEGER: 0x8d94,
+
+    /**
+     * 透明度一个分量
+     * @default 6406
+     */
+    ALPHA: 0x1906,
+
+    /**
+     * 亮度一个分量
+     * @default 6409
+     */
+    LUMINANCE: 0x1909,
+
+    /**
+     * 亮度和透明度两个分量
+     * @default 6410
+     */
+    LUMINANCE_ALPHA: 0x190A,
+
+    /**
+     * 深度一个分量
+     * @default 6402
+     */
+    DEPTH_COMPONENT: 0x1902,
+
+    /**
+     * 深度和模板两个分量
+     * @default 34041
+     */
+    DEPTH_STENCIL: 0x84f9,
 }
 
-// 纹理数据存储格式
+// 纹理存储数据类型
 export const TYPES = {
-    //
+    /**
+     * 每个通道8位
+     * 字节型（范围-128～127）
+     * WebGL1
+     * @default 5120
+     */
     BYTE: 0x1400,
-    // RGBA每个通道8位
+    /**
+     * 每个通道8位
+     * 无符号字节型（范围0～255）
+     * WebGL1
+     * @default 5121
+     */
     UNSIGNED_BYTE: 0x1401,
-    //
+    /**
+     * 每个通道16位
+     * 短整型（范围-32768～32767）
+     * WebGL1
+     * @default 5122
+     */
     SHORT: 0x1402,
-    // 
+    /**
+     * 每个通道16位
+     * 无符号短整型（范围0～65535）
+     * WebGL1
+     * @default 5123
+     */
     UNSIGNED_SHORT: 0x1403,
-    //
+    /**
+     * 每个通道32位
+     * 整型（范围-2147483648~2147483647）
+     * WebGL1
+     * @default 5124
+     */
     INT: 0x1404,
-    //
+    /**
+     * 每个通道32位
+     * 无符号整型（范围0~4294967295）
+     * WebGL1
+     * @default 5124
+     */
     UNSIGNED_INT: 0x1405,
-    //
+    /**
+     * 每个通道32位
+     * 浮点型 指数8位，尾数23位，符号位1位
+     * WebGL1
+     * @default 5125
+     */
     FLOAT: 0x1406,
-    // r：4位，g：4位，b：4位，a：4位 
+    /**
+     * r：4位，g：4位，b：4位，a：4位
+     * 无符号短整型
+     * WebGL1
+     * @default 32819
+     */
     UNSIGNED_SHORT_4_4_4_4: 0x8033,
-    // r：5位，g：5位，b：5位，a：1位 
+    /**
+     * r：5位，g：5位，b：5位，a：1位 
+     * 无符号短整型
+     * WebGL1
+     * @default 32820
+     */
     UNSIGNED_SHORT_5_5_5_1: 0x8034,
-    // r：5位，g：6位，b：5位
+    /**
+     * r：5位，g：6位，b：5位
+     * 无符号短整型
+     * WebGL1
+     * @default 33635
+     */
     UNSIGNED_SHORT_5_6_5:  0x8363,
+    /**
+     * a：2位，b：10位，g：10位，r：10位
+     * 无符号整型
+     * WebGL2
+     * ```
+     * 需要拓展OES_texture_float_linear 或 OES_texture_half_float_linear
+     * ```
+     * @default 33640
+     */
+    UNSIGNED_INT_2_10_10_10_REV: 0x8368,
+
+    /**
+     * rgb：24位，a：8位
+     * 通常用于HDR
+     * 无符号整型
+     * 仅WebGL2
+     * @default 34042
+     */
+    UNSIGNED_INT_24_8: 0x84fa,
+
+    /**
+     * b：10位，g：11位，r：11位
+     * 通常用于HDR
+     * 无符号整型
+     * 仅WebGL2
+     * @default 35899
+     */
+    UNSIGNED_INT_10F_11F_11F_REV:  0x8c3b,
+
+    /**
+     * a：5位，b：9位，g：9位，r：9位
+     * 通常用于HDR
+     * 无符号整型
+     * 仅WebGL2
+     * @default 35902
+     */
+    UNSIGNED_INT_5_9_9_9_REV: 0x8c3e,
+
+    /**
+     * rgb：24位，a：8位
+     * 通常用于HDR
+     * 仅WebGL2
+     * @default 36269
+     */
+    FLOAT_32_UNSIGNED_INT_24_8_REV: 0x8dad,
+
+    /**
+     * 每个通道16位
+     * 半精度浮点型
+     * WebGL2
+     * @default 36193
+     */
+    HALF_FLOAT: 0x8d61,
+}
+
+// 采样器类型
+export const SAMPLER_TYPES = {
+    /**
+     * 浮点型
+     * @default 0
+     */
+    FLOAT: 0,
+
+    /**
+     * 整型
+     * @default 1
+     */
+    INT: 1,
+
+    /**
+     * 无符号整型
+     * @default 2
+     */
+    UINT: 2
 }

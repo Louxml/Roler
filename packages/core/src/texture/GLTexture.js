@@ -1,4 +1,4 @@
-import { FORMATS, TYPES, WRAP_MODES } from "../../../constants/src/index.js";
+import { FORMATS, SAMPLER_TYPES, TYPES, WRAP_MODES } from "../../../constants/src/index.js";
 
 
 export class GLTexture{
@@ -50,10 +50,16 @@ export class GLTexture{
 
     /**
      * GPU内存中存储的格式，颜色划分规则？
+     * @Number
      * @public
      */
     internalFormat;
 
+    /**
+     * 采样器类型
+     * @Number
+     * @publiv
+     */
     samplerType;
 
     /**
@@ -77,9 +83,9 @@ export class GLTexture{
         this.updateStyleID = -1;
         this.mipmap =  false;
         this.wrapMode =  WRAP_MODES.CLAMP;
-        // TODO
+        
         this.type = TYPES.UNSIGNED_BYTE;
         this.internalFormat = FORMATS.RGBA;
-        // this.samplerType = 0;
+        this.samplerType = SAMPLER_TYPES.FLOAT;
     }
 }

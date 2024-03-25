@@ -30,6 +30,12 @@ export class BaseImageResource extends Resource{
         this.noSubImage = false;
     }
 
+    /**
+     * 设置跨域配置
+     * @param {HTMLImageElement | HTMLVideoElement | HTMLCanvasElement | ImageBitmap} element html节点
+     * @param {String} url 节点的资源url
+     * @param {String | Boolean} crossorigin 跨域配置
+     */
     static crossOrigin(element, url, crossorigin){
         if (crossorigin === undefined && !url.startsWith('data:')){
 
@@ -56,6 +62,7 @@ export class BaseImageResource extends Resource{
 
         source = source || this.source;
 
+        // 资源是否加载完
         if (source instanceof HTMLImageElement){
             if (!source.complete || source.naturalWidth === 0){
                 return false;
@@ -66,6 +73,7 @@ export class BaseImageResource extends Resource{
             }
         }
 
+        // 设置RGB分量是否预乘ALPHA
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, baseTexture.alphaMode === ALPHA_MODE.UNPACK);
 
         if (!this.noSubImage && baseTexture.target === gl.TEXTURE_2D && glTexture.width === width && glTexture.height === height){

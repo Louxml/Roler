@@ -69,6 +69,12 @@ export const Adapter = {
         
     },
     
+    /**
+     * 确认源跨域
+     * @param {String} url 资源url
+     * @param {String} loc 本地地址
+     * @returns String
+     */
     determineCrossOrigin: (url, loc = globalThis.location) => {
         if (url.startsWith('data:')){
             return '';

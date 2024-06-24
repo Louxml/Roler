@@ -280,7 +280,7 @@ class Extension{
      * 没有 priority 属性，默认0
      * @static
      * @param {ExtensionType} type 插件类型
-     * @param {Array<{name: string, value: any}>} map 插件存储字典
+     * @param {Array<{name: string, value: any, priority: Number}>} map 插件存储字典
      * @returns 用于链式调用
      */
     static handleByNamedList(type, map){
@@ -293,9 +293,10 @@ class Extension{
                 }
                 
                 // 添加
-                map.push({ name: ext.name, value: ext.ref });
+                const data = { name: ext.name, value: ext.ref, priority: ext.priority }
+                map.push(data);
                 // 排降序
-                map.sort((a, b) => normalizeExtension(b).priority - normalizeExtension(a).priority);
+                map.sort((a, b) => b.priority - a.priority);
             },
             (ext) => {
                 const index = map.findIndex(item => item.name === ext.name);

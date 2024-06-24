@@ -29,13 +29,38 @@ const defaultRunners = [
  */
 export class AbstractRenderer {
 
+    static defaultOptions = {
+        
+        // 渲染器分辨率/设备像素比
+        resolution: 1,
+
+        // 像素是否四舍五入
+        roundPixels: false,
+    }
+
     #type;
 
     #name;
 
     #config;
 
+    #roundPixels;
+
+    // options存储
+    #initOptions;
+
+    /**
+     * 运行器列表
+     */
     runners = Object.create(null);
+
+    /**
+     *渲染管线列表
+     */
+    renderPipes = Object.create(null);
+
+    // 子系统存储哈希表
+    #systemHash = Object.create(null);
     
     constructor(config){
         this.#type = config.type;
@@ -45,7 +70,7 @@ export class AbstractRenderer {
         const combinedRunners = [...defaultRunners, ...(config.runners ?? [])];
 
 
-        this._addRunners(...combinedRunners);
+        this._addRunners(combinedRunners);
 
         this._checkUnsafeEval();
     }
@@ -54,6 +79,47 @@ export class AbstractRenderer {
         const skip = options.skipExtensionImports;
 
         await loadEnvironmentExtensions(skip);
+
+        this._addSystems(this.#config.systems);
+
+        this._addPipes(this.#config.renderPipes, this.#config.renderPipeAdaptors);
+
+        for (const name in this.#systemHash){
+            const system = this.#systemHash[name];
+
+            const defaultSystemOptions = system.defaultOptions ?? {};
+
+            options = {...defaultSystemOptions, ...options};
+        }
+
+        options = {...AbstractRenderer.defaultOptions, ...options};
+
+        this.#roundPixels = options.roundPixels ? 1 : 0;
+
+        for (let i = 0; i < this.runners.init.items.length; i++){
+            await this.runners.init.items[i](options);
+        }
+        
+        this.#initOptions = options;
+    }
+
+    // TODO
+    render(){
+
+    }
+
+    // TODO
+    resize(width, height, resolution){
+
+    }
+
+    /**
+     * TODO
+     * 清除渲染器
+     * @param {Object} options clear配置
+     */
+    clear(options){
+
     }
 
     /**
@@ -61,10 +127,82 @@ export class AbstractRenderer {
      * @private
      * @param  {...any} runners 运行器
      */
-    _addRunners(...runners){
+    _addRunners(runners){
         runners.forEach(runnerId => {
             this.runners[runnerId] = new Runner(runnerId);
         })
+    }
+
+    /**
+     * 添加子系统列表
+     * @param {Array} systems 子系统列表
+     */
+    _addSystems(systems){
+        systems.forEach(system => {
+            this._addSystem(system.value, system.name);
+        })
+    }
+
+    /**
+     * 添加子系统
+     * @param {Object} ClassRef 子系统类
+     * @param {String} name 子系统命名
+     */
+    _addSystem(ClassRef, name){
+        if (this[name]){
+            throw new Error(`The name "${name}" is already in use.`)
+        }
+
+        const system = new ClassRef(this);
+
+        this[name] = system;
+
+        //TODO system添加hash映射
+        this.#systemHash[name] = system;
+
+        for (const i in this.runners){
+            this.runners[i].add(system);
+        }
+    }
+
+    /**
+     * 添加渲染管线
+     * @param {Object} pipes 渲染管线列表
+     * @param {Object} pipeAdaptors 渲染管线适配器列表
+     */
+    _addPipes(pipes, pipeAdaptors){
+        const adaptors = {};
+        pipeAdaptors.forEach(adaptor => {
+            adaptors[adaptor.name] = adaptor.value;
+        })
+
+        pipes.forEach(pipe => {
+            const pipeClass = pipe.value;
+            const name = pipe.name;
+
+            const Adaptor = adaptors[name];
+
+            this.renderPipes[name] = new pipeClass(this, Adaptor ? new Adaptor() : null);
+        })
+    }
+
+    /**
+     * 渲染器销毁
+     * @param {Object} options 销毁配置
+     */
+    destroy(options){
+        this.runners.destroy.items.reverse();
+        this.runners.destroy.emit(options);
+        
+        Object.values(this.runners).forEach(runner => {
+            runner.destroy();
+        })
+
+        this.runners = null;
+
+        this.#systemHash = null;
+
+        this.renderPipes = null;
     }
 
     /**
@@ -82,5 +220,48 @@ export class AbstractRenderer {
 
     get name(){
         return this.#name;
+    }
+
+    get roundPixels(){
+        return !!this.#roundPixels;
+    }
+
+    // TODO viewSytem
+    get resolution(){
+
+    }
+
+    // TODO viewSytem
+    set resolution(value){
+        
+    }
+
+    // TODO viewSytem
+    get width(){
+        
+    }
+
+    // TODO viewSytem
+    get height(){
+        
+    }
+
+    // TODO viewSytem
+    get canvas(){
+
+    }
+    
+    // TODO lastObjectRendered 最后一个渲染的对象，可能对其他子系统、拓展、插件有用
+
+    //TODO 是否渲染到屏幕上
+
+    // TODO viewSytem
+    get screen(){
+
+    }
+
+    // TODO GenerateTextureSystem
+    generateTexture(options){
+
     }
 }

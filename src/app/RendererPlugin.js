@@ -1,6 +1,6 @@
 
 
-import { Extension, ExtensionType } from "../../extensions/src/index.js";
+import { Extension, ExtensionType } from "../extensions/index.js";
 
 // Application类型插件一般不实例化，作为一个静态类操作Application，赋予Application属性和功能
 export class RendererPlugin{
@@ -20,8 +20,8 @@ export class RendererPlugin{
      * @public
      * @param {Object} options 插件配置
      */
-    static init(options){
-        this.renderer = RendererPlugin.autoDetectRenderer(options);
+    static async init(options){
+        this.renderer = await RendererPlugin.autoDetectRenderer(options);
     }
 
     /**
@@ -45,10 +45,12 @@ export class RendererPlugin{
      * @param {Object} options 选项配置
      * @returns 渲染器实例
      */
-    static autoDetectRenderer(options){
+    static async autoDetectRenderer(options){
         for (const RendererType of this._renderers){
             if (RendererType.test(options)){
-                return new RendererType(options);
+                const renderer = new RendererType();
+                await renderer.init(options);
+                return renderer;
             }
         }
 
@@ -57,4 +59,3 @@ export class RendererPlugin{
 }
 
 Extension.handleByList(ExtensionType.Renderer, RendererPlugin._renderers);
-Extension.add(RendererPlugin);

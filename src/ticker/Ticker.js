@@ -1,21 +1,16 @@
 import { UPDATE_PRIORITY } from "./const.js";
 import { TickerListener } from "./TickerListener.js";
 
-// 暂定常量
-const deltatime = 1/60
-
 // 默认配置
 const config = {
     autoStart: false,
     speed: 1,
-    minFPS: 10,
+    minFPS: 1,
     maxFPS: Infinity,
 }
 
 /**
  * 循环器
- * 可优化：
- * 1、还没考虑帧率的问题，默认requestAnimationFrame帧率（最高帧率）
  */
 export class Ticker{
     /**
@@ -47,13 +42,13 @@ export class Ticker{
      */
     _head;
 
+
     /**
      * 是否开始
      * @Boolean
      * @public
      */
     started = false;
-
 
     /**
      * 速度
@@ -62,13 +57,27 @@ export class Ticker{
      */
     speed = 1;
 
+    /**
+     * 上一次(tick调用)时间戳
+     * @Number
+     * @private
+     */
+    lasttime = 0;
 
     /**
-     * 受速度影响的时间
+     * 时间差，受速度影响和帧率限制
+     * @Number
+     * @private
+     */
+    deltatime = 0;
+
+    /**
+     * 实际（tick调用）时间差，不受速度影响和帧率限制
      * @Number
      * @public
      */
-    _elapsedtime = 0;
+    elapsedtime = 0;
+
 
     /**
      * 是否受保护
@@ -78,23 +87,9 @@ export class Ticker{
     _protected = false;
 
     /**
-     * 上一次时间戳
-     * @Number
-     * @private
-     */
-    _lasttime = 0;
-
-    /**
      * 上一帧的时间戳
      */
     _lastframe = 0;
-
-    /**
-     * 时间差
-     * @Number
-     * @private
-     */
-    _deltatime = 0;
 
     /**
      * 最小延迟，影响最大帧率
@@ -109,7 +104,7 @@ export class Ticker{
      * @Number
      * @private
      */
-    _maxelapsedtime = 100;
+    _maxelapsedtime = 1000;
 
     /**
      * 创建运行器
@@ -141,8 +136,8 @@ export class Ticker{
         this._tick = (time = performance.now()) => {
             this._requestId = null;
             if (this.started){
-                this._update(time)
-                if (this.started){
+                this.update(time)
+                if (this.started && this._head.next){
                     this._requestId = requestAnimationFrame(this._tick);
                 }
             }
@@ -184,10 +179,8 @@ export class Ticker{
      * @public
      * @returns this 返回改对象（用于链式调用）
      */
-    add(fn = ()=>{}, context = null, once = false, priority = UPDATE_PRIORITY.NORMAL){
-        let listener = new TickerListener(fn, context, once, priority);
-        this._addListener(listener)
-        return this;
+    add(fn, context = null, priority = UPDATE_PRIORITY.NORMAL){
+        return this._addListener(new TickerListener(fn, context, false, priority));
     }
 
     /**
@@ -198,10 +191,8 @@ export class Ticker{
      * @public
      * @returns this 返回改对象（用于链式调用）
      */
-    addOnce(fn = ()=>{}, context = null, priority = UPDATE_PRIORITY.NORMAL){
-        let listener = new TickerListener(fn, context, this, priority);
-        this._addListener(listener)
-        return this;
+    addOnce(fn, context = null, priority = UPDATE_PRIORITY.NORMAL){
+        return this._addListener(new TickerListener(fn, context, true, priority));
     }
 
     /**
@@ -211,7 +202,7 @@ export class Ticker{
      * @public
      * @returns this 返回改对象（用于链式调用）
      */
-    remove(fn = ()=>{}, context = null){
+    remove(fn, context = null){
         const head = this._head;
         let listener = head.next;
         while (listener){
@@ -247,6 +238,7 @@ export class Ticker{
      * 添加监听器
      * @param {TickerListener} listener 
      * @private
+     * @returns this 返回改对象（用于链式调用）
      */
     _addListener(listener){
         const head = this._head;
@@ -256,7 +248,9 @@ export class Ticker{
         }
         pre.connect(listener);
 
-        if (this.autoStart)this.start()
+        if (this.autoStart)this.start();
+
+        return this;
     }
 
     /**
@@ -264,9 +258,9 @@ export class Ticker{
      * @private
      */
     _requestAnimationFrame(){
-        if (this._requestId === null){
-            this._lasttime = performance.now();
-            this._lastframe = this._lasttime;
+        if (this._requestId === null && this._head.next){
+            this.lasttime = performance.now();
+            this._lastframe = this.lasttime;
             this._requestId = requestAnimationFrame(this._tick);
         }
     }
@@ -287,34 +281,39 @@ export class Ticker{
      * @param {number} time 运行时间戳
      * @private
      */
-    _update(time){
-        const delta = time - this._lastframe;
+    update(time){
 
-        if (delta < this._minelapsedtime)return;
+        if (time > this.lasttime){
+            let elapsedMs = this.elapsedtime = time - this.lasttime;
 
-        // 实际时间差
-        this._elapsedtime = time - this._lasttime;
-        this._elapsedtime = Math.min(this._elapsedtime, this._maxelapsedtime);
+            // 最小帧率限制
+            elapsedMs = Math.min(elapsedMs, this._maxelapsedtime);
 
-        // 基于速度的时间差
-        this._deltatime = this._elapsedtime * this.speed;
+            // 最大帧率限制
+            if (this._minelapsedtime){
+                const delta = time - this._lastframe | 0;
+                if (delta < this._minelapsedtime)return;
+                this._lastframe = time - (delta % (this._minelapsedtime));
+            }
 
-        // 运行
-        const head = this._head;
-        let listener = head.next;
-        while (listener){
-            // 执行更新事件
-            listener = listener.emit(this._deltatime)
+            // 基于速度的时间差
+            this.deltatime = elapsedMs * this.speed;
+
+            // 运行
+            const head = this._head;
+            let listener = head.next;
+            while (listener){
+                // 执行更新事件
+                listener = listener.emit(this)
+            }
+
+            // 如果没有，则停止
+            if (!head.next)this.stop();
+        }else{
+            this.deltatime = this.elapsedtime = 0;
         }
-
-        // 如果没有，则停止
-        if (!head.next)this.stop();
-
-        // 更新上一帧的理论时间戳
-        this._lastframe = time - (delta % (this._minelapsedtime || 1));
-
-        // 更新上一帧时间戳
-        this._lasttime = time;
+        
+        this.lasttime = time;
     }
 
 
@@ -324,7 +323,7 @@ export class Ticker{
      * @public
      */
     get FPS(){
-        return 1000 / this._elapsedtime;
+        return 1000 / this.elapsedtime;
     }
 
     /**
@@ -385,7 +384,7 @@ export class Ticker{
     }
 
     /**
-     * 基础实例
+     * 基础实例，通常不会暂停
      * @static
      * @public
      */

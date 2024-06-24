@@ -65,13 +65,13 @@ export class TickerListener{
 
     /**
      * 触发监听
-     * @param {number} deltatime 时间戳
+     * @param {Ticker} ticker ticker
      * @public
      * @returns 返回下一个监听器
      */
-    emit(deltatime){
+    emit(ticker){
         // 判断函数是否存在
-        this._fn && this._fn.call(this._context || this, deltatime);
+        this._fn && this._fn.call(this._context || this, ticker);
 
         const next = this.next;
 
@@ -109,9 +109,11 @@ export class TickerListener{
 
     /**
      * 注销监听器
+     * @param hard 是否硬注销next的引用
      * @public
+     * @returns 返回下一个监听器
      */
-    destroy(){
+    destroy(hard = false){
         this._destroyed = true;
         this._fn = null;
         this._context = null;
@@ -127,7 +129,7 @@ export class TickerListener{
         const next = this.next;
 
         this.prev = null;
-        this.next = null;
+        this.next = hard ? null : next;
 
         return next;
     }

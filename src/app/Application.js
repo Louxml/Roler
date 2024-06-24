@@ -1,5 +1,5 @@
 
-import { Extension, ExtensionType } from '../../extensions/src/index.js';
+import { Extension, ExtensionType } from '../extensions/index.js';
 import { config } from './config.js'
 
 export class Application{
@@ -10,13 +10,20 @@ export class Application{
      */
     static _plugins = [];
 
-    constructor(options){
+    constructor(){
+        
+    }
+
+    async init(options){
         // 配置覆盖
         options = Object.assign({}, config, options);
 
-        // 正序初始化插件
-        Application._plugins.forEach((plugin) => {
-            plugin.init.call(this, options);
+        // 异步初始化
+        const plugins = Application._plugins.slice(0);
+
+        // 异步初始化插件
+        plugins.forEach(async (plugin) => {
+            await plugin.init.call(this, options);
         })
     }
 

@@ -3,7 +3,8 @@ var app = express();
 var http = require('http').createServer(app);
 
 app.use('/packages',express.static('packages'));
-app.use('/test', express.static("test"));
+app.use('/src',express.static('src'));
+app.use('/tests', express.static("tests"));
 app.get('/',(req,res) => {
     res.sendFile(__dirname + '/index.html');
 });

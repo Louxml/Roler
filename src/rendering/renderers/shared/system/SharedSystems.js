@@ -1,6 +1,7 @@
 
 
 import { BackgroundSystem } from "../background/BackgroundSystem.js";
+import { HelloSystem } from "../startup/HelloSystem.js";
 import { ViewSystem } from "../view/ViewSystem.js";
 
 
@@ -8,6 +9,7 @@ import { ViewSystem } from "../view/ViewSystem.js";
 export const SharedSystems = [
     BackgroundSystem,
     ViewSystem,
+    HelloSystem,
 ];
 
 

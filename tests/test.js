@@ -6,6 +6,8 @@ export * from "./ticker/ticker.test.js";
 
 export * from "./rendering/renderer.test.js";
 
+export * from "./maths/Rectangle.test.js";
+
 import * as Roler from "../src/index.js";
 
 console.log(Roler);

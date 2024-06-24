@@ -87,7 +87,7 @@ export class AbstractRenderer {
         for (const name in this.#systemHash){
             const system = this.#systemHash[name];
 
-            const defaultSystemOptions = system.defaultOptions ?? {};
+            const defaultSystemOptions = system.constructor.defaultOptions ?? {};
 
             options = {...defaultSystemOptions, ...options};
         }
@@ -97,7 +97,7 @@ export class AbstractRenderer {
         this.#roundPixels = options.roundPixels ? 1 : 0;
 
         for (let i = 0; i < this.runners.init.items.length; i++){
-            await this.runners.init.items[i](options);
+            await this.runners.init.items[i].init(options);
         }
         
         this.#initOptions = options;

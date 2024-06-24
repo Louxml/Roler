@@ -59,3 +59,4 @@ export class RendererPlugin{
 }
 
 Extension.handleByList(ExtensionType.Renderer, RendererPlugin._renderers);
+Extension.add(RendererPlugin);

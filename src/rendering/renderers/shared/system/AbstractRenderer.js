@@ -1,3 +1,4 @@
+import { loadEnvironmentExtensions } from "../../../../environment/autoDetectEnvironment.js";
 import { Runner } from "../../../../runner/index.js";
 
 
@@ -50,7 +51,9 @@ export class AbstractRenderer {
     }
 
     async init(options){
+        const skip = options.skipExtensionImports;
 
+        await loadEnvironmentExtensions(skip);
     }
 
     /**

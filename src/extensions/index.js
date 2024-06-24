@@ -33,7 +33,8 @@ const ExtensionType = {
     // 注册添加/移除解析器
     DetectionParser: "detection-parser",
 
-
+    // 注册环境拓展
+    Environment: "environment",
 
 }
 
@@ -61,7 +62,7 @@ const ExtenstionMetaData = {
  * @returns 标准插件配置对象
  */
 const normalizeExtension = (ext) => {
-    if(typeof ext === "function"){
+    if(typeof ext === "function" || typeof ext == "object" && ext.extension){
         if(!ext.extension){
             throw new Error('Extension class must have an extension object');
         }

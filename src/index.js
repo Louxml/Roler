@@ -1,4 +1,5 @@
 
+import "./environment/index.js";
 
 export * from "./app/index.js";
 

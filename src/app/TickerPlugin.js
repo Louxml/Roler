@@ -1,5 +1,5 @@
 
-import { ExtensionType } from "../extensions/index.js";
+import { Extension, ExtensionType } from "../extensions/index.js";
 import { Ticker } from "../ticker/index.js";
 
 // 默认配置
@@ -53,3 +53,5 @@ export class TickerPlugin{
         }
     }
 }
+
+Extension.add(TickerPlugin);

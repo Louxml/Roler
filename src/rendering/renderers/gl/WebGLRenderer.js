@@ -5,11 +5,13 @@ import { RendererType } from "../types.js";
 
 import { SharedSystems, SharedRenderPipes } from "../shared/system/SharedSystems.js";
 import { GLContextSystem } from "./context/GLContextSystem.js";
+import { GLStateSystem } from "./state/GLStateSystem.js";
 
 
 const DefaultWebGLSystems = [
     ...SharedSystems, // 默认系统
     GLContextSystem, // webgl上下文系统
+    GLStateSystem, // webgl状态系统
 ];
 
 const DefaultWebGLPipes = [...SharedRenderPipes];

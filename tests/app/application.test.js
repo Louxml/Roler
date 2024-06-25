@@ -17,7 +17,21 @@ await app.init({
     ...config,
     width: window.innerWidth,
     height: window.innerHeight,
+    // backgroundAlpha: 1,
+    preferWebGLVersion: 1,
     autoDensity: true,
 });
 
 console.log(app);
+
+
+
+function test1(){
+    setTimeout(() => {
+        app.renderer.context.forceContextLoss();
+    }, 1000);
+}
+
+
+
+// test1()

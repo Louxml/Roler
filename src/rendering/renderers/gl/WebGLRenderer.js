@@ -4,10 +4,12 @@ import { AbstractRenderer } from "../shared/system/AbstractRenderer.js";
 import { RendererType } from "../types.js";
 
 import { SharedSystems, SharedRenderPipes } from "../shared/system/SharedSystems.js";
+import { GLContextSystem } from "./context/GLContextSystem.js";
 
 
 const DefaultWebGLSystems = [
     ...SharedSystems, // 默认系统
+    GLContextSystem, // webgl上下文系统
 ];
 
 const DefaultWebGLPipes = [...SharedRenderPipes];

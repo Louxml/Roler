@@ -246,18 +246,24 @@ export class AbstractRenderer {
         
     }
 
-    // TODO viewSytem
+    /**
+     * 获取Canvas HTML节点
+     * @return {HTMLCanvasElement}
+     */
     get canvas(){
-
+        return this.view.canvas;
     }
     
     // TODO lastObjectRendered 最后一个渲染的对象，可能对其他子系统、拓展、插件有用
 
     //TODO 是否渲染到屏幕上
 
-    // TODO viewSytem
+    /**
+     * 获取屏幕对象可视区域位置
+     * @return {Rectangle}
+     */
     get screen(){
-
+        return this.view.screen;
     }
 
     // TODO GenerateTextureSystem

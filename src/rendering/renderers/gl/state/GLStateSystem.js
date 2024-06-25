@@ -89,7 +89,7 @@ export class GLStateSystem extends System {
     }
 
     init(){
-        console.log("GLStateSytem init")
+        
     }
 
     contextChange(gl){

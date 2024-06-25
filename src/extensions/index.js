@@ -140,7 +140,7 @@ class Extension{
     static #queue = Object.create(null);
 
     static get queue(){
-        return Object.assign({}, this.#queue);
+        return {...this.#queue};
     }
 
     /**

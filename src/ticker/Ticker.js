@@ -1,13 +1,6 @@
 import { UPDATE_PRIORITY } from "./const.js";
 import { TickerListener } from "./TickerListener.js";
 
-// 默认配置
-const config = {
-    autoStart: false,
-    speed: 1,
-    minFPS: 1,
-    maxFPS: Infinity,
-}
 
 /**
  * 循环器
@@ -24,6 +17,17 @@ export class Ticker{
      * @private
      */
     static _shared;
+
+    /**
+     * 默认配置
+     */
+    static defaultOptions = {
+        autoStart: false,
+        speed: 1,
+        minFPS: 1,
+        maxFPS: Infinity,
+    }
+
     /**
      * id
      * @private
@@ -120,7 +124,7 @@ export class Ticker{
         if (new.target !== Ticker) return;
 
         // 配置
-        options = Object.assign({}, config, options);
+        options = {...Ticker.defaultOptions, ...options};
 
         this.autoStart = options.autoStart;
         this.speed = options.speed;

@@ -1,6 +1,5 @@
 
 import { Extension, ExtensionType } from '../extensions/index.js';
-import { config } from './config.js'
 
 export class Application{
     
@@ -10,13 +9,19 @@ export class Application{
      */
     static _plugins = [];
 
+    /**
+     * 默认配置
+     */
+    static defaultOptions = {
+
+    }
+
     constructor(){
         
     }
 
     async init(options){
-        // 配置覆盖
-        options = Object.assign({}, config, options);
+        options = {...Application.defaultOptions, ...options};
 
         // 异步初始化
         const plugins = Application._plugins.slice(0);

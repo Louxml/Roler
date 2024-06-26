@@ -30,6 +30,7 @@ function test1(){
     setTimeout(() => {
         app.renderer.context.forceContextLoss();
     }, 1000);
+
 }
 
 

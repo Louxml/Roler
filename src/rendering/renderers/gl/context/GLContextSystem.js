@@ -2,6 +2,7 @@
 import { DOMAdapter } from "../../../../environment/Adapter.js";
 import { ExtensionType } from "../../../../extensions/index.js";
 import { System } from "../../shared/system/System.js";
+import { uid } from "../../../../utils/data/uid.js";
 
 import { webgl1Extensions, webgl2Extensions } from "./WebGLExtensions.js";
 
@@ -36,8 +37,6 @@ export const ContextSystemOptions = {
     preferWebGLVersion: 2,
 }
 
-
-let CONTEXT_UID_COUNTER = 0;
 
 
 export class GLContextSystem extends System{
@@ -137,6 +136,7 @@ export class GLContextSystem extends System{
     }
 
     init(options){
+        console.log("GLContextSystem init");
         options = {...GLContextSystem.defaultOptions, ...options};
 
         if (options.context){
@@ -161,7 +161,7 @@ export class GLContextSystem extends System{
     }
 
     contextChange(gl){
-        this.#CONTEXT_UID = ++CONTEXT_UID_COUNTER;
+        this.#CONTEXT_UID = uid('context');
     }
 
     initFromContext(gl){
@@ -242,7 +242,6 @@ export class GLContextSystem extends System{
         event.preventDefault();
 
         console.log('context lost');
-        console.log(this)
 
         if (this.#contextLossForced){
             this.#contextLossForced = false;

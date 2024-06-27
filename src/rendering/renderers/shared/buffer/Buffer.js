@@ -104,7 +104,7 @@ export class Buffer extends EventEmitter {
     /**
      * 缓冲区上传更新大小（单位字节）
      */
-    _updateSize;
+    _updateSize = 0;
 
 
     constructor(options){
@@ -118,18 +118,14 @@ export class Buffer extends EventEmitter {
             data = new Float32Array(data ?? []);
         }
 
-        // TODO 这里不走setData逻辑吗
         this.#data = data;
 
-        size = size ?? data?.byteLength ?? 0;
-
-        const mappedAtCreation = !!data;
+        this._updateSize = size = size ?? data?.byteLength ?? 0;
 
         this.#descriptor = {
             size,
             usage,
             label,
-            mappedAtCreation
         }
         
         this.#uid = uid('buffer');

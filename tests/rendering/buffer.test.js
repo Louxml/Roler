@@ -16,8 +16,8 @@ function test1(){
     })
 
     console.log(buffer);
-    buffer.data = [1,2,3,4];
-    buffer.data[1] = 10;
+    // buffer.data = [1,2,3,4];
+    // buffer.data[1] = 10;
     buffer.update();
 }
 

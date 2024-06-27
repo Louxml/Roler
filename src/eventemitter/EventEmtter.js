@@ -2,15 +2,21 @@
 // 导出EventEmitter类
 export class EventEmitter {
 
-    // 定义一个私有变量#addListeners
+    /**
+     * 用于存储事件监听器
+     */
     #addListeners;
-    // 构造函数
+    
     constructor() {
         // 将#addListeners初始化为空对象
-        this.#addListeners = {}
+        this.#addListeners = Object.create(null);
     }
 
-    // 定义on方法，用于添加事件监听器
+    /**
+     * 注册事件监听器
+     * @param {String} event 事件名
+     * @param {Function} callback 事件监听器的回调函数
+     */
     on(event, callback) {
         // 如果事件监听器列表中没有该事件
         if (!this.#addListeners[event]) {
@@ -21,7 +27,13 @@ export class EventEmitter {
         this.#addListeners[event].push(callback)
     }
 
-    // 定义off方法，用于删除事件监听器
+    
+    /**
+     * 删除指定事件的监听器回调函数
+     * @param {String} event 事件名
+     * @param {Function} callback 事件监听器回调函数
+     * @returns 
+     */
     off(event, callback) {
         // 如果事件监听器列表中没有该事件
         if (!this.#addListeners[event]) {
@@ -39,7 +51,12 @@ export class EventEmitter {
         }
     }
 
-    // 定义emit方法，用于触发事件
+    /**
+     * 用于触发指定事件
+     * @param {String} event 事件名
+     * @param  {...any} args 回调参数
+     * @returns 
+     */
     emit(event, ...args) {
         // 如果事件监听器列表中没有该事件
         if (!this.#addListeners[event]) {
@@ -52,7 +69,11 @@ export class EventEmitter {
         })
     }
 
-    // 定义once方法，用于触发一次事件
+    /**
+     * 定义once方法，用于触发一次事件
+     * @param {String} event 事件名
+     * @param {Function} callback 事件监听器回调函数
+     */
     once(event, callback) {
         // 定义一个onceCallback函数，用于触发一次事件
         const onceCallback = (...args) => {
@@ -65,9 +86,11 @@ export class EventEmitter {
         this.on(event, onceCallback)
     }
 
-    // 定义clear方法，用于清空事件监听器列表
+    /**
+     * @description 清空事件监听器列表
+     */
     clear() {
         // 将#addListeners清空
-        this.#addListeners = {}
+        this.#addListeners = Object.create(null);
     }
 }

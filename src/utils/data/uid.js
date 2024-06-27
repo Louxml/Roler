@@ -9,6 +9,7 @@ const uidTypes = [
     'context',
     'buffer',
     'resource',
+    'geometry',
 ]
 
 /**
@@ -18,7 +19,7 @@ const uidTypes = [
  */
 export function uid(name = 'default'){
     if (!uidTypes.includes(name)){
-        throw new Error(`Invalid uid type: ${name}`)
+        console.warn(`Invalid uid type: ${name}`);
     }
 
     uidCache[name] ??= -1;

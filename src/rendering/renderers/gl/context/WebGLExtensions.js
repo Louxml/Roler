@@ -83,7 +83,7 @@ export const webgl1Extensions = {
     // floatTexture: "OES_texture_float",
     // halfFloatTexture: "OES_texture_half_float",
     // halfFloatLinearTexture: "OES_texture_half_float_linear",
-    // vertexAttribDivisorANGLE: "ANGLE_instanced_arrays",
+    vertexAttribDivisorANGLE: "ANGLE_instanced_arrays",
     sRGB: "EXT_sRGB",
 }
 

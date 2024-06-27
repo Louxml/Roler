@@ -23,13 +23,13 @@ export class Application{
     async init(options){
         options = {...Application.defaultOptions, ...options};
 
-        // 异步初始化
+        // 插件列表
         const plugins = Application._plugins.slice(0);
 
         // 异步初始化插件
-        plugins.forEach(async (plugin) => {
+        for (const plugin of plugins) {
             await plugin.init.call(this, options);
-        })
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 
 
 import { Application } from "../../src/index.js";
+import { Geometry } from "../../src/rendering/renderers/shared/geometry/Geometry.js";
 
 const target = document.body
 
@@ -33,6 +34,30 @@ function test1(){
 
 }
 
+function test2(){
+    let geo = new Geometry({
+        attributes:{
+            position:[
+                1,1,0, //0
+                1,-1,0, //1
+                -1,-1,0, //2
+            ],
+            color:[1,0,0,0,1,0,0,0,1],
+        },
+        indexBuffer:[
+            0,1,2,
+        ]
+    });
+
+    // console.log(geo);
+
+    app.renderer.geometry.bind(geo, null);
+
+    // console.log(app.renderer)
+}
+
 
 
 // test1()
+
+test2();

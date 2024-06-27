@@ -7,12 +7,14 @@ import { SharedSystems, SharedRenderPipes } from "../shared/system/SharedSystems
 import { GLContextSystem } from "./context/GLContextSystem.js";
 import { GLStateSystem } from "./state/GLStateSystem.js";
 import { GLBufferSystem } from "./buffer/GLBufferSystem.js";
+import { GLGeometrySystem } from "./geometry/GLGeometrySystem.js";
 
 
 const DefaultWebGLSystems = [
     ...SharedSystems, // 默认系统
     GLContextSystem, // webgl上下文系统
     GLBufferSystem, // webgl缓冲区系统
+    GLGeometrySystem, // webgl几何系统
     GLStateSystem, // webgl状态系统
 ];
 

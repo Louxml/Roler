@@ -12,9 +12,11 @@ export * from "./rendering/renderer.test.js";
 
 export * from "./rendering/buffer.test.js";
 
+export * from "./rendering/geometry.test.js";
+
 
 
 
 import * as Roler from "../src/index.js";
 
-console.log(Roler);
+// console.log(Roler);

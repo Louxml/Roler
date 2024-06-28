@@ -46,9 +46,9 @@ export class RendererPlugin{
      * @returns 渲染器实例
      */
     static async autoDetectRenderer(options){
-        for (const RendererType of this._renderers){
-            if (RendererType.test(options)){
-                const renderer = new RendererType();
+        for (const RendererClass of this._renderers){
+            if (RendererClass.test(options)){
+                const renderer = new RendererClass();
                 await renderer.init(options);
                 return renderer;
             }

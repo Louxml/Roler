@@ -121,8 +121,8 @@ export class Geometry extends EventEmitter {
             if (bufferIndex === -1) {
                 this.#buffers.push(attribute.buffer);
 
-                attribute.buffer.on('update', this.onBufferUpdate.bind(this));
-                attribute.buffer.on('change', this.onBufferUpdate.bind(this));
+                attribute.buffer.on('update', this.onBufferUpdate, this);
+                attribute.buffer.on('change', this.onBufferUpdate, this);
             }
         }
 

@@ -95,9 +95,7 @@ export class GLGeometrySystem extends System {
 
         // this.#checkCompatibility(geometry, program);
 
-        const signature = this.getSignature(geometry, program);
-
-        console.log(signature)
+        // const signature = this.getSignature(geometry, program);
 
     }
 

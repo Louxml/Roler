@@ -7,19 +7,23 @@ function test1(){
     const eventEmitter = new EventEmitter();
 
     // 监听事件
-    eventEmitter.on('event', (data) => {
+    eventEmitter.once('event', (data) => {
         console.log('收到事件:', data, this);
-    });
+    }, globalThis);
 
 
-    eventEmitter.once('start', function(d){
+    eventEmitter.on('event', function(d){
         console.log('start', d, this);
-    }.bind(globalThis));
+    }, globalThis);
+
+    eventEmitter.on('event', (data) => {
+        console.log('收到事件1:', data, this);
+    }, globalThis);
 
     // 触发事件
     eventEmitter.emit('event', 'Hello World');
-    eventEmitter.emit('start', 'Hello World');
-    eventEmitter.emit('start', 'Hello World');
+    eventEmitter.emit('event', 'Hello World');
+    // eventEmitter.emit('start', 'Hello World');
 
 }
 

@@ -146,7 +146,7 @@ export class GLBufferSystem extends System {
         
         this.#gpuBuffers[buffer.uid] = glBuffer;
 
-        buffer.on('destroy', this.#onDestroyBuffer.bind(this));
+        buffer.on('destroy', this.#onDestroyBuffer, this);
 
         return glBuffer;
     }

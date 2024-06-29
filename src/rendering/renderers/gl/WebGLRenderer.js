@@ -8,6 +8,7 @@ import { GLContextSystem } from "./context/GLContextSystem.js";
 import { GLStateSystem } from "./state/GLStateSystem.js";
 import { GLBufferSystem } from "./buffer/GLBufferSystem.js";
 import { GLGeometrySystem } from "./geometry/GLGeometrySystem.js";
+import { GLShaderSystem } from "./shader/GLShaderSystem.js";
 
 
 const DefaultWebGLSystems = [
@@ -15,6 +16,7 @@ const DefaultWebGLSystems = [
     GLContextSystem, // webgl上下文系统
     GLBufferSystem, // webgl缓冲区系统
     GLGeometrySystem, // webgl几何系统
+    GLShaderSystem, // webgl着色器系统
     GLStateSystem, // webgl状态系统
 ];
 

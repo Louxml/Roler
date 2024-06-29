@@ -9,6 +9,7 @@ const uidTypes = [
     'context',
     'buffer',
     'resource',
+    'uniform',
     'geometry',
 ]
 

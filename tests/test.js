@@ -14,6 +14,8 @@ export * from "./rendering/buffer.test.js";
 
 export * from "./rendering/geometry.test.js";
 
+export * from "./rendering/shader.test.js";
+
 
 
 

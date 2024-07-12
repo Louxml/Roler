@@ -1,10 +1,11 @@
 import { uid } from "../../../../utils/data/uid.js";
+import { BindResource } from "../../gpu/shader/BindResource.js";
 import { generateIdFromString } from "../../utils/generateIdFromString.js";
 import { UNIFORM_TYPSE_VALUES } from "./types.js";
 import { getDefaultUniformValue } from "./utils/getDefaultUniformValue.js";
 
 
-export class UniformGroup {
+export class UniformGroup extends BindResource {
     
     static defaultOptions = {
         ubo: false,
@@ -22,18 +23,6 @@ export class UniformGroup {
      * @type {Number}
      */
     #uid;
-
-    /**
-     * 资源类型
-     * @type {String}
-     */
-    #resourceType = 'uniformGroup';
-
-    /**
-     * 资源id
-     * @type {Number}
-     */
-    #resourceId;
 
     /**
      * uniformGroup结构
@@ -66,16 +55,14 @@ export class UniformGroup {
 
 
     constructor(uniformStructures, options){
+        super('uniformGroup');
+
         options = {...UniformGroup.defaultOptions, ...options};
 
         this.#uid = uid('uniform');
-        this.#resourceId = uid('resource');
 
         // uniform
         this.uniformStructures = uniformStructures;
-
-        console.log(uniformStructures);
-
 
         const uniforms = {};
 
@@ -114,12 +101,8 @@ export class UniformGroup {
         return this.#uid;
     }
 
-    get resourceType(){
-        return this.#resourceType;
-    }
-
-    get resourceId(){
-        return this.#resourceId;
+    get signature(){
+        return this.#signature;
     }
 
     get updateId(){

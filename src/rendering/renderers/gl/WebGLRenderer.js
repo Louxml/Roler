@@ -9,6 +9,7 @@ import { GLStateSystem } from "./state/GLStateSystem.js";
 import { GLBufferSystem } from "./buffer/GLBufferSystem.js";
 import { GLGeometrySystem } from "./geometry/GLGeometrySystem.js";
 import { GLShaderSystem } from "./shader/GLShaderSystem.js";
+import { GLUniformGroupSystem } from "./shader/GLUniformGroupSystem.js";
 
 
 const DefaultWebGLSystems = [
@@ -16,6 +17,7 @@ const DefaultWebGLSystems = [
     GLContextSystem, // webgl上下文系统
     GLBufferSystem, // webgl缓冲区系统
     GLGeometrySystem, // webgl几何系统
+    GLUniformGroupSystem, // webgl uniform组系统
     GLShaderSystem, // webgl着色器系统
     GLStateSystem, // webgl状态系统
 ];
@@ -54,6 +56,10 @@ export class WebGLRenderer extends AbstractRenderer {
 
     static test(){
         return true;
+    }
+
+    get gl(){
+        return this.context.gl;
     }
 }
 

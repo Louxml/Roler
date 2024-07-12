@@ -1,6 +1,8 @@
+import { EventEmitter } from "../../../../eventemitter/EventEmtter.js";
+import { uid } from "../../../../utils/data/uid.js";
 
 
-export class BindResource {
+export class BindResource extends EventEmitter {
     
     /**
      * 资源类型
@@ -12,7 +14,7 @@ export class BindResource {
      * 资源id
      * @type {Number}
      */
-    #resourceId;
+    _resourceId;
 
     /**
      * 资源是否已销毁
@@ -20,15 +22,19 @@ export class BindResource {
      */
     destroyed;
 
-    on(event, callback, bindGroup){}
+    constructor(type){
+        super();
 
-    off(event, callback, bindGroup){}
+        this.#resourceType = type;
+        this._resourceId = uid('resource');
+        this.destroyed = false;
+    }
 
     get resourceType(){
         return this.#resourceType;
     }
 
     get resourceId(){
-        return this.#resourceId;
+        return this._resourceId;
     }
 }

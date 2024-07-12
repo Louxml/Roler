@@ -1,8 +1,8 @@
 
 
 import { uid } from "../../../../utils/data/uid.js";
+import { BindResource } from "../../gpu/shader/BindResource.js";
 import { BufferUsage } from "./const.js";
-import { EventEmitter } from "../../../../eventemitter/EventEmtter.js";
 
 const BufferOptions = {
 
@@ -36,7 +36,7 @@ const BufferOptions = {
     shrinkToFit: false,
 }
 
-export class Buffer extends EventEmitter {
+export class Buffer extends BindResource {
 
     /**
      * 缓冲区大小调整时触发，通知GPU丢弃旧缓冲区创建新缓冲区
@@ -59,18 +59,6 @@ export class Buffer extends EventEmitter {
      * @type {Number}
      */
     #uid;
-
-    /**
-     * 资源类型
-     * @type {String}
-     */
-    #resourceType = 'buffer';
-
-    /**
-     * 资源id
-     * @type {Number}
-     */
-    #resourceId;
 
     /**
      * 缓冲区的描述
@@ -108,7 +96,7 @@ export class Buffer extends EventEmitter {
 
 
     constructor(options){
-        super();
+        super('buffer');
 
         options = {...BufferOptions, ...options};
         let { data, size } = options;
@@ -129,21 +117,12 @@ export class Buffer extends EventEmitter {
         }
         
         this.#uid = uid('buffer');
-        this.#resourceId = uid('resource')
 
         this.shrinkToFit = shrinkToFit;
     }
 
     get uid(){
         return this.#uid;
-    }
-
-    get resourceType(){
-        return this.#resourceType;
-    }
-
-    get resourceId(){
-        return this.#resourceId;
     }
 
     get data(){
@@ -190,7 +169,7 @@ export class Buffer extends EventEmitter {
         if (oldData.length !== value.length){
             if (this.shrinkToFit || value.byteLength >= oldData.byteLength){
                 this.#descriptor.size = value.byteLength;
-                this.#resourceId = uid('resource');
+                this._resourceId = uid('resource');
                 this.emit('change', this);
 
                 return;

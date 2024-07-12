@@ -22,7 +22,7 @@ export class GLBuffer {
     byteLength;
 
     /**
-     * 缓冲类型, BUFFER_TYPE类型
+     * 缓冲类型, BUFFER_TYPE类型, WEBGL常量
      * @type {number}
      */
     type;

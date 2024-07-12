@@ -23,7 +23,7 @@ export class GLBufferSystem extends System {
      */
     #gl;
 
-    #gpuBuffers = Object.create(null);
+    #glBuffers = Object.create(null);
 
     #boundBufferBases = Object.create(null);
     
@@ -35,12 +35,13 @@ export class GLBufferSystem extends System {
     contextChange(gl){
         this.#gl = gl;
 
-        this.#gpuBuffers = Object.create(null);
+        this.#glBuffers = Object.create(null);
     }
 
     /**
      * 绑定buffer，第一次绑定时创建glBuffer 和 （WebGLBuffer）
      * @param {Buffer} buffer 要绑定的buffer
+     * @public
      */
     bind(buffer){
         const gl = this.#gl;
@@ -54,6 +55,7 @@ export class GLBufferSystem extends System {
      * 缓冲区绑定到指定的索引上，UNIFROM_BUFFER类型
      * @param {Buffer} buffer 要绑定的buffer
      * @param {Number} index 指定的索引，默认为0
+     * @public
      */
     bindBufferBase(buffer, index = 0){
         const gl = this.#gl;
@@ -73,6 +75,7 @@ export class GLBufferSystem extends System {
      * @param {Number} index 指定的索引，默认为0
      * @param {Number} offset 偏移量，默认为0，1=256， 2=512等
      * @param {Number} size 大小，默认为256
+     * @public
      */
     bindBufferRange(buffer, index = 0, offset = 0, size = 256){
         const gl = this.#gl;
@@ -85,6 +88,7 @@ export class GLBufferSystem extends System {
     /**
      * 更新buffer数据上传至GPU
      * @param {Buffer} buffer 要更新的buffer
+     * @public
      * @returns GLBuffer
      */
     updateBuffer(buffer){
@@ -102,6 +106,7 @@ export class GLBufferSystem extends System {
 
         const data = buffer.data;
 
+        // 更新数据长度小于buffer长度时，使用bufferSubData局部更新
         if (data.byteLength <= glBuffer.byteLength){
 
             gl.bufferSubData(glBuffer.type, 0, data, 0, buffer._updateSize / data.BYTES_PER_ELEMENT);
@@ -121,10 +126,11 @@ export class GLBufferSystem extends System {
     /**
      * 获取GLBuffer对象，第一次获取时创建GLBuffer对象
      * @param {Buffer} buffer buffer
+     * @public
      * @returns GLBuffer
      */
     getGLBuffer(buffer){
-        return this.#gpuBuffers[buffer.uid] || this.#createGLBuffer(buffer);
+        return this.#glBuffers[buffer.uid] || this.#createGLBuffer(buffer);
     }
 
     /**
@@ -144,8 +150,9 @@ export class GLBufferSystem extends System {
 
         const glBuffer = new GLBuffer(gl.createBuffer(), type);
         
-        this.#gpuBuffers[buffer.uid] = glBuffer;
+        this.#glBuffers[buffer.uid] = glBuffer;
 
+        // 这里是监听buffer销毁事件，销毁时删除对应的WebGLBuffer，buffer销毁时，会自动清除所有监听
         buffer.on('destroy', this.#onDestroyBuffer, this);
 
         return glBuffer;
@@ -157,31 +164,31 @@ export class GLBufferSystem extends System {
      * @param {Boolean} contextLost 是否上下文丢失导致的，true则不删除buffer，false则在gpu中删除buffer
      */
     #onDestroyBuffer(buffer, contextLost = false){
-        const glBuffer = this.#gpuBuffers[buffer.uid];
+        const glBuffer = this.#glBuffers[buffer.uid];
 
         if (!contextLost){
             this.#gl.deleteBuffer(glBuffer.buffer);
         }
         
-        this.#gpuBuffers[buffer.uid] = null;
+        this.#glBuffers[buffer.uid] = null;
     }
 
     /**
      * 销毁所有管理的buffer
      */
     destroyAll(){
-        for (const id in this.#gpuBuffers){
-            this.#gl.deleteBuffer(this.#gpuBuffers[id].buffer);
+        for (const id in this.#glBuffers){
+            this.#gl.deleteBuffer(this.#glBuffers[id].buffer);
         }
 
-        this.#gpuBuffers = Object.create(null);
+        this.#glBuffers = Object.create(null);
     }
 
 
     destroy(){
         this.renderer = null;
         this.#gl = null;
-        this.#gpuBuffers = null;
+        this.#glBuffers = null;
         this.#boundBufferBases = null;
     }
 

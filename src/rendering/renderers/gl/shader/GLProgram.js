@@ -66,15 +66,26 @@ export class GLProgram {
      */
     #key;
 
+    /**
+     * attribute 数据格式
+     */
     _attributeData;
 
+    /**
+     * uniform 数据格式
+     */
     _uniformData;
+
+    /**
+     * uniform block 数据格式
+     */
+    _uniformBlockData;
     
 
     constructor(options){
         options = {...GLProgram.defaultOptions, ...options};
 
-        const isES300 = options.fragment.indexOf('#version 300 es') !== -1;
+        const isES300 = (options.fragment.indexOf('#version 300 es') !== -1) || (options.vertex.indexOf('#version 300 es') !== -1);
 
         const preprocessorOptions = {
             stripVersion: isES300,

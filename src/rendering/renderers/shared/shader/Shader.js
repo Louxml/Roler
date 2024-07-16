@@ -36,7 +36,7 @@ export class Shader extends EventEmitter{
     /**
      * uniform 和 texture 的绑定关系
      */
-    #uniformBindMap = Object.create(null);
+    _uniformBindMap = Object.create(null);
 
     /**
      * owned bind groups
@@ -67,6 +67,7 @@ export class Shader extends EventEmitter{
         const nameHash = Object.create(null);
 
 
+        //resources 目前只接受 UniformGroup、BufferResources、TextureResources
 
         if (!resources && !groups) resources = {};
 
@@ -93,7 +94,7 @@ export class Shader extends EventEmitter{
                 for (const i in resources) {
                     nameHash[i] = { group: 99, binding: bindTick, name: i };
 
-                    groupMap[99] ??= [];
+                    groupMap[99] ??= {};
                     groupMap[99][bindTick] = i;
 
                     bindTick++;
@@ -126,12 +127,12 @@ export class Shader extends EventEmitter{
         }
 
         this.groups = groups;
-        this.#uniformBindMap= groupMap;
+        this._uniformBindMap = groupMap;
 
-        this.resources = this.#bindResourceAccessor(groups, nameHash);
+        this.resources = this.#buildResourceAccessor(groups, nameHash);
     }
 
-    #bindResourceAccessor(groups, nameHash){
+    #buildResourceAccessor(groups, nameHash){
         const uniformsOut = {};
 
         for (const name in nameHash) {
@@ -152,13 +153,19 @@ export class Shader extends EventEmitter{
     }
 
     /**
-     * TODO
+     * TODO 具体逻辑还不清除目前只在Filter（过滤器）用到过，感觉添加后，resources并不能访问到
      * @param {String} name 
      * @param {Number} groupIndex 
      * @param {Number} bindIndex 
      */
     addResource(name, groupIndex, bindIndex){
-        
+        this._uniformBindMap[groupIndex] ??= {};
+        this._uniformBindMap[groupIndex][bindIndex] ??= name;
+
+        if (!this.groups[groupIndex]) {
+            this.groups[groupIndex] = new BindGroup();
+            this.#ownedBindGroups.push(this.groups[groupIndex]);
+        }
     }
 
     destroy(destroyPrograms = false){
@@ -174,7 +181,7 @@ export class Shader extends EventEmitter{
 
         this.clear();
 
-        this.#uniformBindMap = null;
+        this._uniformBindMap = null;
 
         this.#ownedBindGroups.forEach((bindGroup) => {
             bindGroup.destroy();

@@ -37,6 +37,12 @@ export class GLUniformGroupSystem extends System{
     }
 
 
+    /**
+     * 更新UniformGroup上传数据至GLProgram
+     * @param {UniformGroup} group 数据
+     * @param {GLProgram} program 上传数据的GLProgram
+     * @param {Object} syncData 
+     */
     updateUniformGroup(group, program, syncData){
         const programData = this.renderer.shader._getProgramData(program);
 

@@ -2,6 +2,8 @@
 
 import { Application } from "../../src/index.js";
 import { GLProgram } from "../../src/rendering/renderers/gl/shader/GLProgram.js";
+import { BufferResource } from "../../src/rendering/renderers/shared/buffer/BufferResource.js";
+import { Buffer } from "../../src/rendering/renderers/shared/buffer/Buffer.js";
 import { Geometry } from "../../src/rendering/renderers/shared/geometry/Geometry.js";
 import { Shader } from "../../src/rendering/renderers/shared/shader/Shader.js";
 
@@ -21,7 +23,7 @@ await app.init({
     width: window.innerWidth,
     height: window.innerHeight,
     // backgroundAlpha: 1,
-    preferWebGLVersion: 1,
+    // preferWebGLVersion: 1,
     autoDensity: true,
 });
 
@@ -62,10 +64,18 @@ function test2(){
 function test3(){
     let pro = new GLProgram({
         vertex: `
-        attribute vec2 aPosition;
-        attribute vec4 aColor;
+        #version 300 es
 
-        varying vec4 vColor;
+        layout(std140) uniform colorGroup {
+            vec4 uTintColor;
+            float u_time;
+            vec4[5] u_colors;
+        };
+
+        in vec2 aPosition;
+        in vec4 aColor;
+
+        out vec4 vColor;
 
         uniform float uTime;
 
@@ -79,8 +89,10 @@ function test3(){
 
         uniform vec4 uTint;
 
+        out vec4 finalColor;
+
         void main() {
-            gl_FragColor = uTint;
+            finalColor = uTint;
         }
         `,
         name: 'test'
@@ -98,18 +110,73 @@ function test3(){
             //     value: 0,
             //     type: 'f32'
             // },
-            uTint: {
-                color : {
-                    // value: [1, 0, 0, 1],
-                    type: 'vec4<f32>'
+            light: {
+                uTint : {
+                    value: [1, 0, 0, 1],
+                    type: 'vec4<f32>',
                 }
-            }
+            },
+            colorGroup: new BufferResource({
+                buffer: new Buffer({
+                    data: [1, 0, 0, 1],
+                })
+            })
         }
     });
 
-    app.renderer.shader.bind(shader, null);
+    app.renderer.shader.bind(shader);
 
     console.log(shader)
+}
+
+
+function test4(gl){
+    console.log(gl)
+    const vertexShader = `#version 300 es
+
+    in vec4 aPosition;
+    out vec2 TexCoords;
+    
+    void main()
+    {
+        TexCoords = aPosition.xy;
+        gl_Position = aPosition;
+    }
+    `;
+    const fragmentShader = `#version 300 es
+    precision mediump float;
+
+    out vec4 FragColor;
+
+    in vec2 TexCoords;
+    void main()
+    {
+        vec4 color = vec4(TexCoords, 0.0, 1.0);
+        FragColor = color;
+    }
+    `;
+    const glVertShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(glVertShader, vertexShader);
+    gl.compileShader(glVertShader);
+    const glFragShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(glFragShader, fragmentShader);
+    gl.compileShader(glFragShader);
+
+    // 创建WebGLProgram，设置顶点和片元着色器
+    const webGLProgram = gl.createProgram();
+    gl.attachShader(webGLProgram, glVertShader);
+    gl.attachShader(webGLProgram, glFragShader);
+
+
+    // 链接
+    gl.linkProgram(webGLProgram);
+
+
+    if (!gl.getProgramParameter(webGLProgram, gl.LINK_STATUS)) {
+        console.error('Unable to initialize the shader program: ' + gl.getProgramInfoLog(webGLProgram));
+    }
+
+    gl.useProgram(webGLProgram);
 }
 
 
@@ -118,3 +185,6 @@ function test3(){
 test2();
 
 test3();
+
+
+// test4(app.renderer.gl);

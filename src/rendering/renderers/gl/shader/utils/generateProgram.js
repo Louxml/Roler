@@ -7,6 +7,38 @@ import { GLProgramData } from "../GLProgramData.js";
 
 
 /**
+ * 获取uniform block信息
+ * @param {WebGLProgram} program 
+ * @param {WebGLRenderingContext} gl 
+ * @returns 
+ */
+function getUboData(program, gl){
+    if (!gl.ACTIVE_UNIFORM_BLOCKS) return {};
+
+    const uniformBlocks = {};
+
+    const totalUniformBlocks = gl.getProgramParameter(program, gl.ACTIVE_UNIFORM_BLOCKS);
+
+    for (let i = 0; i < totalUniformBlocks; i++) {
+        const name = gl.getActiveUniformBlockName(program, i);
+        const blockIndex = gl.getUniformBlockIndex(program, name);
+        const blockData = gl.getActiveUniformBlockParameter(program, blockIndex, gl.UNIFORM_BLOCK_DATA_SIZE);
+
+        const uniform = gl.getActiveUniformBlockParameter(program, blockIndex, gl.UNIFORM_BLOCK_ACTIVE_UNIFORMS);
+        
+        uniformBlocks[name] = {
+            name,
+            index: blockIndex,
+            size: blockData,
+        }
+    }
+
+    return uniformBlocks
+
+}
+
+
+/**
  * 导出UniformsData
  * @param {WebGLProgram} program 
  * @param {WebGLRenderingContext} gl 
@@ -139,8 +171,7 @@ export function generateProgram(gl, program) {
 
     program._uniformData = getUniformData(webGLProgram, gl);
 
-    // TODO UBO
-    // program.uniformBlockData = ;
+    program._uniformBlockData = getUboData(webGLProgram, gl);
 
     gl.deleteShader(glVertShader);
     gl.deleteShader(glFragShader);

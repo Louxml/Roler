@@ -10,11 +10,11 @@ export class BindGroup {
 
     #key = '';
 
-    #dirty;
+    #update;
 
     constructor(resources) {
 
-        this.#dirty = true
+        this.#update = false
         
         let index = 0;
         for (const i in resources) {
@@ -45,7 +45,7 @@ export class BindGroup {
         resource.on?.('change', this.onResourceChange, this);
 
         this.resources[index] = resource;
-        this.#dirty = true;
+        this.#update = true;
     }
 
     /**
@@ -58,7 +58,7 @@ export class BindGroup {
     }
 
     onResourceChange(resource) {
-        this.#dirty = true;
+        this.#update = true;
 
         if (resource.destroyed) {
             for (const i in this.resources){
@@ -72,15 +72,15 @@ export class BindGroup {
     }
 
     #updateKey() {
-        if (!this.#dirty) return;
-        this.#dirty = false;
+        if (!this.#update) return;
+        this.#update = false;
 
         const keys = [];
         for (const i in this.resources) {
             keys.push(this.resources[i]?.resourceId);
         }
 
-        return keys.join('|');
+        this.#key = keys.join('|');
     }
 
     /**

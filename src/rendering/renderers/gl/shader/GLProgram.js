@@ -47,6 +47,11 @@ export class GLProgram {
          * @type {string}
          */
         preferredFragmentPrecision: 'mediump',
+
+        /**
+         * transform feedback varyings
+         */
+        transformFeedbackVaryings: {names: [], bufferMode: 'interleaved'}
     }
 
     /**
@@ -80,6 +85,11 @@ export class GLProgram {
      * uniform block 数据格式
      */
     _uniformBlockData;
+
+    /**
+     * transform feedback varyings 数据
+     */
+    transformFeedbackVaryings;
     
 
     constructor(options){
@@ -115,9 +125,10 @@ export class GLProgram {
 
         });
 
-
         this.#fragment = fragment;
         this.#vertex = vertex;
+
+        this.transformFeedbackVaryings = options.transformFeedbackVaryings;
         
         this.#key = generateIdFromString(`${vertex}:${fragment}`, 'gl-program');
     }

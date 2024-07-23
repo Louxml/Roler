@@ -51,6 +51,7 @@ const GeometryOptions = {
     /**
      * 几何图形拓扑结构
      * @type {String | Topology}
+     * @values 'point-list' | 'line-list' | 'line-strip' | 'triangle-list' | 'triange-strip'
      */
     topology: 'triangle-list',
 
@@ -76,7 +77,9 @@ export class Geometry extends EventEmitter {
 
     
     /**
-     * 几何图形的拓扑结构
+     * 几何图形拓扑结构
+     * @type {String | Topology}
+     * @values 'point-list' | 'line-list' | 'line-strip' | 'triangle-list' | 'triange-strip'
      */
     topology;
 
@@ -97,7 +100,7 @@ export class Geometry extends EventEmitter {
     /**
      * 是否需要更新
      */
-    #dirty = true;
+    #update = true;
 
 
     constructor(options){
@@ -127,7 +130,7 @@ export class Geometry extends EventEmitter {
         }
 
         if (indexBuffer){
-            this.#indexBuffer = ensureIsBuffer(indexBuffer, this);
+            this.#indexBuffer = ensureIsBuffer(indexBuffer, true);
             this.#buffers.push(this.#indexBuffer);
         }
 
@@ -161,7 +164,7 @@ export class Geometry extends EventEmitter {
     }
 
     /**
-     * TODO 大小？长度？
+     * 获取几何图形顶点数量
      * @returns 
      */
     getSize(){
@@ -178,7 +181,7 @@ export class Geometry extends EventEmitter {
     }
 
     onBufferUpdate(buffer){
-        this.#dirty = true;
+        this.#update = true;
         this.emit('update', this);
     }
 
@@ -202,8 +205,8 @@ export class Geometry extends EventEmitter {
         return this.#uid;
     }
 
-    get dirty(){
-        return this.#dirty;
+    get update(){
+        return this.#update;
     }
 
     get attributes(){

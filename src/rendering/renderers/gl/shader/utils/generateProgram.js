@@ -1,4 +1,4 @@
-import { mapGLToVertexFormat, mapType } from "./mapType.js";
+import { mapGLToVertexFormat, mapGLTypeFromFormat, mapType } from "./mapType.js";
 import { logProgramError } from "./logProgramError.js";
 import { getAttributeInfoFromFormat } from "./getAttributeInfoFromFormat.js";
 import { defaultValue } from "./defaultValue.js";
@@ -95,10 +95,17 @@ function extractAttributesFromGLProgram(program, gl, sortAttributes){
 
         const format = mapGLToVertexFormat(gl, attribute.type);
 
+        const type = mapGLTypeFromFormat(format);
+
+        const { size, stride, normalize } = getAttributeInfoFromFormat(format);
+
         attributes[attribute.name] = {
-            location: 0,    // 下面会重置
+            location: i,    // 下面可能会重置
             format,
-            stride: getAttributeInfoFromFormat(format).stride,
+            type,
+            size,
+            stride,
+            normalize,
             offset: 0,
             instance: false,
             start: 0,
@@ -110,17 +117,14 @@ function extractAttributesFromGLProgram(program, gl, sortAttributes){
     if (sortAttributes) {
         keys.sort((a, b) => (a > b ? 1 : -1));
 
-
         for (let i = 0; i < keys.length; i++) {
             const key = keys[i];
-            attributes[key].location = i;
             gl.bindAttribLocation(program, i, key);
+            attributes[key].location = i;
         }
-    } else {
-        for (let i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            attributes[key].location = gl.getAttribLocation(program, key);
-        }
+
+        // 这里修改了绑定点，需要重新链接
+        gl.linkProgram(program);
     }
 
     return attributes;
@@ -158,6 +162,19 @@ export function generateProgram(gl, program) {
     gl.attachShader(webGLProgram, glFragShader);
 
     // TODO program.transformFeedbackVaryings处理
+    // const transformFeedbackVaryings = program.transformFeedbackVaryings;
+
+    // if (transformFeedbackVaryings){
+    //     if (typeof gl.transformFeedbackVaryings !== 'function') {
+    //         throw new Error('WebGL2 required for transformFeedbackVaryings');
+    //     }
+
+    //     gl.transformFeedbackVaryings(
+    //         webGLProgram,
+    //         transformFeedbackVaryings.names,
+    //         transformFeedbackVaryings.bufferMode === 'separate' ? gl.SEPARATE_ATTRIBS : gl.INTERLEAVED_ATTRIBS
+    //     );
+    // }
 
     // 链接
     gl.linkProgram(webGLProgram);
@@ -167,6 +184,7 @@ export function generateProgram(gl, program) {
         logProgramError(gl, webGLProgram, glVertShader, glFragShader);
     }
 
+    // GLSL 3.00：不要重置attribute位置（绑定点），新的语法和功能会在shader代码指定
     program._attributeData = extractAttributesFromGLProgram(webGLProgram, gl, !(/^[ \t]*#[ \t]*version[ \t]+300[ \t]+es[ \t]*$/m).test(program.vertex));
 
     program._uniformData = getUniformData(webGLProgram, gl);

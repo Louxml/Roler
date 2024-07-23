@@ -1,3 +1,4 @@
+import { GL_TYPES } from "../../texture/const.js";
 
 let GL_TABLE = null;
 
@@ -52,15 +53,43 @@ const GLSL_TO_VERTEX_TYPES = {
     ivec3:      'sint32x3',
     ivec4:      'sint32x4',
 
-    uint:        'uint32',
-    uvec2:       'uint32x2',
-    uvec3:       'uint32x3',
-    uvec4:       'uint32x4',
+    uint:       'uint32',
+    uvec2:      'uint32x2',
+    uvec3:      'uint32x3',
+    uvec4:      'uint32x4',
 
-    bool:        'uint32',
-    bvec2:       'uint32x2',
-    bvec3:       'uint32x3',
-    bvec4:       'uint32x4',
+    bool:       'uint32',
+    bvec2:      'uint32x2',
+    bvec3:      'uint32x3',
+    bvec4:      'uint32x4',
+}
+
+const FORMAT_TO_GL_TYPES = {
+    uint8x2: GL_TYPES.UNSIGNED_BYTE,
+    uint8x4: GL_TYPES.UNSIGNED_BYTE,
+    sint8x2: GL_TYPES.BYTE,
+    sint8x4: GL_TYPES.BYTE,
+
+    uint16x2: GL_TYPES.UNSIGNED_SHORT,
+    uint16x4: GL_TYPES.UNSIGNED_SHORT,
+    sint16x2: GL_TYPES.SHORT,
+    sint16x4: GL_TYPES.SHORT,
+
+    uint32:   GL_TYPES.UNSIGNED_INT,
+    uint32x2: GL_TYPES.UNSIGNED_INT,
+    uint32x3: GL_TYPES.UNSIGNED_INT,
+    uint32x4: GL_TYPES.UNSIGNED_INT,
+    sint32:   GL_TYPES.INT,
+    sint32x2: GL_TYPES.INT,
+    sint32x3: GL_TYPES.INT,
+    sint32x4: GL_TYPES.INT,
+
+    float16x2:  GL_TYPES.HALF_FLOAT,
+    float16x2:  GL_TYPES.HALF_FLOAT,
+    float32:    GL_TYPES.FLOAT,
+    float32x2:  GL_TYPES.FLOAT,
+    float32x3:  GL_TYPES.FLOAT,
+    float32x4:  GL_TYPES.FLOAT,
 }
 
 export function mapType(gl, type) {
@@ -81,9 +110,22 @@ export function mapType(gl, type) {
     return GL_TABLE[type];
 }
 
-
+/**
+ * 获取格式
+ * @param {WebGLRenderingContext} gl 
+ * @param {Number} type gl数据类型
+ * @returns 
+ */
 export function mapGLToVertexFormat(gl, type) {
     const typeValue = mapType(gl, type)
 
     return GLSL_TO_VERTEX_TYPES[typeValue] || 'float32';
+}
+
+/**
+ * 获取数据类型
+ * @param {String} format 格式
+ */
+export function mapGLTypeFromFormat(format){
+    return FORMAT_TO_GL_TYPES[format] || FORMAT_TO_GL_TYPES.float32;
 }

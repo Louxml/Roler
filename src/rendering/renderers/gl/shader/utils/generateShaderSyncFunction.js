@@ -66,7 +66,7 @@ export function generateShaderSyncFunction(shader, shaderProgram) {
 
     const functionSource = [...headerFragment, ...funcFragments].join('\n');
 
-    console.log(functionSource);
+    // console.log(functionSource);
 
     return new Function('r', 's', 'sD', functionSource);
 }

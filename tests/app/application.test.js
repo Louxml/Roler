@@ -53,7 +53,7 @@ function test2(){
         ]
     });
 
-    // console.log(geo);
+    console.log(geo);
 
     app.renderer.geometry.bind(geo, null);
 
@@ -62,26 +62,19 @@ function test2(){
 
 
 function test3(){
-    let pro = new GLProgram({
+    let pro = GLProgram.from({
         vertex: `
-        #version 300 es
-
-        layout(std140) uniform colorGroup {
-            vec4 uTintColor;
-            float u_time;
-            vec4[5] u_colors;
-        };
 
         in vec2 aPosition;
         in vec4 aColor;
 
         out vec4 vColor;
 
-        uniform float uTime;
+        // uniform float uTime;
 
         void main() {
-            vColor = aColor * sin(uTime);
             gl_Position = vec4(aPosition, 0.0, 1.0);
+            vColor = aColor;
         }
         `,
         fragment: `
@@ -89,13 +82,16 @@ function test3(){
 
         uniform vec4 uTint;
 
+        in vec4 vColor;
+
         out vec4 finalColor;
 
         void main() {
-            finalColor = uTint;
+            // finalColor = uTint;
+            finalColor = vColor;
         }
         `,
-        name: 'test'
+        name: 'test',
     });
 
     // console.log(pro.fragment)
@@ -112,21 +108,49 @@ function test3(){
             // },
             light: {
                 uTint : {
-                    value: [1, 0, 0, 1],
+                    value: [1, 1, 1, 1],
                     type: 'vec4<f32>',
                 }
             },
-            colorGroup: new BufferResource({
-                buffer: new Buffer({
-                    data: [1, 0, 0, 1],
-                })
-            })
+            // colorGroup: new BufferResource({
+            //     buffer: new Buffer({
+            //         data: [1, 0, 0, 1],
+            //     })
+            // })
         }
     });
 
-    app.renderer.shader.bind(shader);
+    let geo = new Geometry({
+        attributes:{
+            aPosition:[
+                0,0.5, //0
+                0.5,-0.5, //1
+                -0.5,-0.5, //2
+                -1, 0.5,
+            ],
+            aColor:[
+                1,0,0,1,
+                0,1,0,1,
+                0,0,1,1,
+                1,1,0,1
+            ],
+        },
+        indexBuffer:[
+            0,1,2,3
+        ],
+        // topology: 'triangle-fan'
+    });
+
+    console.log(geo);
 
     console.log(shader)
+
+    app.renderer.shader.bind(shader);
+    
+    app.renderer.geometry.bind(geo, shader.glProgram);
+
+    app.renderer.geometry.draw();
+
 }
 
 
@@ -182,7 +206,7 @@ function test4(gl){
 
 // test1()
 
-test2();
+// test2();
 
 test3();
 

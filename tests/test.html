@@ -9,49 +9,113 @@
     <title>Simple Shader Example</title>
     <script type="text/javascript">
         function init() {
-            const canvas = document.getElementById('glcanvas');
-            const gl = canvas.getContext('webgl2');
+            
+            // 获取 WebGL 上下文
+            const gl = document.getElementById('glcanvas').getContext('webgl2');
 
-            if (!gl) {
-                alert('WebGL 2.0 not supported');
-                return;
-            }
+            // 创建顶点数组对象
+            const vao = gl.createVertexArray();
 
-            const vertexShaderSource = `#version 300 es
+            // 绑定顶点数组对象
+            gl.bindVertexArray(vao);
+
+            // 设置顶点着色器源码
+            const vertex =  `#version 300 es
+                precision mediump float;
                 in vec4 position;
-                out vec2 texCoords;
+                out vec4 vPosition;
 
                 void main() {
-                    texCoords = position.xy;
+                    vPosition = position;
                     gl_Position = position;
                 }
             `;
 
-            const fragmentShaderSource = `#version 300 es
+            const fragment = `#version 300 es
                 precision mediump float;
+                in vec4 vPosition;
                 out vec4 fragColor;
 
                 void main() {
-                    fragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                    fragColor = vec4(1);
                 }
             `;
 
-            const program = createProgram(gl, vertexShaderSource, fragmentShaderSource);
+            const program = createProgram(gl, vertex, fragment);
 
-            const positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+            // 创建顶点缓冲对象
+            const vbo = gl.createBuffer();
+
+            // 绑定顶点缓冲对象
+            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+
+            // 设置顶点缓冲数据
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-                0.0, 0.5,
-                -0.5, -0.5,
-                0.5, -0.5
+            0.0, 0.5,
+            -0.5, -0.5,
+            0.5, -0.5
             ]), gl.STATIC_DRAW);
 
+            // 获取顶点属性位置
             const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+
+            // 启用顶点属性
             gl.enableVertexAttribArray(positionAttributeLocation);
+
+            // 设置顶点属性指针
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // 使用程序
+            gl.useProgram(program);
+
+            // 绘制三角形
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+            // 解绑顶点数组对象
+            gl.bindVertexArray(null);
+
+            // 清除全屏
+            gl.clearColor(0, 0, 0, 1);
+
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+
+            const vbo1 = gl.createBuffer();
+            // 绑定顶点缓冲对象
+            gl.bindBuffer(gl.ARRAY_BUFFER, vbo1);
+
+            // 设置顶点缓冲数据
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+            1.0, 0.5,
+            -0.5, -0.5,
+            0.5, -0.5
+            ]), gl.STATIC_DRAW);
+            
+            // 启用顶点属性
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            
+            // 设置顶点属性指针
             gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
             
-            gl.useProgram(program);
+            // 绘制三角形
             gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+
+            // 再次绑定vao
+            gl.bindVertexArray(vao);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+            gl.bindVertexArray(null);
+
+            // gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // gl.bindVertexArray(vao);
+
+            // gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+            // gl.bindVertexArray(null);
         }
 
         function createProgram(gl, vertexShaderSource, fragmentShaderSource) {
@@ -85,9 +149,104 @@
 
             return program;
         }
-    </script>
+
+        function demo1(){
+            // 假设我们有一个每段包含顶点、颜色、法线的数组
+            const array = [
+                0.0, 0.5, -0.5, // 顶点
+                1, 0, 0, 1, // 颜色
+                1.0, 0.0, 0.0, // 法线
+
+                -0.5, -0.5, -0.5, // 顶点
+                0, 1, 0, 1, // 颜色
+                0.0, 1.0, 0.0, // 法线
+
+                0.5, -0.5, -0.5, // 顶点
+                0, 0, 1, 1, // 颜色
+                0.0, 0.0, 1.0 // 法线
+            ];
+
+            // 获取 WebGL 上下文
+            const gl = document.getElementById('glcanvas').getContext('webgl2');
+
+            // 设置顶点着色器源码
+            const vertex =  `
+                precision mediump float;
+                attribute vec3 position;
+                attribute vec4 color;
+                attribute vec3 normal;
+                varying vec4 vPosition;
+                varying vec3 vNormal;
+                varying vec4 vColor;
+
+                void main() {
+                    vPosition = vec4(position, 1.0);
+                    vColor = color;
+                    vNormal = normal;
+
+                    gl_Position = vPosition;
+                }
+            `;
+
+            const fragment = `
+                precision mediump float;
+                varying vec4 vColor;
+                // out vec4 fragColor;
+
+                void main() {
+                    gl_FragColor = vColor;
+                }
+            `;
+
+            const program = createProgram(gl, vertex, fragment);
+
+            // 创建顶点缓冲对象
+            const vbo = gl.createBuffer();
+
+            // 绑定顶点缓冲对象
+            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+
+            // 设置顶点缓冲数据
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(array), gl.STATIC_DRAW);
+
+            // 获取顶点属性位置
+            const positionAttributeLocation = 2//gl.getAttribLocation(program, 'position');
+
+            gl.bindAttribLocation(program, positionAttributeLocation, 'position');
+            // 启用顶点属性
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            // 设置顶点属性指针（偏移量：0）
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 40, 0);
+
+            // 获取颜色属性位置
+            const colorAttributeLocation = gl.getAttribLocation(program, 'color');
+            // 启用颜色属性
+            gl.enableVertexAttribArray(colorAttributeLocation);
+            // 设置颜色属性指针（偏移量：12）
+            gl.vertexAttribPointer(colorAttributeLocation, 4, gl.FLOAT, false, 40, 12);
+
+            // 获取法线属性位置
+            const normalAttributeLocation = 0//gl.getAttribLocation(program, 'normal');
+            gl.bindAttribLocation(program, normalAttributeLocation, 'normal');
+            // 启用法线属性
+            gl.enableVertexAttribArray(normalAttributeLocation);
+            // 设置法线属性指针（偏移量：24）
+            gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 40, 28);
+
+            console.log(positionAttributeLocation, colorAttributeLocation, normalAttributeLocation);
+            console.log(gl.getAttribLocation(program, 'position'), gl.getAttribLocation(program, 'color'), gl.getAttribLocation(program, 'normal'));
+
+            gl.linkProgram(program);
+
+            // 使用程序
+            gl.useProgram(program);
+
+            // 绘制三角形
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+        }
+</script>
 </head>
-<body onload="init()">
+<body onload="demo1()">
     <canvas id="glcanvas" width="500" height="500"></canvas>
 </body>
 </html>

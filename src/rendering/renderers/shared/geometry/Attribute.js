@@ -49,6 +49,11 @@ export class Attribute {
     type;
 
     /**
+     * 是否归一化
+     */
+    normalize;
+
+    /**
      * 开始绘制几何图形的起始顶点，未指定默认第一个顶点
      */
     start;
@@ -82,5 +87,7 @@ export class Attribute {
         this.buffer = buffer;
 
         this.size = 1;
+
+        this.normalize = false;
     }
 }

@@ -220,4 +220,8 @@ export class Geometry extends EventEmitter {
     get indexBuffer(){
         return this.#indexBuffer;
     }
+
+    get bounds(){
+        // TODO
+    }
 }

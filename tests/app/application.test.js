@@ -25,6 +25,7 @@ await app.init({
     // backgroundAlpha: 1,
     // preferWebGLVersion: 1,
     autoDensity: true,
+    antialias: true,
 });
 
 console.log(app);
@@ -108,7 +109,7 @@ function test3(){
             // },
             light: {
                 uTint : {
-                    value: [1, 1, 1, 1],
+                    value: [1, 0, 0, 1],
                     type: 'vec4<f32>',
                 }
             },

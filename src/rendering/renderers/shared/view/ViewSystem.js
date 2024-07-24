@@ -1,6 +1,6 @@
 
 
-import { Extension, ExtensionType } from "../../../../extensions/index.js";
+import { ExtensionType } from "../../../../extensions/index.js";
 import { Rectangle } from "../../../../maths/shapes/Rectangle.js";
 import { System } from "../system/System.js";
 import { DOMAdapter } from "../../../../environment/Adapter.js";

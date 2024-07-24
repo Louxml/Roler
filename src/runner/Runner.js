@@ -90,7 +90,7 @@ export class Runner{
      * @returns this 链式调用
      */
     removeAll(){
-        this._items = [];
+        this._items.length = 0;
         return this;
     }
 

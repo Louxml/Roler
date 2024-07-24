@@ -5,10 +5,10 @@
  */
 export class System{
 
-    renderer;
+    #renderer;
 
     constructor(renderer){
-        this.renderer = renderer;
+        this.#renderer = renderer;
     }
 
     init(){
@@ -17,5 +17,9 @@ export class System{
 
     destroy(){
 
+    }
+
+    get renderer(){
+        return this.#renderer;
     }
 }

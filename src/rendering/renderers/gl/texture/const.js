@@ -24,3 +24,19 @@ export const GL_TYPES = {
     //
     HALF_FLOAT: 0x8D61,
 }
+
+
+/**
+ * 清除类型
+ */
+export const CLEAR = {
+    NONE:       0,
+    DEPTH:      0x100,
+    STENCIL:    0x400,
+    COLOR:      0x4000,
+
+    COLOR_DEPTH:    0x4000 | 0x100,
+    COLOR_STENCIL:  0x4000 | 0x400,
+    DEPTH_STENCIL:  0x400 | 0x100,
+    ALL:            0x4000 | 0x400 | 0x100,
+}

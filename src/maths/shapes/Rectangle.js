@@ -54,6 +54,11 @@ export class Rectangle {
         
     // }
 
+    /**
+     * 将矩形区域复制到当前矩形区域
+     * @param {Rectangle} rectangle 矩形区域
+     * @returns 
+     */
     copyFrom(rectangle){
         this.x = rectangle.x;
         this.y = rectangle.y;
@@ -63,12 +68,23 @@ export class Rectangle {
         return this
     }
 
+    /**
+     * 将当前矩形区域复制到矩形区域
+     * @param {Rectangle} rectangle 矩形区域
+     * @returns 
+     */
     copyTo(rectangle){
         rectangle.copyFrom(this);
 
         return rectangle;
     }
 
+    /**
+     * 判断当前矩形区域是否包含点(x, y)
+     * @param {Number} x 
+     * @param {Number} y 
+     * @returns 
+     */
     contains(x, y){
         return (
             x >= this.left &&
@@ -78,6 +94,13 @@ export class Rectangle {
         );
     }
 
+    /**
+     * 判断当前矩形区域是否包含点(x, y)，考虑描边宽度
+     * @param {Number} x 
+     * @param {Number} y 
+     * @param {Number} stroke 矩形的描边宽度
+     * @returns 
+     */
     strokeContains(x, y, stroke){
 
         const halfStroke = stroke / 2;

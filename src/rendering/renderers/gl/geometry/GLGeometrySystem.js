@@ -375,7 +375,6 @@ export class GLGeometrySystem extends System {
             if (instanceCount > 1){
                 gl.drawElementsInstanced(topology, size, glType, start * byteSize, instanceCount);
             }else{
-                console.log(topology, size, glType, start * byteSize);
                 gl.drawElements(topology, size, glType, start * byteSize);
             }
         }else{

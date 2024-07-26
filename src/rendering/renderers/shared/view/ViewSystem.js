@@ -63,6 +63,7 @@ export class ViewSystem extends System {
 
     // TODO
     init(options){
+        console.log('ViewSystem init');
         options = {...ViewSystem.defaultOptions, ...options};
         
         this.screen = new Rectangle(0, 0, options.width, options.height);

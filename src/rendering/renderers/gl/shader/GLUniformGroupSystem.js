@@ -31,6 +31,10 @@ export class GLUniformGroupSystem extends System{
      */
     #cache = Object.create(null);
 
+    init(){
+        console.log('GLUniformGroupSystem init');
+    }
+
     
     contextChange(gl){
         this.#gl = gl;

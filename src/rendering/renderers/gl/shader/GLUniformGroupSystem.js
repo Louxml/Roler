@@ -50,8 +50,8 @@ export class GLUniformGroupSystem extends System{
     updateUniformGroup(group, program, syncData){
         const programData = this.renderer.shader._getProgramData(program);
 
-        if (!group.isStatic || group.updateId != programData.uniformGroupUpdateIds[group.uid]){
-            programData.uniformGroupUpdateIds[group.uid] = group.updateId;
+        if (!group.isStatic || group.updateID != programData.uniformGroupUpdateIds[group.uid]){
+            programData.uniformGroupUpdateIds[group.uid] = group.updateID;
 
             const syncFunc = this.#getUniformSyncFunction(group, program);
 

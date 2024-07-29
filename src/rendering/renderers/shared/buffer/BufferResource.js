@@ -19,7 +19,7 @@ export class BufferResource extends BindResource {
 
 
     constructor({buffer, offset = 0, size = 0}){
-        super('bufferResourc');
+        super('bufferResource');
 
         this.#uid = uid('buffer');
 

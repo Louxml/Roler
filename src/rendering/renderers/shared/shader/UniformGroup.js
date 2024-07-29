@@ -16,7 +16,7 @@ export class UniformGroup extends BindResource {
      * 更新状态
      * @type {Number}
      */
-    #updateId;
+    #updateID;
 
     /**
      * 唯一标识符
@@ -87,14 +87,14 @@ export class UniformGroup extends BindResource {
         this.ubo = options.ubo;
         this.isStatic = options.isStatic;
 
-        this.#updateId = 1;
+        this.#updateID = 1;
 
         const keys = Object.keys(uniforms).map(i => `${i}-${uniformStructures[i].type}`);
         this.#signature = generateIdFromString(keys.join('|'), 'uniform-group');
     }
 
     update(){
-        this.#updateId++;
+        this.#updateID++;
     }
 
     get uid(){
@@ -105,8 +105,8 @@ export class UniformGroup extends BindResource {
         return this.#signature;
     }
 
-    get updateId(){
-        return this.#updateId;
+    get updateID(){
+        return this.#updateID;
     }
 
     get isUniformGroup(){

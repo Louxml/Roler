@@ -4,6 +4,7 @@ import { EventEmitter } from "../../../../eventemitter/EventEmtter.js";
 import { Rectangle } from "../../../../maths/shapes/Rectangle.js";
 import { uid } from "../../../../utils/data/uid.js";
 import { TextureMatrix } from "./TextureMatrix.js";
+import { BufferImageSource } from "./sources/BufferImageSource.js";
 import { TextureSource } from "./sources/TextureSource.js";
 
 /** 纹理边距， 常用于九宫格缩放 */
@@ -200,8 +201,11 @@ export class Texture extends EventEmitter{
 
     static WHITE = new Texture({
         label: 'WHITE',
-        source: new TextureSource({
+        source: new BufferImageSource({
             label: 'WHITE',
+            resource: new Uint8Array([255, 255, 255, 255]),
+            width: 1,
+            height: 1,
         })
     });
 }

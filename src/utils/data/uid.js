@@ -11,6 +11,8 @@ const uidTypes = [
     'resource',
     'uniform',
     'geometry',
+    'textureSource',
+    'texture',
 ]
 
 /**

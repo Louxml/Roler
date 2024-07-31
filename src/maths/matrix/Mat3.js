@@ -52,7 +52,9 @@ export class Mat3{
      * @returns Mat3
      */
     static createRotation(r = 0){
-        return new Mat3([Math.cos(r), -Math.sin(r), 0, Math.sin(r), Math.cos(r), 0, 0, 0, 1]);
+        const cos = Math.cos(r);
+        const sin = Math.sin(r);
+        return new Mat3([cos, -sin, 0, sin, cos, 0, 0, 0, 1]);
     }
     
     /**

@@ -59,7 +59,7 @@ const webgl2 = [
 ]
 
 const common = {
-    // anisotropicFiltering: "EXT_texture_filter_anisotropic",
+    anisotropicFiltering: "EXT_texture_filter_anisotropic",  // 各向异性拓展
     // floatTextureLinear: "OES_texture_float_linear",
     // s3tc: "WEBGL_compressed_texture_s3tc",
     // s3tcSRGB: "WEBGL_compressed_texture_s3tc_srgb",

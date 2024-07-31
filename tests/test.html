@@ -233,10 +233,10 @@
             // 设置法线属性指针（偏移量：24）
             gl.vertexAttribPointer(normalAttributeLocation, 3, gl.FLOAT, false, 40, 28);
 
+            gl.linkProgram(program);
+            
             console.log(positionAttributeLocation, colorAttributeLocation, normalAttributeLocation);
             console.log(gl.getAttribLocation(program, 'position'), gl.getAttribLocation(program, 'color'), gl.getAttribLocation(program, 'normal'));
-
-            gl.linkProgram(program);
 
             // 使用程序
             gl.useProgram(program);

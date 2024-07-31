@@ -23,12 +23,12 @@ await app.init({
     width: window.innerWidth,
     height: window.innerHeight,
     // backgroundAlpha: 1,
-    // preferWebGLVersion: 1,
+    preferWebGLVersion: 1,
     autoDensity: true,
     antialias: true,
 });
 
-console.log(app);
+console.log(app.renderer);
 
 
 

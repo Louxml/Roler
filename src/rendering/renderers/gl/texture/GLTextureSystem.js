@@ -5,7 +5,10 @@ import { System } from "../../shared/system/System.js";
 import { Texture } from "../../shared/texture/Texture.js";
 import { GLTexture } from "./GLTexture.js";
 import { COMPARE_MODES, MIPMAP_SCALE_MODES, SCALE_MODES, WARP_MODES } from "./const.js";
+import { glUploadBufferResource } from "./uploaders/glUploadBufferResource.js";
 import { glUploadImageResource } from "./uploaders/glUploadImageResource.js";
+import { glUploadVideoResource } from "./uploaders/glUploadVideoResource.js";
+import { glUploadCompressedTextureResource } from "./uploaders/glUploadCompressedTextureResource.js";
 import { mapFormatToGLFormat, mapFormatToGLInternalFormat, mapFormatToGLType } from "./utils/mapFormat.js";
 
 // 每个像素的字节数
@@ -46,6 +49,9 @@ export class GLTextureSystem extends System {
     /** 不同类型的纹理上传方法 */
     #uploads = {
         image: glUploadImageResource,
+        buffer: glUploadBufferResource,
+        video: glUploadVideoResource,
+        compressed: glUploadCompressedTextureResource
     };
 
 
@@ -69,7 +75,8 @@ export class GLTextureSystem extends System {
         }
 
         // Test
-        this.getPixels(Texture.EMPTY);
+        // this.getPixels(Texture.EMPTY);
+        this.bind(Texture.WHITE)
     }
 
     initSource(source){

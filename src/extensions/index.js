@@ -10,7 +10,7 @@ const ExtensionType = {
     Application: "application",
 
     // 注册渲染器
-    Renderer: "Renderer",
+    Renderer: "renderer",
 
     
     // 注册webgl渲染管线拓展
@@ -35,6 +35,9 @@ const ExtensionType = {
 
     // 注册环境拓展
     Environment: "environment",
+
+    // 注册纹理资源拓展， 用于自动检测纹理类型
+    TextureSource: "texture-source",
 
 }
 

@@ -20,10 +20,10 @@ export class Color{
      * @Array
      * @private
      */
-    _color;
+    #color;
 
     constructor(...value){
-        this._color = new Float32Array(4).fill(1);
+        this.#color = new Float32Array(4).fill(1);
 
         value = value.length === 1 ? value[0] : value;
         this.value = value;
@@ -40,10 +40,10 @@ export class Color{
     
 
     set(r = 1.0, g = 1.0, b = 1.0, a = 1.0){
-        this._color[0] = Math.min(Math.max(r, 0), 1);
-        this._color[1] = Math.min(Math.max(g, 0), 1);
-        this._color[2] = Math.min(Math.max(b, 0), 1);
-        this._color[3] = Math.min(Math.max(a, 0), 1);
+        this.#color[0] = Math.min(Math.max(r, 0), 1);
+        this.#color[1] = Math.min(Math.max(g, 0), 1);
+        this.#color[2] = Math.min(Math.max(b, 0), 1);
+        this.#color[3] = Math.min(Math.max(a, 0), 1);
     }
 
     setValue(value = 0xffffff){
@@ -51,27 +51,43 @@ export class Color{
     }
 
     setAlpha(a = 1){
-        this._color[3] = Math.min(Math.max(a, 0), 1);
+        this.#color[3] = Math.min(Math.max(a, 0), 1);
+    }
+
+    get color(){
+        return this.#color;
     }
     
     get alpha(){
-        return this._color[3];
+        return this.#color[3];
+    }
+
+    get red(){
+        return this.#color[0];
+    }
+
+    get green(){
+        return this.#color[1];
+    }
+
+    get blue(){
+        return this.#color[2];
     }
 
     get r(){
-        return Math.round(this._color[0] * 255);
+        return Math.round(this.#color[0] * 255);
     }
 
     get g(){
-        return Math.round(this._color[1] * 255);
+        return Math.round(this.#color[1] * 255);
     }
 
     get b(){
-        return Math.round(this._color[2] * 255);
+        return Math.round(this.#color[2] * 255);
     }
 
     get a(){
-        return Math.round(this._color[3] * 255);
+        return Math.round(this.#color[3] * 255);
     }
 
     get rgba(){
@@ -83,7 +99,7 @@ export class Color{
     }
 
     get hsl(){
-        const c = this._color.slice(0, 3);
+        const c = this.#color.slice(0, 3);
         const cmax = Math.max(...c);
         const cmin = Math.min(...c);
         const mIdx = c.indexOf(cmax);
@@ -114,12 +130,12 @@ export class Color{
 
     get hsla(){
         const d = this.hsl;
-        d[3] = Math.round(this._color[3] * 10000) / 100;
+        d[3] = Math.round(this.#color[3] * 10000) / 100;
         return d;
     }
 
     get hsv(){
-        const c = this._color.slice(0, 3);
+        const c = this.#color.slice(0, 3);
         const cmax = Math.max(...c);
         const cmin = Math.min(...c);
         const mIdx = c.indexOf(cmax);
@@ -150,7 +166,7 @@ export class Color{
 
     get hsva(){
         const d = this.hsv;
-        d[3] = Math.round(this._color[3] * 10000) / 100;
+        d[3] = Math.round(this.#color[3] * 10000) / 100;
         return d;
     }
 
@@ -166,7 +182,7 @@ export class Color{
 
     set value(v){
         if (v instanceof Color){
-            this._color.set(v._color);
+            this.#color.set(v.#color);
         }else if (v === null){
             throw new Error('Cannot set Color to null');
         }else if (v !== null){

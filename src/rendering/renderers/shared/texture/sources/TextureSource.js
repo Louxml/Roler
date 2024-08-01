@@ -7,6 +7,7 @@ import { BindResource } from "../../../gpu/shader/BindResource.js";
 import { TextureStyle } from "../TextureStyle.js";
 
 
+// TODO 理解pixelWidth、width、resourceWidth、resolution的区别
 export class TextureSource extends BindResource {
 
     //#region 事件

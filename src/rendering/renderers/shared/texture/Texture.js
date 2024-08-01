@@ -161,6 +161,10 @@ export class Texture extends EventEmitter{
     get uid(){
         return this.#uid;
     }
+
+    get isTexture(){
+        return true;
+    }
     
     get source(){
         return this.#source;

@@ -10,6 +10,8 @@ import { glUploadImageResource } from "./uploaders/glUploadImageResource.js";
 import { glUploadVideoResource } from "./uploaders/glUploadVideoResource.js";
 import { glUploadCompressedTextureResource } from "./uploaders/glUploadCompressedTextureResource.js";
 import { mapFormatToGLFormat, mapFormatToGLInternalFormat, mapFormatToGLType } from "./utils/mapFormat.js";
+import { TextureSource } from "../../shared/texture/sources/TextureSource.js";
+import { DOMAdapter } from "../../../../environment/Adapter.js";
 
 // 每个像素的字节数
 const BYTES_PER_PIXEL = 4;
@@ -73,10 +75,6 @@ export class GLTextureSystem extends System {
         for (let i = 0; i < this.#maxTextures; i++){
             this.bind(Texture.EMPTY, i)
         }
-
-        // Test
-        // this.getPixels(Texture.EMPTY);
-        this.bind(Texture.WHITE)
     }
 
     initSource(source){
@@ -378,8 +376,19 @@ export class GLTextureSystem extends System {
      * @param {Texture} texture 纹理对象
      */
     generateCanvas(texture){
-        
+        const { pixels, width, height} = this.getPixels(texture);
 
+        const canvas = DOMAdapter.get().createCanvas(width, height);
+        const ctx = canvas.getContext('2d');
+
+        if (ctx){
+            const imageData = ctx.createImageData(width, height);
+
+            imageData.data.set(pixels);
+            ctx.putImageData(imageData, 0, 0);
+        }
+
+        return canvas
     }
 
     /**
@@ -390,6 +399,8 @@ export class GLTextureSystem extends System {
         const resolution = texture.source.resolution;
         const frame = texture.frame;
 
+        const x = Math.round(frame.x * resolution);
+        const y = Math.round(frame.y * resolution);
         const width = Math.max(Math.round(frame.width * resolution), 1);
         const height = Math.max(Math.round(frame.height * resolution), 1);
 
@@ -397,7 +408,31 @@ export class GLTextureSystem extends System {
 
         const renderer = this.renderer;
 
-        console.log(renderer.renderTarget)
+        // TODO RenderTargetSystem
+        const renderTarget = renderer.renderTarget.getRenderTarget(texture);
+
+        const glRenderTarget = renderer.renderTarget.getGpuRenderTarget(renderTarget);
+
+        const gl = this.#gl;
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, glRenderTarget.resolveTargetFramebuffer);
+
+        // 读取像素
+        gl.readPixels(
+            x,
+            y,
+            width,
+            height,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            pixels
+        );
+        // TODO 这里不用取消绑定吗？
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        return {
+            pixels: new Uint8ClampedArray(pixels.buffer), width, height
+        };
     }
 
 

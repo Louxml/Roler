@@ -13,7 +13,7 @@ function  test1(){
     //         height: 200
     //     })
     // });
-    let t = Texture.EMPTY;
+    let t = Texture.WHITE;
     // let t = new TextureSource();
 
     console.log(t)

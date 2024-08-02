@@ -12,8 +12,8 @@ export class BufferImageSource extends TextureSource {
 
     constructor(options){
 
-        /** rgba四个通道 */
-        const buffer = options.resource || new Float32Array(options.width * options.height * 4);
+        /** rgba四个通道，这里用Float32Array在webgl1不支持 */
+        const buffer = options.resource || new Uint8Array(options.width * options.height * 4);
         let format = options.format;
 
         if (!format){

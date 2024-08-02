@@ -112,9 +112,31 @@ export function mapFormatToGLType(gl){
         rgba8snorm: gl.BYTE,
         bgra8unorm: gl.UNSIGNED_BYTE,
         'bgra8unorm-srgb': gl.UNSIGNED_BYTE,
+
+        // 64bit format
+        rg32uint: gl.UNSIGNED_INT,
+        rg32sint: gl.INT,
+        rg32float: gl.FLOAT,
+        rgba16uint: gl.UNSIGNED_SHORT,
+        rgba16sint: gl.SHORT,
+        rgba16float: gl.HALF_FLOAT,
+
+        //128 bit format
+        rgba32uint: gl.UNSIGNED_INT,
+        rgba32sint: gl.INT,
+        rgba32float: gl.FLOAT,
+
+        // depth/stencil format
+        stencil8: gl.UNSIGNED_BYTE,
+        depth16unorm: gl.UNSIGNED_SHORT,
+        depth24plus: gl.UNSIGNED_INT,
+        'depth24plus-stencil8': gl.UNSIGNED_INT_24_8,
+        depth32float: gl.FLOAT,
+        'depth32float-stencil8': gl.FLOAT_32_UNSIGNED_INT_24_8_REV
     }
 }
 
+/** format string 对应 format */
 export function mapFormatToGLFormat(gl){
     return {
         // 8bit format
@@ -161,6 +183,14 @@ export function mapFormatToGLFormat(gl){
         rgba32uint: gl.RGBA,
         rgba32sint: gl.RGBA,
         rgba32float: gl.RGBA,
+
+        // depth/stencil format
+        stencil8: gl.STENCIL_INDEX8,
+        depth16unorm: gl.DEPTH_COMPONENT,
+        depth24plus: gl.DEPTH_COMPONENT,
+        'depth24plus-stencil8': gl.DEPTH_STENCIL,
+        depth32float: gl.DEPTH_COMPONENT,
+        'depth32float-stencil8': gl.DEPTH_STENCIL
     }
 }
 

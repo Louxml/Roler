@@ -13,6 +13,7 @@ const uidTypes = [
     'geometry',
     'textureSource',
     'texture',
+    'renderTarget',
 ]
 
 /**

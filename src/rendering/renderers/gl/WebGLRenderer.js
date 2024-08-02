@@ -10,12 +10,16 @@ import { GLBufferSystem } from "./buffer/GLBufferSystem.js";
 import { GLGeometrySystem } from "./geometry/GLGeometrySystem.js";
 import { GLShaderSystem } from "./shader/GLShaderSystem.js";
 import { GLUniformGroupSystem } from "./shader/GLUniformGroupSystem.js";
+import { GLRenderTargetSystem } from "./renderTarget/GLRenderTargetSystem.js";
+import { GLTextureSystem } from "./texture/GLTextureSystem.js";
 
 
 const DefaultWebGLSystems = [
     ...SharedSystems, // 默认系统
     GLContextSystem, // webgl上下文系统
     GLBufferSystem, // webgl缓冲区系统
+    GLTextureSystem, // webgl纹理系统
+    GLRenderTargetSystem, // webgl渲染目标系统
     GLGeometrySystem, // webgl几何系统
     GLUniformGroupSystem, // webgl uniform组系统
     GLShaderSystem, // webgl着色器系统

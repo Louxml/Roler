@@ -6,6 +6,8 @@ import { BufferResource } from "../../src/rendering/renderers/shared/buffer/Buff
 import { Buffer } from "../../src/rendering/renderers/shared/buffer/Buffer.js";
 import { Geometry } from "../../src/rendering/renderers/shared/geometry/Geometry.js";
 import { Shader } from "../../src/rendering/renderers/shared/shader/Shader.js";
+import { Texture } from "../../src/rendering/renderers/shared/texture/Texture.js";
+import { BufferImageSource } from "../../src/rendering/renderers/shared/texture/sources/BufferImageSource.js";
 
 const target = document.body
 
@@ -204,6 +206,27 @@ function test4(gl){
     gl.useProgram(webGLProgram);
 }
 
+function test5(renderer){
+    const gl = renderer.gl;
+    const width = 100;
+    const height = 100;
+    const arr = new Array(width * height * 4).fill(0).map(v=>Math.round(Math.random()*255));
+    const source = new Texture({
+        label: 'test',
+        source:new BufferImageSource({
+            label: 'test',
+            width,
+            height,
+            resource: new Uint8Array(arr)
+        })
+    });
+    // console.log(source)
+    const data = renderer.texture.generateCanvas(source);
+    document.body.appendChild(data);
+
+    // console.log(data)
+}
+
 
 // test1()
 
@@ -213,3 +236,5 @@ test3();
 
 
 // test4(app.renderer.gl);
+
+test5(app.renderer);

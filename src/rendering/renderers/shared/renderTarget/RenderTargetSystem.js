@@ -56,7 +56,7 @@ export class RenderTargetSystem extends System {
     #renderTargetHash = new Map();
 
     /** RenderTarget.uid -> GpuRenderTarget */
-    #gpuRenderTargetHash = Object.create();
+    #gpuRenderTargetHash = Object.create(null);
 
     contextChange(){
         this.#gpuRenderTargetHash = Object.create(null);

@@ -35,7 +35,7 @@ export class TextureSource extends BindResource {
         autoGenerateMipmaps: false,
         /** 采样次数 */
         sampleCount: 1,
-        /** 抗锯齿 */
+        /** 抗锯齿，这里指msaa（多重采样抗锯齿） */
         antialias: false,
         /** 自动垃圾回收 */
         autoGarbageCollect: false
@@ -98,7 +98,7 @@ export class TextureSource extends BindResource {
     /** 透明模式 */
     alphaMode;
 
-    /** 抗锯齿，只影响RenderTexture */
+    /** 抗锯齿，只影响RenderTexture，这里指MSAA（多重采样抗锯齿） */
     antialias;
 
     /** 是否销毁 */

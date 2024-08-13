@@ -404,11 +404,11 @@ export class GLTextureSystem extends System {
         const width = Math.max(Math.round(frame.width * resolution), 1);
         const height = Math.max(Math.round(frame.height * resolution), 1);
 
+        // 用于读取纹理数据
         const pixels = new Uint8Array(BYTES_PER_PIXEL * width * height);
 
         const renderer = this.renderer;
 
-        // TODO RenderTargetSystem
         const renderTarget = renderer.renderTarget.getRenderTarget(texture);
 
         const glRenderTarget = renderer.renderTarget.getGpuRenderTarget(renderTarget);

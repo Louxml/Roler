@@ -30,7 +30,7 @@ await app.init({
     antialias: true,
 });
 
-console.log(app.renderer);
+console.log(app);
 
 
 
@@ -210,7 +210,19 @@ function test5(renderer){
     const gl = renderer.gl;
     const width = 100;
     const height = 100;
-    const arr = new Array(width * height * 4).fill(0).map(v=>Math.round(Math.random()*255));
+    const arr = new Array(width * height * 4).fill(0).map((v, i) => {
+        const x = i / 4 % width;
+        // const y = Math.floor(i / 4 / width);
+
+        if (i % 4 == 0) {
+            return 255;
+        }else if (i % 4 == 3) {
+            return 255 * (width - x) / width
+        }
+
+        return 0;
+        // return Math.round(Math.random()*255)
+    });
     const source = new Texture({
         label: 'test',
         source:new BufferImageSource({

@@ -4,7 +4,7 @@
 import { Texture } from "../Texture.js";
 import { CanvasSource } from "../sources/CanvasSource.js";
 
-
+// 画布缓存，用于存储已经创建过的纹理，key：canvas，value：texture
 const canvasCache = new Map();
 
 

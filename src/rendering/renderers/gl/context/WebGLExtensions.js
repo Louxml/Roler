@@ -70,21 +70,21 @@ const common = {
     // astc: "WEBGL_compressed_texture_astc",
     // bptc: "WEBGL_compressed_texture_bptc",
     // rgtc: "WEBGL_compressed_texture_rgtc",
-    loseContext: "WEBGL_lose_context",
+    loseContext: "WEBGL_lose_context",  // 上下文丢失
 }
 
 export const webgl1Extensions = {
     ...common,
-    // drawBuffers: "WEBGL_draw_buffers",
+    drawBuffers: "WEBGL_draw_buffers",  // 多渲染目标
     // depthTexture: "WEBGL_depth_texture",
-    vertexArrayObject: ["OES_vertex_array_object", "MOZ_OES_vertex_array_object", "WEBKIT_OES_vertex_array_object"],
-    uint32ElementIndex: "OES_element_index_uint",
+    vertexArrayObject: ["OES_vertex_array_object", "MOZ_OES_vertex_array_object", "WEBKIT_OES_vertex_array_object"],    // 顶点数组对象
+    uint32ElementIndex: "OES_element_index_uint",   // 顶点索引为uint32位
 
     // floatTexture: "OES_texture_float",
     // halfFloatTexture: "OES_texture_half_float",
     // halfFloatLinearTexture: "OES_texture_half_float_linear",
-    vertexAttribDivisorANGLE: "ANGLE_instanced_arrays",
-    sRGB: "EXT_sRGB",
+    vertexAttribDivisorANGLE: "ANGLE_instanced_arrays", // 实例化绘制
+    sRGB: "EXT_sRGB",   // sRGB颜色空间
 }
 
 export const webgl2Extensions = {

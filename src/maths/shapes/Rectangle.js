@@ -49,6 +49,23 @@ export class Rectangle {
         return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
+    /**
+     * 设置矩形区域
+     * @param {Number} x x坐标
+     * @param {Number} y y坐标
+     * @param {Number} width 宽度
+     * @param {Number} height 高度
+     * @returns this
+     */
+    set(x, y, width, height){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+
+        return this;
+    }
+
     // TODO Bounds
     // copyFromBounds(bounds){
         

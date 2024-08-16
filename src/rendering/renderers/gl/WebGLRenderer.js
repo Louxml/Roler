@@ -14,6 +14,7 @@ import { GLRenderTargetSystem } from "./renderTarget/GLRenderTargetSystem.js";
 import { GLTextureSystem } from "./texture/GLTextureSystem.js";
 import { GLEncoderSystem } from "./encoder/GLEncoderSystem.js";
 import { GLStencilSystem } from "./stencil/GLStencilSystem.js";
+import { GLColorMaskSystem } from "./colormask/GLColorMaskSystem.js";
 
 
 const DefaultWebGLSystems = [
@@ -28,6 +29,7 @@ const DefaultWebGLSystems = [
     GLEncoderSystem, // webgl编码器系统
     GLStateSystem, // webgl状态系统
     GLStencilSystem, // webgl模板系统
+    GLColorMaskSystem, // webgl颜色掩码系统
 ];
 
 const DefaultWebGLPipes = [...SharedRenderPipes];

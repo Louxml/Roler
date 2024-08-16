@@ -17,6 +17,10 @@ export class GLEncoderSystem extends System {
         name: 'encoder'
     }
 
+    contextChange(gl){
+        console.log('GLEncoderSystem init')
+    }
+
     /**
      * 绑定几何的顶点数据
      * @param {Geometry} geometry 几何对象

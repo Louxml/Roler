@@ -13,6 +13,7 @@ import { GLUniformGroupSystem } from "./shader/GLUniformGroupSystem.js";
 import { GLRenderTargetSystem } from "./renderTarget/GLRenderTargetSystem.js";
 import { GLTextureSystem } from "./texture/GLTextureSystem.js";
 import { GLEncoderSystem } from "./encoder/GLEncoderSystem.js";
+import { GLStencilSystem } from "./stencil/GLStencilSystem.js";
 
 
 const DefaultWebGLSystems = [
@@ -24,8 +25,9 @@ const DefaultWebGLSystems = [
     GLGeometrySystem, // webgl几何系统
     GLUniformGroupSystem, // webgl uniform组系统
     GLShaderSystem, // webgl着色器系统
-    GLStateSystem, // webgl状态系统
     GLEncoderSystem, // webgl编码器系统
+    GLStateSystem, // webgl状态系统
+    GLStencilSystem, // webgl模板系统
 ];
 
 const DefaultWebGLPipes = [...SharedRenderPipes];

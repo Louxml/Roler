@@ -98,6 +98,7 @@ export const MIPMAP_SCALE_MODES = {
     }
 }
 
+// 比较模式
 export const COMPARE_MODES = {
     /** 永不通过 */
     never: 0x0200,

@@ -51,7 +51,7 @@ export class BackgroundSystem extends System {
     }
 
     init(options){
-        console.log('BackgroundSystem.init');
+        console.log('BackgroundSystem init');
         options = {...BackgroundSystem.defaultOptions, ...options};
         this.clearBeforeRender = options.clearBeforeRender;
         this.color = options.background || options.backgroundColor || this.#backgroundColor;

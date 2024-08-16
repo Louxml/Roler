@@ -16,7 +16,7 @@ const ExtensionType = {
     // 注册webgl渲染管线拓展
     WebGLPipes: "webgl-pipes",
     // 注册webgl管线适配器拓展
-    WebGLPipesAdapter: "webgl-pipes-adapter",
+    WebGLPipesAdaptor: "webgl-pipes-adaptor",
     // 注册webgl系统拓展
     WebGLSystem: "webgl-system",
 

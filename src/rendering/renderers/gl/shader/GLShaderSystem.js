@@ -22,6 +22,7 @@ export class GLShaderSystem extends System {
         name: 'shader'
     }
 
+    /** 当前激活的GLProgram */
     #activeProgram;
 
     #gl;
@@ -72,7 +73,7 @@ export class GLShaderSystem extends System {
 
 
     /**
-     * 绑定Shader，并处理数据同步
+     * 绑定Shader，并处理数据同步（处理Unifrom数据）
      * @param {Shader} shader 要绑定的Shader对象
      * @param {Boolean} skipSync 是否跳过数据同步。默认false，执行数据同步代码上传数据至GPU
      * @returns 
@@ -219,5 +220,9 @@ export class GLShaderSystem extends System {
 
     get gl(){
         return this.#gl;
+    }
+
+    get activeProgram(){
+        return this.#activeProgram;
     }
 } 

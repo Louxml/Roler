@@ -144,15 +144,15 @@ function test3(){
         // topology: 'triangle-fan'
     });
 
-    console.log(geo);
+    // console.log(geo);
 
-    console.log(shader)
+    // console.log(shader)
 
-    app.renderer.shader.bind(shader);
-    
-    app.renderer.geometry.bind(geo, shader.glProgram);
 
-    app.renderer.geometry.draw();
+    app.renderer.encoder.draw({
+        geometry: geo,
+        shader: shader
+    })
 
 }
 

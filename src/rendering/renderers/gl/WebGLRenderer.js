@@ -12,6 +12,7 @@ import { GLShaderSystem } from "./shader/GLShaderSystem.js";
 import { GLUniformGroupSystem } from "./shader/GLUniformGroupSystem.js";
 import { GLRenderTargetSystem } from "./renderTarget/GLRenderTargetSystem.js";
 import { GLTextureSystem } from "./texture/GLTextureSystem.js";
+import { GLEncoderSystem } from "./encoder/GLEncoderSystem.js";
 
 
 const DefaultWebGLSystems = [
@@ -24,6 +25,7 @@ const DefaultWebGLSystems = [
     GLUniformGroupSystem, // webgl uniform组系统
     GLShaderSystem, // webgl着色器系统
     GLStateSystem, // webgl状态系统
+    GLEncoderSystem, // webgl编码器系统
 ];
 
 const DefaultWebGLPipes = [...SharedRenderPipes];
@@ -37,7 +39,7 @@ const renderPipeAdaptors = [];
 
 Extension.handleByNamedList(ExtensionType.WebGLSystem, systems);
 Extension.handleByNamedList(ExtensionType.WebGLPipes, renderPipes);
-Extension.handleByNamedList(ExtensionType.WebGLPipeAdaptor, renderPipeAdaptors);
+Extension.handleByNamedList(ExtensionType.WebGLPipesAdaptor, renderPipeAdaptors);
 
 Extension.add(...DefaultWebGLSystems, ...DefaultWebGLPipes, ...DefaultWebGLAdapters);
 

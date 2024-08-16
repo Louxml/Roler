@@ -95,6 +95,11 @@ export class GLGeometrySystem extends System {
         this.#activeVao = null;
     }
 
+    /**
+     * 绑定几何对象，处理VAO，(处理Attribute)
+     * @param {Geometry} geometry 
+     * @param {GLProgram} program GLProgram对象
+     */
     bind(geometry, program){
         const gl = this.#gl;
 
@@ -359,6 +364,14 @@ export class GLGeometrySystem extends System {
     }
 
 
+    /**
+     * 绘制Geometry
+     * @param {String} topology 几何数据拓扑结构
+     * @param {Number} size 顶点数量
+     * @param {Number} start 开始索引，从第几个索引开始绘制，默认为0
+     * @param {Number} instanceCount 实例化绘制数量
+     * @returns 
+     */
     draw(topology, size, start = 0, instanceCount){
         const gl = this.#gl;
         const geometry = this.#activeGeometry;

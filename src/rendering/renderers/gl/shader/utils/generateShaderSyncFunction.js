@@ -77,6 +77,8 @@ export function generateShaderSyncFunction(shader, shaderSystem) {
 
                     textureCount++;
                 }
+            }else{
+                console.warn('Unknown resource type', resource);
             }
         }
     }

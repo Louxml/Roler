@@ -84,6 +84,7 @@ export class RenderTargetSystem extends System {
 
     /**
      * 当开始渲染场景是调用
+     * 生命周期
      * @param {Object} options 配置
      * @param {RenderTarget | TextureSource} options.target 渲染目标
      * @param {Number} options.clear 清空渲染目标，CLEAR.NONE:不清空，CLEAR.COLOR:清空颜色，CLEAR.DEPTH:清空深度，CLEAR.STENCIL:清空模板，可组合使用

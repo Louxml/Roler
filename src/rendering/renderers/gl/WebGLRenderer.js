@@ -15,10 +15,12 @@ import { GLTextureSystem } from "./texture/GLTextureSystem.js";
 import { GLEncoderSystem } from "./encoder/GLEncoderSystem.js";
 import { GLStencilSystem } from "./stencil/GLStencilSystem.js";
 import { GLColorMaskSystem } from "./colormask/GLColorMaskSystem.js";
+import { GLBackBufferSystem } from "./backbuffer/GLBackBufferSystem.js";
 
 
 const DefaultWebGLSystems = [
     ...SharedSystems, // 默认系统
+    GLBackBufferSystem, // webgl后缓冲区系统
     GLContextSystem, // webgl上下文系统
     GLBufferSystem, // webgl缓冲区系统
     GLTextureSystem, // webgl纹理系统

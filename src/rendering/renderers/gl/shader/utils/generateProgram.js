@@ -201,6 +201,7 @@ export function generateProgram(gl, program) {
 
         uniformData[name] = {
             location: gl.getUniformLocation(webGLProgram, name),
+            name,
             value: uniform.value,
         }
     }

@@ -2,9 +2,10 @@ import { BufferResource } from "../../../shared/buffer/BufferResource.js";
 import { UniformGroup } from "../../../shared/shader/UniformGroup.js";
 
 import '../../../shared/buffer/BufferResource.js';
+import { TextureSource } from "../../../shared/texture/sources/TextureSource.js";
 
 
-export function generateShaderSyncFunction(shader, shaderProgram) {
+export function generateShaderSyncFunction(shader, shaderSystem) {
     
     const funcFragments = [];
 
@@ -15,18 +16,22 @@ export function generateShaderSyncFunction(shader, shaderProgram) {
      * sS = ShaderSystem
      * p = GLProgram
      * ugs = UniformGroupSystem
+     * tS = TextureSystem
      */
     const headerFragment = [`
         var g = s.groups;
         var sS = r.shader;
         var p = s.glProgram;
         var ugs = r.uniformGroup;
+        var tS = r.texture;
         var resources;
     `];
 
     let blockIndex = 0;
+    let textureCount = 0;
 
-    const programData = shaderProgram._getProgramData(shader.glProgram);
+    // GLProgram对象
+    const programData = shaderSystem._getProgramData(shader.glProgram);
 
     for (const i in shader.groups){
         // BindGroup对象
@@ -53,12 +58,25 @@ export function generateShaderSyncFunction(shader, shaderProgram) {
                     `);
                 }
             }else if (resource instanceof BufferResource){
-                // TODO BufferResource
                 funcFragments.push(`
                     sS.bindUniformBlock(resources[${j}], s._uniformBindMap[${i}][${j}], ${blockIndex++});
                 `);
-            }else if (resource instanceof TextureResource){
-                // TODO TextureResource
+            }else if (resource instanceof TextureSource){
+                const uniformName = shader._uniformBindMap[i][j];
+
+                const uniformData = programData.uniformData[uniformName];
+                
+                if (uniformData){
+                    // 这里纹理直接上传了？不用异步吗,记得有个地方有纹理上传逻辑代码
+                    // 还是这里只上传索引？
+                    // shaderSystem.gl.uniform1i(uniformData.location, textureCount);
+
+                    funcFragments.push(`
+                        tS.bind(resources[${j}], ${textureCount});
+                    `);
+
+                    textureCount++;
+                }
             }
         }
     }

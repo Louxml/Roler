@@ -83,15 +83,19 @@ function test3(){
         fragment: `
         precision highp float;
 
+        // 未使用的 uniform不会导出
         uniform vec4 uTint;
+
+        uniform sampler2D uTexture;
 
         in vec4 vColor;
 
         out vec4 finalColor;
 
         void main() {
-            // finalColor = uTint;
+            finalColor = uTint;
             finalColor = vColor;
+            finalColor = texture(uTexture, vec2(0.5, 0.5));
         }
         `,
         name: 'test',
@@ -104,11 +108,7 @@ function test3(){
     let shader = new Shader({
         glProgram: pro,
         resources: {
-            // uTexture: {
-            //     name: 'uTexture',
-            //     value: 0,
-            //     type: 'f32'
-            // },
+            uTexture: Texture.WHITE.source,
             light: {
                 uTint : {
                     value: [1, 0, 0, 1],

@@ -1,4 +1,5 @@
 import { ExtensionType } from "../../../../extensions/index.js";
+import { BufferResource } from "../../shared/buffer/BufferResource.js";
 import { Shader } from "../../shared/shader/Shader.js";
 import { UniformGroup } from "../../shared/shader/UniformGroup.js";
 import { System } from "../../shared/system/System.js";
@@ -104,13 +105,14 @@ export class GLShaderSystem extends System {
 
     /**
      * 绑定资源中的数据到 当前Shader中指定的uniform block，并指定位置
-     * @param {BufferResource} uniformGroup 
+     * @param {UniformGroup | BufferResource} uniformGroup 
      * @param {String} name uniform block的名字
      * @param {Number} index 位置
      * @returns 
      */
     bindUniformBlock(uniformGroup, name, index = 0){
 
+        // 采用UBO, webgl1不支持
         if (this.renderer.context.webGLVersion === 1){
             throw new Error('WebGL1.0 not support');
         }
@@ -121,8 +123,7 @@ export class GLShaderSystem extends System {
         const isBufferResource = uniformGroup.isBufferResource;
 
         if (isBufferResource){
-            // TODO uboSystem
-            // this.renderer.ubo.updateUniformGroup(uniformGroup);
+            this.renderer.ubo.updateUniformGroup(uniformGroup);
         }
         
         // 更新Buffer数据
@@ -154,7 +155,13 @@ export class GLShaderSystem extends System {
 
         const gl = this.#gl;
 
-        const uniformBlockIndex = this.#activeProgram._uniformBlockData[name].index;
+        const uniformBlockData = this.#activeProgram._uniformBlockData[name]
+
+        if (!uniformBlockData) {
+            throw new Error(`Uniform block ${name} not found in the current program`);
+        };
+
+        const uniformBlockIndex = uniformBlockData.index;
 
         // program中(index ?) 对应的buffer绑定所在位置
         if (programData.uniformBlockBindings[index] === boundIndex) return;

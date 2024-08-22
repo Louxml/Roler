@@ -116,6 +116,10 @@ export class UniformGroup extends BindResource {
         return this.#updateID;
     }
 
+    set updateID(value){
+        this.#updateID = value;
+    }
+
     get isUniformGroup(){
         return true;
     }

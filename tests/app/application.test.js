@@ -95,7 +95,7 @@ function test3(){
         void main() {
             finalColor = uTint;
             finalColor = vColor;
-            finalColor = texture(uTexture, vec2(0.5, 0.5));
+            // finalColor = texture(uTexture, vec2(0.5, 0.5));
         }
         `,
         name: 'test',

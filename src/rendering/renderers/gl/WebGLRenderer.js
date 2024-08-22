@@ -16,10 +16,12 @@ import { GLEncoderSystem } from "./encoder/GLEncoderSystem.js";
 import { GLStencilSystem } from "./stencil/GLStencilSystem.js";
 import { GLColorMaskSystem } from "./colormask/GLColorMaskSystem.js";
 import { GLBackBufferSystem } from "./backbuffer/GLBackBufferSystem.js";
+import { GLUboSystem } from "./ubo/GLUboSystem.js";
 
 
 const DefaultWebGLSystems = [
     ...SharedSystems, // 默认系统
+    GLUboSystem, // webgl ubo(Uniform Buffer Object)系统
     GLBackBufferSystem, // webgl后缓冲区系统
     GLContextSystem, // webgl上下文系统
     GLBufferSystem, // webgl缓冲区系统

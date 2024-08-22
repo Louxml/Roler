@@ -3,6 +3,7 @@ import { BindResource } from "../../gpu/shader/BindResource.js";
 import { generateIdFromString } from "../../utils/generateIdFromString.js";
 import { UNIFORM_TYPSE_VALUES } from "./types.js";
 import { getDefaultUniformValue } from "./utils/getDefaultUniformValue.js";
+import { Buffer } from "../buffer/Buffer.js";
 
 
 export class UniformGroup extends BindResource {
@@ -34,6 +35,12 @@ export class UniformGroup extends BindResource {
      * uniformGroup数据
      */
     uniforms;
+
+    /**
+     * 缓冲区
+     * @type {Buffer}
+     */
+    buffer;
 
     /**
      * 是否是ubo

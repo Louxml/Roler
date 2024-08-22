@@ -48,7 +48,7 @@ export function generateShaderSyncFunction(shader, shaderSystem) {
 
             if (resource instanceof UniformGroup){
                 if (resource.ubo){
-                    // TODO ubo
+                    // ubo
                     funcFragments.push(`
                         sS.bindUniformBlock(resources[${j}], s._uniformBindMap[${i}][${j}], ${blockIndex++});
                     `);

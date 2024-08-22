@@ -38,7 +38,7 @@ export class GLTextureSystem extends System {
     /** source生成glTexture哈希表，避免重复生成 */
     #glTextures = Object.create(null);
 
-    /** TODO 是否使用单独的采样器 */
+    /** TODO 是否使用单独的采样器,webgl2可用 */
     #useSeparateSamplers = false;
 
     #mapFormatToInternalFormat;
@@ -91,7 +91,7 @@ export class GLTextureSystem extends System {
         
         if (texture){
             this.bindSource(source, location);
-            // TODO 单独采样器
+            // TODO 单独采样器 webgl2可用
         }else{
             this.bindSource(null, location);
             // TODO 单独采样器

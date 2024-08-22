@@ -1,5 +1,5 @@
 
-// TODO 待学习
+// TODO Shader代码错误提示 待学习
 
 function logPrettyShaderError(gl, shader) {
     const shaderSrc = gl.getShaderSource(shader) .split('\n') .map((line, index) => `${index}: ${line}`);

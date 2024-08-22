@@ -144,7 +144,7 @@ export class GLContextSystem extends System{
         }else{
             const alpha = this.renderer.background.alpha < 1;
             const premultipliedAlpha = options.premultipliedAlpha;
-            const antialias = options.antialias;// TODO backBufferSystem
+            const antialias = options.antialias && !this.renderer.backBuffer.useBackBuffer;
             const preserveDrawingBuffer = options.preserveDrawingBuffer;
             const powerPreference = options.powerPreference;
 

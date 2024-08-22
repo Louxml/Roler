@@ -4,6 +4,8 @@ import { ExtensionType } from "../../../../extensions/index.js";
 import { Rectangle } from "../../../../maths/shapes/Rectangle.js";
 import { System } from "../system/System.js";
 import { DOMAdapter } from "../../../../environment/Adapter.js";
+import { getCanvasTexture } from "../texture/utils/getCanvasTexture.js";
+import { RenderTarget } from "../renderTarget/RenderTarget.js";
 
 // ViewSystemOptions
 // {
@@ -70,19 +72,23 @@ export class ViewSystem extends System {
         this.canvas = options.canvas || DOMAdapter.get().createCanvas(options.width, options.height);
         this.antialias = !!options.antialias;
 
-        // TODO TextSystem
-        // this.texture = ;
+        this.texture = getCanvasTexture(this.canvas, options);
+        this.texture.label = 'main';
 
-        // TODO RenderTargetSystem
-        // this.renderTarget = ;
+        this.renderTarget = new RenderTarget({
+            colorTextures: [this.texture],
+            // 是否开启深度缓冲区
+            depth: !!options.depth,
+            isRoot: true,
+        });
+        this.texture.source.transparent = options.backgroundAlpha < 1;
 
-        // TODO
-        // this.multiView = !!options.multiView;
+        // TODO 多视图
+        this.multiView = !!options.multiView;
 
         if (options.autoDensity) {
-            // TOOD 要替换成texture的宽高
-            this.canvas.style.width = `${options.width}px`;
-            this.canvas.style.height = `${options.height}px`;
+            this.canvas.style.width = `${this.texture.width}px`;
+            this.canvas.style.height = `${this.texture.height}px`;
         }
 
         if (options.target) {
@@ -90,9 +96,16 @@ export class ViewSystem extends System {
         }
     }
 
-    // TODO
     resize(width, height, resolution){
+        this.texture.source.resize(width, height, resolution);
 
+        this.screen.width = this.texture.frame.width;
+        this.screen.height = this.texture.frame.height;
+
+        if (options.autoDensity) {
+            this.canvas.style.width = `${width}px`;
+            this.canvas.style.height = `${height}px`;
+        }
     }
 
 
@@ -109,14 +122,16 @@ export class ViewSystem extends System {
         }
     }
 
-    // TODO TextureSystem
-    // get resolution(){
-        
-    // }
+    get resolution(){
+        return this.texture.source.resolution;
+    }
 
-    // TODO TextureSystem
-    // set resolution(value){
-        
-    // }
+    set resolution(value){
+        this.texture.source.resize(
+            this.texture.source.width,
+            this.texture.source.height,
+            value
+        );
+    }
 
 }

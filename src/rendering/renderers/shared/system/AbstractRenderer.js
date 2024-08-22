@@ -6,7 +6,7 @@ const defaultRunners = [
     'init',
     'destroy',
     'contextChange',
-    // 'resolutionChange',
+    'resolutionChange',
     'reset',
     'renderEnd',
     'renderStart',
@@ -226,24 +226,21 @@ export class AbstractRenderer {
         return !!this.#roundPixels;
     }
 
-    // TODO viewSytem
     get resolution(){
-
+        return this.view.resolution;
     }
 
-    // TODO viewSytem
     set resolution(value){
-        
+        this.view.resolution = value;
+        this.runners.resolutionChange.emit(value);
     }
 
-    // TODO viewSytem
     get width(){
-        
+        return this.view.texture.frame.width;
     }
 
-    // TODO viewSytem
     get height(){
-        
+        return this.view.texture.frame.height;
     }
 
     /**
@@ -256,7 +253,10 @@ export class AbstractRenderer {
     
     // TODO lastObjectRendered 最后一个渲染的对象，可能对其他子系统、拓展、插件有用
 
-    //TODO 是否渲染到屏幕上
+
+    get renderingToScreen(){
+        return this.renderTarget.renderingToScreen;
+    }
 
     /**
      * 获取屏幕对象可视区域位置

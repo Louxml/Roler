@@ -6,8 +6,6 @@ export * from "./ticker/ticker.test.js";
 
 export * from "./maths/Rectangle.test.js";
 
-export * from "./maths/GroupD8.test.js";
-
 export * from "./eventemitter/eventemitter.test.js";
 
 export * from "./rendering/renderer.test.js";

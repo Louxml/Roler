@@ -7,37 +7,37 @@
 const ExtensionType = {
 
     // 注册应用程序拓展
-    Application: "application",
+    Application: 'application',
 
     // 注册渲染器
-    Renderer: "renderer",
+    Renderer: 'renderer',
 
     
     // 注册webgl渲染管线拓展
-    WebGLPipes: "webgl-pipes",
+    WebGLPipes: 'webgl-pipes',
     // 注册webgl管线适配器拓展
-    WebGLPipesAdaptor: "webgl-pipes-adaptor",
+    WebGLPipesAdaptor: 'webgl-pipes-adaptor',
     // 注册webgl系统拓展
-    WebGLSystem: "webgl-system",
+    WebGLSystem: 'webgl-system',
 
     
 
     // 注册Assets拓展
-    Assets: "assets",
+    Assets: 'assets',
     // 注册加载解析器
-    LoadParser: "load-parser",
+    LoadParser: 'load-parser',
     // 注册urls加载解析器
-    ResolveParser: "resolve-parser",
+    ResolveParser: 'resolve-parser',
     // 注册缓存解析器
-    CacheParser: "cache-parser",
+    CacheParser: 'cache-parser',
     // 注册添加/移除解析器
-    DetectionParser: "detection-parser",
+    DetectionParser: 'detection-parser',
 
     // 注册环境拓展
-    Environment: "environment",
+    Environment: 'environment',
 
     // 注册纹理资源拓展， 用于自动检测纹理类型
-    TextureSource: "texture-source",
+    TextureSource: 'texture-source',
 
 }
 
@@ -51,7 +51,7 @@ const ExtensionType = {
  */
 const ExtenstionMetaData = {
     type: ['type'],
-    name: "name",
+    name: 'name',
     priority: 0,
     ref: {}
 }
@@ -65,7 +65,7 @@ const ExtenstionMetaData = {
  * @returns 标准插件配置对象
  */
 const normalizeExtension = (ext) => {
-    if(typeof ext === "function" || typeof ext == "object" && ext.extension){
+    if(typeof ext === 'function' || typeof ext === 'object' && ext.extension){
         if(!ext.extension){
             throw new Error('Extension class must have an extension object');
         }
@@ -73,14 +73,14 @@ const normalizeExtension = (ext) => {
         let metaData = ext.extension
 
         // 将String类型封装对象
-        if (typeof metaData === "string"){
+        if (typeof metaData === 'string'){
             metaData = {
                 type: [metaData]
             }
         }
 
         // 将string类型的type转成Array类型
-        if(typeof metaData.type === "string"){
+        if(typeof metaData.type === 'string'){
             metaData.type = [metaData.type]
         }
 
@@ -93,7 +93,7 @@ const normalizeExtension = (ext) => {
         metaData.name ??= ext.name;
 
         // name类型错误
-        if(typeof metaData.name !== "string"){
+        if(typeof metaData.name !== 'string'){
             throw new Error('This extension is name error.')
         }
 
@@ -101,7 +101,7 @@ const normalizeExtension = (ext) => {
         metaData.priority ??= ExtenstionMetaData.priority;
         
         // priority类型错误
-        if(typeof metaData.priority !== "number"){
+        if(typeof metaData.priority !== 'number'){
             throw new Error('This extension is priority error.');
         }
 
@@ -109,7 +109,7 @@ const normalizeExtension = (ext) => {
     }
 
     // 属性拷贝
-    if(typeof ext === "object"){
+    if(typeof ext === 'object'){
         ext = { ...ext }
     }else{
         throw new Error('Extension error');
@@ -143,7 +143,7 @@ class Extension{
     static #queue = Object.create(null);
 
     static get queue(){
-        return {...this.#queue};
+        return { ...this.#queue };
     }
 
     /**
@@ -160,7 +160,7 @@ class Extension{
                 const queue = this.#queue;
                 // 该类型没有注册添加方法，将 拓展类数据 添加到等待队列
                 if(!handlers[type]){
-                    queue[type] = queue[type] || [];
+                    queue[type] ??= [];
                     // 添加到等待队列
                     queue[type].push(ext);
                 }else{
@@ -296,7 +296,7 @@ class Extension{
                 }
                 
                 // 添加
-                const data = { name: ext.name, value: ext.ref, priority: ext.priority }
+                const data = { name: ext.name, value: ext.ref, priority: normalizeExtension(ext).priority }
                 map.push(data);
                 // 排降序
                 map.sort((a, b) => b.priority - a.priority);
